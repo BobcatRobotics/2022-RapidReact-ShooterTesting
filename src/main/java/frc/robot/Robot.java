@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveTele;
@@ -50,12 +51,18 @@ public class Robot extends TimedRobot {
   private ShuffleboardTab tab = Shuffleboard.getTab("Things Tab");
   private double waitTime = 0;
 
+  // set to true to use Parallel Command Groups
+  private boolean commandGroupTest = false;
+  private ParallelCommandGroup commandGroup = new ParallelCommandGroup();
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   // private Joystick rightStick;
   // private Joystick leftStick;
+
+
+
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
@@ -72,6 +79,7 @@ public class Robot extends TimedRobot {
     // compressor = m_robotContainer.compressor;
     SmartDashboard.putNumber("Set Speed", 4800);
     tab.add("Shooter current RPM",0);
+    commandGroup.addCommands(intakeControls,drivetele,shootingProcess);
   }
 
   /**
@@ -98,7 +106,6 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     intake.stopIntake();
     shooter.stopShooter();
-
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -126,12 +133,25 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     CommandScheduler.getInstance().cancelAll();
-    drivetele.schedule();
-    // shooter controller
-    // shootingProcess.schedule();
-    // intake controller
-    intakeControls.schedule();
-    // climber controller
+    
+    // We will most likely want to use command group test as this will allow
+    // our threads to run together and not step on each others toes.
+    // Think of a command group as a threadpool and a command as its own thread
+    // sequential group will run commands one after another, this would operate like a set of threads with semaphores (might look chooppy)
+    // parrallel group will run commands in parrallel duhhh
+    // parallel race will run all commands at the same time but kill all of them when one finishes (race conditions)
+    // parallel deadline will run all commands in parallel but will end them when a specific command gets executed
+    if(commandGroupTest) {
+      commandGroup.schedule();
+    } else {
+      drivetele.schedule();
+      // shooter controller
+      shootingProcess.schedule();
+      // intake controller
+      intakeControls.schedule();
+      // climber controller
+
+    }
 
   }
 
@@ -142,7 +162,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     CommandScheduler.getInstance().run();
-    shootingProcess.execute();
     // right = rightStick.getRawAxis(Joystick.AxisType.kY.value);
     // left = leftStick.getRawAxis(Joystick.AxisType.kY.value);
 

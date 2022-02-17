@@ -30,7 +30,6 @@ public class Shooter extends SubsystemBase {
     private final double rpmThreshold = 800.0;
 
     // Feeder Motor & Sensors & Other ****
-    private final WPI_TalonFX feederMotor1;
     // private final TimeOfFlight ballPresentSensor;
     // private final TimeOfFlight ballLeavingSensor;
     private int ballCounter = 0;
@@ -86,7 +85,6 @@ public class Shooter extends SubsystemBase {
         // TODO: Need to do any sensor/voltage/solenoid stuff?
 
         // Feeder stuff
-        feederMotor1 = new WPI_TalonFX(10);
         // ballPresentSensor = new TimeOfFlight(FeederConstants.feederBallPresentId);
         // ballLeavingSensor = new TimeOfFlight(FeederConstants.feederBallLeavingId);
         // pneumaticCylinder = new Solenoid(PneumaticsModuleType.REVPH, ShooterConstants.shooterAngleSolenoid);
@@ -153,18 +151,18 @@ public class Shooter extends SubsystemBase {
 
     public void feed(boolean fullSpeed) {
         if (fullSpeed) {
-            feederMotor1.set(FeederConstants.speedLimiter);
+            feedMotor.set(FeederConstants.speedLimiter);
         } else {
-            feederMotor1.set(FeederConstants.speedLimiterSlow);
+            feedMotor.set(FeederConstants.speedLimiterSlow);
         }
     }
 
     public void reverseFeed() {
-        feederMotor1.set(-FeederConstants.speedLimiter);
+        feedMotor.set(-FeederConstants.speedLimiter);
     }
 
     public void stopFeeding() {
-        feederMotor1.stopMotor();
+        feedMotor.stopMotor();
     }
 
     /**
