@@ -1,0 +1,201 @@
+package frc.robot.subsystems;
+
+import static frc.robot.Constants.IntakeConstants.*;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.lib.RioLogger;
+
+public class Intake extends SubsystemBase {
+    // Compressor
+    private Compressor compressorModel;
+
+    // Horizontal BAG wheels
+    private WPI_VictorSPX intakeLeftWheel;
+    private WPI_TalonSRX intakeRightWheel;
+
+    // Falcon intake
+    private WPI_TalonFX intakeBar;
+
+    // Solenoids
+    private Solenoid intakeLeftSolenoid;
+    private Solenoid intakeRightSolenoid;
+    private boolean isDeployed;
+
+    // Target speeds - we can tune these values as needed
+    private double inFullSpeed = 1.0;
+    private double inHalfSpeed = 0.3;
+    private double outSpeed = -0.5;
+
+
+    /**
+     * Constructor for the Intake subsystem
+     */
+    public Intake() {
+        // Init new compressor object from port in Constants
+        compressorModel = new Compressor(compressorModelPort, PneumaticsModuleType.CTREPCM);
+
+        // Init intake motors
+        intakeLeftWheel = new WPI_VictorSPX(intakeLeftWheelPort);
+        // intakeRightWheel = new WPI_TalonSRX(intakeRightWheelPort);
+        // intakeRightWheel.setInverted(true); // Based on CAD drawing, the wheels should spin in opposite directions
+        intakeBar = new WPI_TalonFX(intakeBarPort);
+
+        // Init solenoids
+        // intakeLeftSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
+        // // intakeRightSolenoid = new Solenoid(PneumaticsModuleType.REVPH, intakeRightSolenoidPort);
+        // if (intakeLeftSolenoid.get() != intakeRightSolenoid.get()) {
+        //     RioLogger.debugLog("line: " + Thread.currentThread().getStackTrace()[1].getLineNumber() + ": " + "Intake solenoids are not in the same state at initialization!");
+        // }
+        // isDeployed = intakeLeftSolenoid.get();
+
+        // When in neutral mode for intake motors, allow for coasting
+        intakeLeftWheel.setNeutralMode(NeutralMode.Coast);
+        // intakeRightWheel.setNeutralMode(NeutralMode.Coast);
+        intakeBar.setNeutralMode(NeutralMode.Coast);
+    }
+
+    public void feedOut() {
+        runIntakeBarOut(true);
+        runIntakeWheelsOut(true);
+    }
+    public void feedIn() {
+        runIntakeBarIn(true);
+        runIntakeWheelsIn(true);
+        
+    }
+
+    /**
+     * Runs the intake wheels inward
+     * @param fullSpeed True if we want to run at full speed, false if we want to run at half speed
+     */
+    public void runIntakeWheelsIn(boolean fullSpeed) {
+        intakeLeftWheel.set(fullSpeed ? inFullSpeed : inHalfSpeed);
+        // intakeRightWheel.set(fullSpeed ? inFullSpeed : inHalfSpeed);
+    }
+
+    /**
+     * Runs the intake wheels outward
+     * @param fullSpeed True if we want to run at full speed, false if we want to run at half speed
+     */
+    public void runIntakeWheelsOut(boolean fullSpeed) {
+        intakeLeftWheel.set(outSpeed);
+        // intakeRightWheel.set(outSpeed);
+    }
+
+    /**
+     * Runs the intake bar motor inward
+     * @param fullSpeed True if we want to run at full speed, false if we want to run at half speed
+     */
+    public void runIntakeBarIn(boolean fullSpeed) {
+        intakeBar.set(fullSpeed ? inFullSpeed : inHalfSpeed);
+    }
+
+    /**
+     * Runs the intake bar motor outward
+     * @param fullSpeed True if we want to run at full speed, false if we want to run at half speed
+     */
+    public void runIntakeBarOut(boolean fullSpeed) {
+        intakeBar.set(outSpeed);
+    }
+    
+    /**
+     * Returns the current speed of the intake bar motor
+     */
+    public double getIntakeBarSpeed() {
+        return intakeBar.get();
+    }
+
+    /**
+     * Returns the current speed of the left intake wheel
+     * @return
+     */
+    public double getIntakeLeftWheelSpeed() {
+        return intakeLeftWheel.get();
+    }
+
+    /**
+     * Returns the current speed of the right intake wheel
+     */
+    public double getintakeRightWheelSpeed() {
+        //return // intakeRightWheel.get();
+        return 0.0;
+    }
+
+    /**
+     * Stops the intake wheels
+     */
+    public void stopIntakeWheels() {
+        intakeLeftWheel.set(0);
+        // // intakeRightWheel.set(0);
+    }
+
+    /**
+     * Stops the intake bar motor
+     */
+    public void stopIntakeBar() {
+        intakeBar.set(0);
+    }
+
+    /**
+     * Stops all intake motors
+     */
+    public void stopIntake() {
+        stopIntakeWheels();
+        stopIntakeBar();
+    }
+
+    /**
+     * Toggles the intake's deployed status and returns the resulting state of the solenoids.
+     */
+    public boolean toggleDeploy() {
+        // intakeLeftSolenoid.set(!intakeLeftSolenoid.get());
+        // intakeRightSolenoid.set(!intakeRightSolenoid.get());
+        // isDeployed = intakeLeftSolenoid.get();
+        // if (isDeployed != intakeRightSolenoid.get()) {
+        //     RioLogger.debugLog("line: " + Thread.currentThread().getStackTrace()[1].getLineNumber() + ": " + "Intake solenoids are not in the same state after toggling!");
+        // }
+        return isDeployed;
+    }
+
+    /**
+     * Deploys or retracts intake solenoids based on a provided desired state
+     * @param state True if we want to deploy, false if we want to retract
+     */
+    public void deploy(boolean state) {
+        // intakeLeftSolenoid.set(state);
+        // intakeRightSolenoid.set(state);
+        isDeployed = state;
+    }
+
+    /**
+     * Returns whether the intake is deployed or not
+     */
+    public boolean isDeployed() {
+        return isDeployed;
+    }
+
+    /**
+     * Toggles compressor and returns new state
+     */
+    public boolean toggleCompressor() {
+        if (compressorModel.enabled()) compressorModel.disable();
+        else compressorModel.enableDigital();
+        return compressorModel.enabled();
+    }
+
+    /**
+     * Returns state of compressor
+     */
+    public boolean compressorIsEnabled() {
+        return compressorModel.enabled();
+    }
+    
+}
