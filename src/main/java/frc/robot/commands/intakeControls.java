@@ -24,7 +24,6 @@ public class intakeControls extends CommandBase {
     this.shooter = shoot;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.intake);
-    addRequirements(this.shooter);
   }
 
   // Called when the command is initially scheduled.
