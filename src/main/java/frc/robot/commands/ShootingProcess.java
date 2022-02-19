@@ -34,7 +34,28 @@ public class ShootingProcess extends CommandBase {
   @Override
   public void execute() {                           // what the fuck is this sensor for
     // boolean[] tofArray = {shooter.getBallReadyToFeed(),shooter.getBallLeaving()};
-    // Shooter controls
+
+    // // Gamepad left bumper button -> run shooter
+    // if (gamepad.getRawButton(Constants.Left_Bumper_Button)) {
+    //   // WORKING
+    //   shooter.setRunning(true);
+    //   shooter.getToSpeed();
+    //   if (shooter.atSpeed()) {
+    //     System.out.println("Ready to feed -> shoot");
+    //   }
+    // } else {
+    //   shooter.stopShooter();
+    //   shooter.setRunning(false);
+    // }
+    // // Gamepad left trigger -> run tower in
+    // if (gamepad.getRawButton(Constants.Left_Trigger_Button)) {
+    //   shooter.feed();
+    // } else {
+    //   shooter.stopFeeding();
+    // }
+
+
+    // // Shooter controls
     if (gamepad.getRawButton(Constants.Right_Trigger_Button)) {
       System.out.println("Right trigger pressed");
       shooter.setRunning(true);

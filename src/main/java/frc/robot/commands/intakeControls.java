@@ -8,6 +8,9 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+
+import java.lang.invoke.ConstantCallSite;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -37,6 +40,37 @@ public class intakeControls extends CommandBase {
   public void execute() {
 
     boolean feedReady = shooter.getBallReadyToFeed();
+
+    // // Gamepad B button --> intake + vertical wheels out
+    // if (gp.getRawButton(Constants.B_Button)) {
+    //   System.out.println("B button");
+    //   intake.feedOut();
+    // } else {
+
+    //   // Gamepad D-pad down -> vertical wheels out
+    //   if (gp.getRawButton(Constants.D_Pad_Down)) {
+    //     System.out.println("D-pad down button");
+    //     intake.runIntakeWheelsOut(true);
+    //   }
+    //   // Gamepad right trigger -> vertical wheels in
+    //   else if (gp.getRawButton(Constants.Right_Trigger_Button)) {
+    //     System.out.println("Right trigger button");
+    //     intake.runIntakeWheelsIn(true);
+    //   } else {
+    //     intake.stopIntakeWheels();
+    //   }
+
+
+    //   // Gamepad right bumper button -> intake bar in
+    //   if (gp.getRawButton(Constants.Right_Bumper_Button)) {
+    //     // WORKING
+    //     System.out.println("Right bumper button");
+    //     intake.runIntakeBarIn(true);
+    //   } else {
+    //     intake.stopIntakeBar();
+    //   }
+
+    // }
 
     if (gp.getRawButton(Constants.Left_Bumper_Button)) { 
       intake.feedOut();
