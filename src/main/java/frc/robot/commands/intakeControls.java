@@ -41,64 +41,68 @@ public class intakeControls extends CommandBase {
 
     boolean feedReady = shooter.getBallReadyToFeed();
 
-    // // Gamepad B button --> intake + vertical wheels out
-    // if (gp.getRawButton(Constants.B_Button)) {
-    //   System.out.println("B button");
-    //   intake.feedOut();
-    // } else {
-
-    //   // Gamepad D-pad down -> vertical wheels out
-    //   if (gp.getRawButton(Constants.D_Pad_Down)) {
-    //     System.out.println("D-pad down button");
-    //     intake.runIntakeWheelsOut(true);
-    //   }
-    //   // Gamepad right trigger -> vertical wheels in
-    //   else if (gp.getRawButton(Constants.Right_Trigger_Button)) {
-    //     System.out.println("Right trigger button");
-    //     intake.runIntakeWheelsIn(true);
-    //   } else {
-    //     intake.stopIntakeWheels();
-    //   }
-
-
-    //   // Gamepad right bumper button -> intake bar in
-    //   if (gp.getRawButton(Constants.Right_Bumper_Button)) {
-    //     // WORKING
-    //     System.out.println("Right bumper button");
-    //     intake.runIntakeBarIn(true);
-    //   } else {
-    //     intake.stopIntakeBar();
-    //   }
-
-    // }
-
-    if (gp.getRawButton(Constants.Left_Bumper_Button)) { 
+    // Gamepad B button --> intake + vertical wheels out
+    if (gp.getRawButton(Constants.B_Button)) {
+      System.out.println("B button");
       intake.feedOut();
-    } else if (gp.getRawButton(Constants.Right_Bumper_Button)) {
-      if (feedReady){
-        intake.feedIn();
-      } else {
+    } else {
+
+      // Gamepad right trigger -> vertical wheels in
+      if (gp.getRawButton(Constants.Right_Trigger_Button)) {
+        System.out.println("Right trigger button");
+        intake.runIntakeWheelsIn(true);
+      }
+      // Stop vertical wheels if nothing
+      else {
+        intake.stopIntakeWheels();
+      }
+
+
+      // Gamepad right bumper button -> intake bar in
+      if (gp.getRawButton(Constants.Right_Bumper_Button)) {
+        // WORKING
+        System.out.println("Right bumper button");
         intake.runIntakeBarIn(true);
       }
-    } else {
-      intake.stopIntake();
+      // Gamepad D-pad down -> intake out
+      else if (gp.getRawButton(Constants.A_Button)) {
+        System.out.println("D-pad down button");
+        intake.runIntakeBarOut(true);
+      }
+      // Stop intake bar if nothing
+      else {
+        intake.stopIntakeBar();
+      }
+
     }
 
-    //toggle the solenoid 
-    if (gp.getRawButton(Constants.X_Button)) {
-      intake.toggleDeploy();
-    }
+    // if (gp.getRawButton(Constants.Left_Bumper_Button)) { 
+    //   intake.feedOut();
+    // } else if (gp.getRawButton(Constants.Right_Bumper_Button)) {
+    //   if (feedReady){
+    //     intake.feedIn();
+    //   } else {
+    //     intake.runIntakeBarIn(true);
+    //   }
+    // } else {
+    //   intake.stopIntake();
+    // }
 
-    //extra feed conntrols
-    if (gp.getRawButton(Constants.B_Button)) {
-      intake.runIntakeWheelsIn(true);
-      intake.runIntakeBarIn(true);
-    } else if(gp.getRawButton(Constants.A_Button)) {
-      intake.runIntakeWheelsOut(true);
-      intake.runIntakeBarOut(true);
-    } else {
-      intake.stopIntake();
-    }
+    // //toggle the solenoid 
+    // if (gp.getRawButton(Constants.X_Button)) {
+    //   intake.toggleDeploy();
+    // }
+
+    // //extra feed conntrols
+    // if (gp.getRawButton(Constants.B_Button)) {
+    //   intake.runIntakeWheelsIn(true);
+    //   intake.runIntakeBarIn(true);
+    // } else if(gp.getRawButton(Constants.A_Button)) {
+    //   intake.runIntakeWheelsOut(true);
+    //   intake.runIntakeBarOut(true);
+    // } else {
+    //   intake.stopIntake();
+    // }
 
   }
 

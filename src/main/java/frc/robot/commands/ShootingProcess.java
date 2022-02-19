@@ -35,46 +35,46 @@ public class ShootingProcess extends CommandBase {
   public void execute() {                           // what the fuck is this sensor for
     // boolean[] tofArray = {shooter.getBallReadyToFeed(),shooter.getBallLeaving()};
 
-    // // Gamepad left bumper button -> run shooter
-    // if (gamepad.getRawButton(Constants.Left_Bumper_Button)) {
-    //   // WORKING
-    //   shooter.setRunning(true);
-    //   shooter.getToSpeed();
-    //   if (shooter.atSpeed()) {
-    //     System.out.println("Ready to feed -> shoot");
-    //   }
-    // } else {
-    //   shooter.stopShooter();
-    //   shooter.setRunning(false);
-    // }
-    // // Gamepad left trigger -> run tower in
-    // if (gamepad.getRawButton(Constants.Left_Trigger_Button)) {
-    //   shooter.feed();
-    // } else {
-    //   shooter.stopFeeding();
-    // }
-
-
-    // // Shooter controls
-    if (gamepad.getRawButton(Constants.Right_Trigger_Button)) {
-      System.out.println("Right trigger pressed");
+    // Gamepad left bumper button -> run shooter
+    if (gamepad.getRawButton(Constants.Left_Bumper_Button)) {
+      // WORKING
       shooter.setRunning(true);
       shooter.getToSpeed();
       if (shooter.atSpeed()) {
-        System.out.println("Should be shooting now!");
-        shooter.feed();
-      } 
+        System.out.println("Ready to feed -> shoot");
+      }
     } else {
-      shooter.stop();
+      shooter.stopShooter();
       shooter.setRunning(false);
     }
-
-    if (!shooter.isRunning()) {
-      if (gamepad.getRawButton(Constants.Left_Bumper_Button) || gamepad.getRawButton(Constants.Left_Trigger_Button)) {
-        shooter.reverseFeed();
-      } 
+    // Gamepad left trigger -> run tower in
+    if (gamepad.getRawButton(Constants.Left_Trigger_Button)) {
+      shooter.feed();
+    } else {
+      shooter.stopFeeding();
     }
-    System.out.println("shooting process execute() code is running...");
+
+
+    // // Shooter controls
+    // if (gamepad.getRawButton(Constants.Right_Trigger_Button)) {
+    //   System.out.println("Right trigger pressed");
+    //   shooter.setRunning(true);
+    //   shooter.getToSpeed();
+    //   if (shooter.atSpeed()) {
+    //     System.out.println("Should be shooting now!");
+    //     shooter.feed();
+    //   } 
+    // } else {
+    //   shooter.stop();
+    //   shooter.setRunning(false);
+    // }
+
+    // if (!shooter.isRunning()) {
+    //   if (gamepad.getRawButton(Constants.Left_Bumper_Button) || gamepad.getRawButton(Constants.Left_Trigger_Button)) {
+    //     shooter.reverseFeed();
+    //   } 
+    // }
+    // System.out.println("shooting process execute() code is running...");
   }
 
   // Called once the command ends or is interrupted.
