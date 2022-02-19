@@ -216,7 +216,7 @@ public final class Constants {
    */
   public static final class ShooterConstants {
     // Shooter spinner motors
-    public static final int shooterFalcon1Port = 13; //changed from 8 in Phoenix tuner
+    public static final int shooterFalcon1Port = 13; //changed from 8 in Phoenix tuner - DO NOT USE PORT 8 BECAUSE IT IS NOT WORKING PROPERLY
     public static final int shooterFalcon2Port = 9;
     public static final int feedMotorPort = 10;
     // public static final int shooterAngleSolenoid = 1;
