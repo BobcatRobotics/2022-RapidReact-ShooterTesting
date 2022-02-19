@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
   private double waitTime = 0;
 
   // set to true to use Parallel Command Groups
-  private boolean commandGroupTest = false;
+  private boolean commandGroupTest = true;
   private ParallelCommandGroup commandGroup = new ParallelCommandGroup();
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
     // compressor = m_robotContainer.compressor;
     SmartDashboard.putNumber("Set Speed", 4800);
     tab.add("Shooter current RPM",0);
-    commandGroup.addCommands(intakeControls,drivetele,shootingProcess);
+    // commandGroup.addCommands(intakeControls,drivetele,shootingProcess);
   }
 
   /**
@@ -141,9 +141,10 @@ public class Robot extends TimedRobot {
     // parrallel group will run commands in parrallel duhhh
     // parallel race will run all commands at the same time but kill all of them when one finishes (race conditions)
     // parallel deadline will run all commands in parallel but will end them when a specific command gets executed
-    if(commandGroupTest) {
-      commandGroup.schedule();
-    } else {
+    // if(commandGroupTest) {
+    //   commandGroup.schedule();
+    // } else {
+      // drive controller
       drivetele.schedule();
       // shooter controller
       shootingProcess.schedule();
@@ -151,7 +152,7 @@ public class Robot extends TimedRobot {
       intakeControls.schedule();
       // climber controller
 
-    }
+    // }
 
   }
 
@@ -162,19 +163,20 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     CommandScheduler.getInstance().run();
-    // right = rightStick.getRawAxis(Joystick.AxisType.kY.value);
-    // left = leftStick.getRawAxis(Joystick.AxisType.kY.value);
-
-    // // If the value of the joysticks are too low just set it to zero
-    // if (Math.abs(right) <= driveThreshold) {
-    //     right = 0.0;
+    // if (gamepad.getRawButton(Constants.Left_Trigger_Button)) {
+    //   shooter.setRunning(true);
+    //   shooter.getToSpeed();
+    // } else {
+    //   shooter.stopShooter();
+    //   shooter.setRunning(false);
     // }
-
-    // if (Math.abs(left) <= driveThreshold) {
-    //     left = 0.0;
+    // if (gamepad.getRawButton(Constants.Right_Bumper_Button)) {
+    //   shooter.feed(true);
+    // } else if (gamepad.getRawButton(Constants.Right_Trigger_Button)){
+    //   shooter.reverseFeed();
+    // } else {
+    //   shooter.stop();
     // }
-
-    // drivetrain.drive(right, left);
 
     updateShuffleBoard();
   }
@@ -184,12 +186,13 @@ public class Robot extends TimedRobot {
     // System.out.println("SET SPEED IS " + speed);
     shooter.setSpeed(speed);
     SmartDashboard.putNumber("Current RPM", shooter.getLeftRPM());
+    // SmartDashboard.putNumber("Current RPM", shooter.getRightRPM());
     
-    SmartDashboard.putNumber("NavX heading cos", RobotContainer.navx.getRotation2d().getCos());
-    SmartDashboard.putNumber("NavX X Disp", RobotContainer.navx.getDisplacementX());
-    SmartDashboard.putNumber("NavX Y Disp", RobotContainer.navx.getDisplacementY());
-    SmartDashboard.putNumber("NavX Z Disp", RobotContainer.navx.getDisplacementZ());
-    SmartDashboard.putNumber("NavX angle", RobotContainer.navx.getAngle());
+    // SmartDashboard.putNumber("NavX heading cos", RobotContainer.navx.getRotation2d().getCos());
+    // SmartDashboard.putNumber("NavX X Disp", RobotContainer.navx.getDisplacementX());
+    // SmartDashboard.putNumber("NavX Y Disp", RobotContainer.navx.getDisplacementY());
+    // SmartDashboard.putNumber("NavX Z Disp", RobotContainer.navx.getDisplacementZ());
+    // SmartDashboard.putNumber("NavX angle", RobotContainer.navx.getAngle());
     SmartDashboard.putString("DriveTrain get pose", drivetrain.getPose().toString());
   }
   

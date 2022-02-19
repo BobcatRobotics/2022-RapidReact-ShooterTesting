@@ -54,7 +54,7 @@ public class Shooter extends SubsystemBase {
 
         // Set both falcon motor speeds equal to each other
         // shooterFalconRight.follow(shooterFalconLeft);
-        shooterFalconLeft.follow(shooterFalconRight);
+        // shooterFalconLeft.follow(shooterFalconRight);
 
         // Invert one motor because motors will be facing
         // each other, meaning that one will be rotating in
@@ -81,7 +81,7 @@ public class Shooter extends SubsystemBase {
         shooterFalconRight.config_kI(0,0.00002,0);
         shooterFalconRight.config_kD(0,0.0,0);
         shooterFalconRight.config_IntegralZone(0,3,0);
-
+        
         // TODO: Need to do any sensor/voltage/solenoid stuff?
 
         // Feeder stuff
