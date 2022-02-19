@@ -79,7 +79,7 @@ public final class Constants {
    
   public static final class ClimberConstants
   {
-    public static final int winchMotorPort = 8;
+    public static final int winchMotorPort = 42; // DONT MAKE THIS THE SAME AS SHOOTER PLS
     public static final int climberSolenoidPort = 2;
     public static final int winchSwitchPos = 0;
     }
@@ -216,7 +216,7 @@ public final class Constants {
    */
   public static final class ShooterConstants {
     // Shooter spinner motors
-    public static final int shooterFalcon1Port = 13; //changed from 8 in Phoenix tuner
+    public static final int shooterFalcon1Port = 8; //changed from 8 in Phoenix tuner
     public static final int shooterFalcon2Port = 9;
     public static final int feedMotorPort = 10;
     // public static final int shooterAngleSolenoid = 1;
