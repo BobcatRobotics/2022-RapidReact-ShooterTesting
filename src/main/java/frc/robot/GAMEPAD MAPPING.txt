@@ -1,0 +1,11 @@
+GAMEPAD MAPPING
+
+A:              Intake wheels out
+B:              Intake + vertical wheels out
+X:
+Y:
+D-Pad down:     
+Left bumper:    Run shooter
+Left trigger:   Run tower in
+Right bumper:   Intake bar in
+Right trigger:  Vertical wheels in
