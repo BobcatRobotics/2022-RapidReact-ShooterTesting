@@ -94,7 +94,7 @@ public class Shooter extends SubsystemBase {
     public void getToSpeed() {
         // shooterFalconLeft.set(-0.7);
         // shooterFalconLeft.set(ControlMode.Velocity, 4800);
-        System.out.println("getting to speed: " + (-(speed/targetRPM*encoderEPR)));
+      //  System.out.println("getting to speed: " + (-(speed/targetRPM*encoderEPR)));
         shooterFalconLeft.set(ControlMode.Velocity, (-speed/targetRPM*encoderEPR));
         shooterFalconRight.set(ControlMode.Velocity, (-speed/targetRPM*encoderEPR));
     }
