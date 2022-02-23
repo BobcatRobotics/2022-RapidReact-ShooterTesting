@@ -27,9 +27,7 @@ public class ClimberCommand extends CommandBase {
     */
     @Override
     public void execute() {
-        // if deployed(){
-            
-        // }
+        // D-pad left -> 
     }
 
     @Override

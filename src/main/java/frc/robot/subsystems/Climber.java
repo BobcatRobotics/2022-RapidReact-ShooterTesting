@@ -8,14 +8,16 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class Climber extends SubsystemBase
 {
     private WPI_TalonFX winchMotor;
     private DigitalInput winchSwitch;
+
+    private Solenoid climberSolenoid;
 
     private boolean deployed = false;
 
@@ -27,10 +29,16 @@ public class Climber extends SubsystemBase
         winchMotor.configFactoryDefault();
         winchMotor.setNeutralMode(NeutralMode.Brake);
         winchMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,0);
-        winchSwitch = new DigitalInput(Constants.ClimberConstants.winchSwitchPos);
+        winchSwitch = new DigitalInput(winchSwitchPos);
+
+        climberSolenoid = new Solenoid(PneumaticsModuleType.REVPH, climberSolenoidPort);
+        if (climberSolenoid.get()) {
+            System.out.println("Climber pistons have been extended to start with.");
+        }
     }
 
     public void deploy() {
+        climberSolenoid.set(true);
         deployed = true;
     }
 
@@ -43,6 +51,7 @@ public class Climber extends SubsystemBase
     }
 
     public void withdraw() {
+        climberSolenoid.set(false);
         deployed = false;
     }
 
@@ -50,7 +59,7 @@ public class Climber extends SubsystemBase
         winchMotor.stopMotor();
     }
 
-    public boolean getDeployed() {
+    public boolean isDeployed() {
         return deployed;
     }
 }

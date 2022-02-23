@@ -80,7 +80,7 @@ public final class Constants {
   public static final class ClimberConstants
   {
     public static final int winchMotorPort = 42; // DONT MAKE THIS THE SAME AS SHOOTER PLS
-    public static final int climberSolenoidPort = 2;
+    public static final int climberSolenoidPort = 20;
     public static final int winchSwitchPos = 0;
     }
 
@@ -156,8 +156,7 @@ public final class Constants {
     public static final int intakeBarPort = 6;
 
     // Intake solenoids
-    public static final int intakeLeftSolenoidPort = 20;
-    public static final int intakeRightSolenoidPort = 21;
+    public static final int intakeSolenoidPort = 21;
   }
 
   /**

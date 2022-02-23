@@ -25,8 +25,7 @@ public class Intake extends SubsystemBase {
     private WPI_TalonFX intakeBar;
 
     // Solenoids
-    private Solenoid intakeLeftSolenoid;
-    private Solenoid intakeRightSolenoid;
+    private Solenoid intakeSolenoid;
     private boolean isDeployed;
 
     // Target speeds - we can tune these values as needed
@@ -49,12 +48,8 @@ public class Intake extends SubsystemBase {
         intakeBar = new WPI_TalonFX(intakeBarPort);
 
         // Init solenoids
-        intakeLeftSolenoid = new Solenoid(PneumaticsModuleType.REVPH, intakeLeftSolenoidPort);
-        intakeRightSolenoid = new Solenoid(PneumaticsModuleType.REVPH, intakeRightSolenoidPort);
-        if (intakeLeftSolenoid.get() != intakeRightSolenoid.get()) {
-            RioLogger.debugLog("line: " + Thread.currentThread().getStackTrace()[1].getLineNumber() + ": " + "Intake solenoids are not in the same state at initialization!");
-        }
-        isDeployed = intakeLeftSolenoid.get();
+        intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, intakeSolenoidPort);
+        isDeployed = intakeSolenoid.get();
 
         // When in neutral mode for intake motors, allow for coasting
         intakeLeftWheel.setNeutralMode(NeutralMode.Coast);
@@ -157,8 +152,7 @@ public class Intake extends SubsystemBase {
      * @param state True if we want to deploy, false if we want to retract
      */
     public void deploy(boolean state) {
-        intakeLeftSolenoid.set(!state); // Deployed = piston retracted
-        intakeRightSolenoid.set(!state); // Deployed = piston retracted
+        intakeSolenoid.set(!state); // Deployed = piston retracted
         isDeployed = state;
     }
 

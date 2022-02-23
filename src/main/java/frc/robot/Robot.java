@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
   // commands and crap
   private intakeControls intakeControls = new intakeControls(RobotContainer.intake,  RobotContainer.gamepad, RobotContainer.shooter);
   private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
-  private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.gamepad);
+  private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.gamepad, RobotContainer.climber);
 
 
 
@@ -44,6 +44,7 @@ public class Robot extends TimedRobot {
   private Joystick gamepad;
   private Intake intake;
   private Shooter shooter;
+  private Climber climber;
   private Drivetrain drivetrain;
   private Compressor compressor;
   private boolean shoot = false;
