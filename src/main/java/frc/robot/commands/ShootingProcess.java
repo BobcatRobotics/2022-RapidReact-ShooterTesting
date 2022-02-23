@@ -35,6 +35,21 @@ public class ShootingProcess extends CommandBase {
   public void execute() {                           // what the fuck is this sensor for
     // boolean[] tofArray = {shooter.getBallReadyToFeed(),shooter.getBallLeaving()};
 
+    // Gamepad D-pad right -> shooter solenoid up
+    if (gamepad.getPOV() == Constants.D_Pad_Right) {
+      if (!shooter.isShooterSolenoidExtended()) {
+        System.out.println("D-pad right - shooter solenoid up");
+        shooter.setShooterSolenoidExtended(true);
+      }
+    }
+    // Gamepad D-pad left -> shooter solenoid down
+    else if (gamepad.getPOV() == Constants.D_Pad_Left) {
+      if (!shooter.isShooterSolenoidExtended()) {
+        System.out.println("D-pad left - shooter solenoid down");
+        shooter.setShooterSolenoidExtended(false);
+      }
+    }
+
     // Gamepad left bumper button -> run shooter
     if (gamepad.getRawButton(Constants.Left_Bumper_Button)) {
       // WORKING

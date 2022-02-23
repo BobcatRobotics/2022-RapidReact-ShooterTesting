@@ -156,8 +156,8 @@ public final class Constants {
     public static final int intakeBarPort = 6;
 
     // Intake solenoids
-    // public static final int intakeLeftSolenoidPort = 24;
-    // public static final int intakeRightSolenoidPort = 25;
+    public static final int intakeLeftSolenoidPort = 20;
+    public static final int intakeRightSolenoidPort = 21;
   }
 
   /**
@@ -216,11 +216,11 @@ public final class Constants {
    */
   public static final class ShooterConstants {
     // Shooter spinner motors
-
+    public static final int compressorModelPort = 1;
     public static final int shooterFalcon1Port = 8; //changed from 8 in Phoenix tuner
     public static final int shooterFalcon2Port = 9;
     public static final int feedMotorPort = 10;
-    // public static final int shooterAngleSolenoid = 1;
+    public static final int shooterAngleSolenoidPort = 22;
   }
 
   // /**

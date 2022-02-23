@@ -9,12 +9,15 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.playingwithfusion.TimeOfFlight;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
+    // Compressor
+    private Compressor compressorModel;
 
     // TalonFXs for shooter motors
     private final WPI_TalonFX shooterFalconLeft;
@@ -33,9 +36,13 @@ public class Shooter extends SubsystemBase {
     // private final TimeOfFlight ballPresentSensor;
     // private final TimeOfFlight ballLeavingSensor;
     private int ballCounter = 0;
-    // private final Solenoid pneumaticCylinder;
+    private final Solenoid shooterAngleSolenoid;
+    private boolean isShooterSolenoidExtended;
 
     public Shooter() {
+        // Init new compressor object from port in Constants
+        compressorModel = new Compressor(ShooterConstants.compressorModelPort, PneumaticsModuleType.REVPH);
+
         // Instantiate new talons
         shooterFalconLeft = new WPI_TalonFX(Constants.ShooterConstants.shooterFalcon1Port);
         shooterFalconRight = new WPI_TalonFX(Constants.ShooterConstants.shooterFalcon2Port);
@@ -87,7 +94,8 @@ public class Shooter extends SubsystemBase {
         // Feeder stuff
         // ballPresentSensor = new TimeOfFlight(FeederConstants.feederBallPresentId);
         // ballLeavingSensor = new TimeOfFlight(FeederConstants.feederBallLeavingId);
-        // pneumaticCylinder = new Solenoid(PneumaticsModuleType.REVPH, ShooterConstants.shooterAngleSolenoid);
+        shooterAngleSolenoid = new Solenoid(PneumaticsModuleType.REVPH, ShooterConstants.shooterAngleSolenoidPort);
+        isShooterSolenoidExtended = shooterAngleSolenoid.get();
     }
 
     // Start shooter motors
@@ -224,7 +232,29 @@ public class Shooter extends SubsystemBase {
         // pneumaticCylinder.set(true);
     }
 
-    public void setShooter(boolean position) {
-        // pneumaticCylinder.set(position);
+    public void setShooterSolenoidExtended(boolean status) {
+        shooterAngleSolenoid.set(status);
+        isShooterSolenoidExtended = status;
     }
+
+    public boolean isShooterSolenoidExtended() {
+        return isShooterSolenoidExtended;
+    }
+
+    // [PR] May not need stuff below because it is in intake - although we might have to call that particular toggleCompressor() method in Robot.java
+    // /**
+    //  * Toggles compressor and returns new state
+    //  */
+    // public boolean toggleCompressor() {
+    //     if (compressorModel.enabled()) compressorModel.disable();
+    //     else compressorModel.enableDigital();
+    //     return compressorModel.enabled();
+    // }
+
+    // /**
+    //  * Returns state of compressor
+    //  */
+    // public boolean compressorIsEnabled() {
+    //     return compressorModel.enabled();
+    // }
 }

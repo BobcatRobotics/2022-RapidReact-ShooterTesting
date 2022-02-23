@@ -5,11 +5,8 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-
-import java.lang.invoke.ConstantCallSite;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -41,7 +38,22 @@ public class intakeControls extends CommandBase {
 
     boolean feedReady = shooter.getBallReadyToFeed();
 
-    // Gamepad B button --> intake + vertical wheels out
+    // Gamepad Y button -> intake up
+    if (gp.getRawButton(Constants.Y_Button)) {
+      if (intake.isDeployed()) {
+        System.out.println("Y button - intake up");
+        intake.deploy(false);
+      }
+    }
+    // Gamepad X button -> intake down
+    else if (gp.getRawButton(Constants.X_Button)) {
+      if (!intake.isDeployed()) {
+        System.out.println("X button - intake down");
+        intake.deploy(true);
+      }
+    }
+
+    // Gamepad B button -> intake + vertical wheels out
     if (gp.getRawButton(Constants.B_Button)) {
       System.out.println("B button");
       intake.feedOut();
