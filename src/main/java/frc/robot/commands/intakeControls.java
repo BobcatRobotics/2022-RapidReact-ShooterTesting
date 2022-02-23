@@ -65,7 +65,7 @@ public class intakeControls extends CommandBase {
         intake.runIntakeBarIn(true);
       }
       // Gamepad D-pad down -> intake out
-      else if (gp.getRawButton(Constants.A_Button)) {
+      else if (gp.getPOV() == Constants.D_Pad_Down) {
         System.out.println("D-pad down button");
         intake.runIntakeBarOut(true);
       }
