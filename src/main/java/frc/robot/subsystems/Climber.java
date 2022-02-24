@@ -15,13 +15,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Climber extends SubsystemBase
 {
     private WPI_TalonFX winchMotor;
-    private DigitalInput winchSwitch;
+    private DigitalInput leftWinchSwitch;
+    private DigitalInput rightWinchSwitch;
 
     private Solenoid climberSolenoid;
 
     private boolean deployed = false;
+    private boolean isClimberMode = false;
 
     private double climbMotorSpeedLimiter = 1.0;
+
+    private double fullClimbingSpeed = 0.5;
+    private double slowClimbingSpeed = 0.1;
+
 
     public Climber() {
         winchMotor = new WPI_TalonFX(winchMotorPort);
@@ -29,12 +35,22 @@ public class Climber extends SubsystemBase
         winchMotor.configFactoryDefault();
         winchMotor.setNeutralMode(NeutralMode.Brake);
         winchMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,0);
-        winchSwitch = new DigitalInput(winchSwitchPos);
+        
+        leftWinchSwitch = new DigitalInput(leftWinchSwitchPort);
+        rightWinchSwitch = new DigitalInput(rightWinchSwitchPort);
 
         climberSolenoid = new Solenoid(PneumaticsModuleType.REVPH, climberSolenoidPort);
         if (climberSolenoid.get()) {
             System.out.println("Climber pistons have been extended to start with.");
         }
+    }
+
+    public void toggleSwitchToClimberMode() {
+        isClimberMode = !isClimberMode;
+    }
+
+    public boolean isClimberMode() {
+        return isClimberMode;
     }
 
     public void deploy() {
@@ -43,10 +59,21 @@ public class Climber extends SubsystemBase
     }
 
     public boolean switchTripped() {
-        return winchSwitch.get();
+        return leftWinchSwitch.get() || rightWinchSwitch.get();
     }
 
-    public void climb( Double climbSpeed) {
+    public void climb(boolean isUnwinding) {
+        // If limit switch has been hit, go slowly
+        if (switchTripped()) {
+            winchMotor.set(isUnwinding ? -slowClimbingSpeed : slowClimbingSpeed);
+        }
+        // Otherwise, go at normal speed
+        else {
+            winchMotor.set(isUnwinding ? -fullClimbingSpeed : fullClimbingSpeed);
+        }
+    }
+
+    public void climb(Double climbSpeed) {
         winchMotor.set(climbSpeed * climbMotorSpeedLimiter);
     }
 

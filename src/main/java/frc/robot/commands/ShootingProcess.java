@@ -39,14 +39,14 @@ public class ShootingProcess extends CommandBase {
     // boolean[] tofArray = {shooter.getBallReadyToFeed(),shooter.getBallLeaving()};
 
     // Gamepad D-pad right -> shooter solenoid up
-    if (gamepad.getPOV() == Constants.D_Pad_Right && !climber.isDeployed()) {
+    if (gamepad.getPOV() == Constants.D_Pad_Right && !climber.isClimberMode()) {
       if (!shooter.isShooterSolenoidExtended()) {
         System.out.println("D-pad right - shooter solenoid up");
         shooter.setShooterSolenoidExtended(true);
       }
     }
     // Gamepad D-pad left -> shooter solenoid down
-    else if (gamepad.getPOV() == Constants.D_Pad_Left && !climber.isDeployed()) {
+    else if (gamepad.getPOV() == Constants.D_Pad_Left && !climber.isClimberMode()) {
       if (!shooter.isShooterSolenoidExtended()) {
         System.out.println("D-pad left - shooter solenoid down");
         shooter.setShooterSolenoidExtended(false);

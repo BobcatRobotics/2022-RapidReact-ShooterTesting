@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
 public class ClimberCommand extends CommandBase {
@@ -27,7 +28,30 @@ public class ClimberCommand extends CommandBase {
     */
     @Override
     public void execute() {
-        // D-pad left -> 
+        // D-pad left -> winch motor rewind
+        if (gp.getPOV() == Constants.D_Pad_Left && climber.isClimberMode()) {
+            climber.climb(true);
+        }
+        // D-pad right -> winch motor unwind
+        else if (gp.getPOV() == Constants.D_Pad_Right && climber.isClimberMode()) {
+            climber.climb(false);
+        }
+        // Otherwise, stop moving motor
+        else {
+            climber.stop();
+        }
+        // X button -> climber solenoid withdraw
+        if (gp.getRawButton(Constants.X_Button) && climber.isClimberMode()) {
+            if (climber.isDeployed()) {
+                climber.withdraw();
+            }
+        }
+        // Y button -> climber solenoid deploy
+        if (gp.getRawButton(Constants.Y_Button) && climber.isClimberMode()) {
+            if (!climber.isDeployed()) {
+                climber.deploy();
+            }
+        }
     }
 
     @Override

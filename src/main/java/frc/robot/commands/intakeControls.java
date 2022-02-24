@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
@@ -16,12 +17,14 @@ public class intakeControls extends CommandBase {
 
   private Intake intake;
   private Shooter shooter;
+  private Climber climber;
   private Joystick gp;
 
-  public intakeControls(Intake in, Joystick gp, Shooter shoot) {
+  public intakeControls(Intake in, Joystick gp, Shooter shoot, Climber climber) {
     this.intake = in;
     this.gp = gp;
     this.shooter = shoot;
+    this.climber = climber;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.intake);
   }
@@ -39,14 +42,14 @@ public class intakeControls extends CommandBase {
     boolean feedReady = shooter.getBallReadyToFeed();
 
     // Gamepad Y button -> intake up
-    if (gp.getRawButton(Constants.Y_Button)) {
+    if (gp.getRawButton(Constants.Y_Button) && !climber.isClimberMode()) {
       if (intake.isDeployed()) {
         System.out.println("Y button - intake up");
         intake.deploy(false);
       }
     }
     // Gamepad X button -> intake down
-    else if (gp.getRawButton(Constants.X_Button)) {
+    else if (gp.getRawButton(Constants.X_Button) && !climber.isClimberMode()) {
       if (!intake.isDeployed()) {
         System.out.println("X button - intake down");
         intake.deploy(true);
