@@ -179,6 +179,9 @@ public class Robot extends TimedRobot {
     // } else {
     //   shooter.stop();
     // }
+    if(gamepad.getRawButtonReleased(Constants.A_Button)){
+       climber.toggleSwitchToClimberMode();   
+    }
 
     updateShuffleBoard();
   }
