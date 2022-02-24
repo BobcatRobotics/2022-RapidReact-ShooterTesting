@@ -30,11 +30,11 @@ public class ClimberCommand extends CommandBase {
     public void execute() {
         // D-pad left -> winch motor rewind
         if (gp.getPOV() == Constants.D_Pad_Left && climber.isClimberMode()) {
-            climber.climb(true);
+            climber.climb(false);
         }
         // D-pad right -> winch motor unwind
         else if (gp.getPOV() == Constants.D_Pad_Right && climber.isClimberMode()) {
-            climber.climb(false);
+            climber.climb(true);
         }
         // Otherwise, stop moving motor
         else {

@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -14,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase
 {
+    private Compressor compressorModel;
+    
     private WPI_TalonFX winchMotor;
     private DigitalInput leftWinchSwitch;
     private DigitalInput rightWinchSwitch;
@@ -30,6 +33,8 @@ public class Climber extends SubsystemBase
 
 
     public Climber() {
+        compressorModel = new Compressor(compressorModelPort, PneumaticsModuleType.REVPH);
+
         winchMotor = new WPI_TalonFX(winchMotorPort);
         
         winchMotor.configFactoryDefault();

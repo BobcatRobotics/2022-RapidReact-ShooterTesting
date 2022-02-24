@@ -83,7 +83,9 @@ public final class Constants {
     public static final int climberSolenoidPort = 20;
     public static final int leftWinchSwitchPort = 8;
     public static final int rightWinchSwitchPort = 9;
-    }
+
+    public static final int compressorModelPort = 1;
+  }
 
    /**
     * Constants for the drive train
