@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   private intakeControls intakeControls = new intakeControls(RobotContainer.intake,  RobotContainer.gamepad, RobotContainer.shooter);
   private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
   private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.gamepad, RobotContainer.climber);
-
+  private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
 
 
 
@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
     gamepad = m_robotContainer.gamepad;
     intake = m_robotContainer.intake;
     shooter = m_robotContainer.shooter;
-
+    climber = m_robotContainer.climber;
     // this.rightStick = RobotContainer.rightStick;
     // this.leftStick = RobotContainer.leftStick;
 
@@ -152,6 +152,7 @@ public class Robot extends TimedRobot {
       // intake controller
       intakeControls.schedule();
       // climber controller
+      climberCommand.schedule();
 
     // }
 

@@ -58,7 +58,6 @@ import frc.robot.Constants.BallCameraConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Climber;
 // import frc.robot.Constants.FeederConstants;
-// import frc.robot.subsystems.Climber;
 // import frc.robot.subsystems.ColorWheel;
 import frc.robot.subsystems.Drivetrain;
 // import frc.robot.subsystems.Feeder;
@@ -98,7 +97,7 @@ public class RobotContainer {
 
   //Gyro
   public static final NavxGyro navx = new NavxGyro(SPI.Port.kMXP);
-
+  
   //Color Wheel
   // public static final ColorWheel colorwheel = new ColorWheel();
   // public static final ColorWheel colorwheel = null;
