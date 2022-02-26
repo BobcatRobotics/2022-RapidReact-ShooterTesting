@@ -81,8 +81,8 @@ public final class Constants {
   {
     public static final int winchMotorPort = 42; // DONT MAKE THIS THE SAME AS SHOOTER PLS
     public static final int climberSolenoidPort = 2;
-    public static final int leftWinchSwitchPort = 8;
-    public static final int rightWinchSwitchPort = 9;
+    public static final int leftWinchSwitchPort = 0;
+    public static final int rightWinchSwitchPort = 1;
   }
 
    /**
