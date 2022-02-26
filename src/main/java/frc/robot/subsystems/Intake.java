@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.IntakeConstants.*;
+import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -25,8 +26,7 @@ public class Intake extends SubsystemBase {
     private WPI_TalonFX intakeBar;
 
     // Solenoids
-    private Solenoid intakeLeftSolenoid;
-    private Solenoid intakeRightSolenoid;
+    private Solenoid intakeSolenoid;
     private boolean isDeployed;
 
     // Target speeds - we can tune these values as needed
@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
      */
     public Intake() {
         // Init new compressor object from port in Constants
-        compressorModel = new Compressor(compressorModelPort, PneumaticsModuleType.CTREPCM);
+        compressorModel = new Compressor(compressorModelPort, PneumaticsModuleType.REVPH);
 
         // Init intake motors
         intakeLeftWheel = new WPI_VictorSPX(intakeLeftWheelPort);
@@ -49,12 +49,9 @@ public class Intake extends SubsystemBase {
         intakeBar = new WPI_TalonFX(intakeBarPort);
 
         // Init solenoids
-        // intakeLeftSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
-        // // intakeRightSolenoid = new Solenoid(PneumaticsModuleType.REVPH, intakeRightSolenoidPort);
-        // if (intakeLeftSolenoid.get() != intakeRightSolenoid.get()) {
-        //     RioLogger.debugLog("line: " + Thread.currentThread().getStackTrace()[1].getLineNumber() + ": " + "Intake solenoids are not in the same state at initialization!");
-        // }
-        // isDeployed = intakeLeftSolenoid.get();
+        intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, intakeSolenoidPort);
+        intakeSolenoid.set(false);
+        isDeployed = intakeSolenoid.get();
 
         // When in neutral mode for intake motors, allow for coasting
         intakeLeftWheel.setNeutralMode(NeutralMode.Coast);
@@ -153,25 +150,11 @@ public class Intake extends SubsystemBase {
     }
 
     /**
-     * Toggles the intake's deployed status and returns the resulting state of the solenoids.
-     */
-    public boolean toggleDeploy() {
-        // intakeLeftSolenoid.set(!intakeLeftSolenoid.get());
-        // intakeRightSolenoid.set(!intakeRightSolenoid.get());
-        // isDeployed = intakeLeftSolenoid.get();
-        // if (isDeployed != intakeRightSolenoid.get()) {
-        //     RioLogger.debugLog("line: " + Thread.currentThread().getStackTrace()[1].getLineNumber() + ": " + "Intake solenoids are not in the same state after toggling!");
-        // }
-        return isDeployed;
-    }
-
-    /**
      * Deploys or retracts intake solenoids based on a provided desired state
      * @param state True if we want to deploy, false if we want to retract
      */
     public void deploy(boolean state) {
-        // intakeLeftSolenoid.set(state);
-        // intakeRightSolenoid.set(state);
+        intakeSolenoid.set(!state); // Deployed = intake up
         isDeployed = state;
     }
 

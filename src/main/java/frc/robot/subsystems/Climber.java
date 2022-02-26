@@ -7,42 +7,82 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
-public class Climber extends SubsystemBase
-{
+public class Climber extends SubsystemBase {
+    // private Compressor compressorModel;
+
     private WPI_TalonFX winchMotor;
-    private DigitalInput winchSwitch;
+    private DigitalInput leftWinchSwitch;
+    private DigitalInput rightWinchSwitch;
+
+    private Solenoid climberSolenoid;
 
     private boolean deployed = false;
+    private boolean isClimberMode = false;
 
     private double climbMotorSpeedLimiter = 1.0;
 
+    private double fullClimbingSpeed = 0.5;
+    private double slowClimbingSpeed = 0.1;
+
     public Climber() {
+        // compressorModel = new Compressor(compressorModelPort,
+        // PneumaticsModuleType.REVPH);
+
         winchMotor = new WPI_TalonFX(winchMotorPort);
-        
+
         winchMotor.configFactoryDefault();
         winchMotor.setNeutralMode(NeutralMode.Brake);
-        winchMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,0);
-        winchSwitch = new DigitalInput(Constants.ClimberConstants.winchSwitchPos);
+        winchMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
+
+        leftWinchSwitch = new DigitalInput(leftWinchSwitchPort);
+        rightWinchSwitch = new DigitalInput(rightWinchSwitchPort);
+
+        climberSolenoid = new Solenoid(PneumaticsModuleType.REVPH, climberSolenoidPort);
+        if (climberSolenoid.get()) {
+            System.out.println("Climber pistons have been extended to start with.");
+        }
+    }
+
+    public void toggleSwitchToClimberMode() {
+        isClimberMode = !isClimberMode;
+    }
+
+    public boolean isClimberMode() {
+        return isClimberMode;
     }
 
     public void deploy() {
+        climberSolenoid.set(true);
         deployed = true;
     }
 
     public boolean switchTripped() {
-        return winchSwitch.get();
+        return leftWinchSwitch.get() || rightWinchSwitch.get();
     }
 
-    public void climb( Double climbSpeed) {
+    public void climb(boolean isUnwinding) {
+        // If limit switch has been hit, go slowly
+        if (switchTripped()) {
+            winchMotor.set(isUnwinding ? -slowClimbingSpeed : slowClimbingSpeed);
+        }
+        // Otherwise, go at normal speed
+        else {
+            winchMotor.set(isUnwinding ? -fullClimbingSpeed : fullClimbingSpeed);
+        }
+    }
+
+    public void climb(Double climbSpeed) {
         winchMotor.set(climbSpeed * climbMotorSpeedLimiter);
     }
 
     public void withdraw() {
+        climberSolenoid.set(false);
         deployed = false;
     }
 
@@ -50,7 +90,7 @@ public class Climber extends SubsystemBase
         winchMotor.stopMotor();
     }
 
-    public boolean getDeployed() {
+    public boolean isDeployed() {
         return deployed;
     }
 }

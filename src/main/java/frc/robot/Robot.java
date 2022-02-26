@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DriveTele;
 import frc.robot.commands.ShootingProcess;
 import frc.robot.commands.intakeControls;
@@ -32,10 +33,10 @@ import frc.robot.utils.*;
  */
 public class Robot extends TimedRobot {
   // commands and crap
-  private intakeControls intakeControls = new intakeControls(RobotContainer.intake,  RobotContainer.gamepad, RobotContainer.shooter);
+  private intakeControls intakeControls = new intakeControls(RobotContainer.intake,  RobotContainer.gamepad, RobotContainer.shooter, RobotContainer.climber);
   private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
-  private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.gamepad);
-
+  private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.gamepad, RobotContainer.climber);
+  private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
 
 
 
@@ -44,6 +45,7 @@ public class Robot extends TimedRobot {
   private Joystick gamepad;
   private Intake intake;
   private Shooter shooter;
+  private Climber climber;
   private Drivetrain drivetrain;
   private Compressor compressor;
   private boolean shoot = false;
@@ -71,7 +73,7 @@ public class Robot extends TimedRobot {
     gamepad = m_robotContainer.gamepad;
     intake = m_robotContainer.intake;
     shooter = m_robotContainer.shooter;
-
+    climber = m_robotContainer.climber;
     // this.rightStick = RobotContainer.rightStick;
     // this.leftStick = RobotContainer.leftStick;
 
@@ -100,11 +102,14 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+
+  }
 
   @Override
   public void disabledPeriodic() {
     intake.stopIntake();
+    // intake.deploy(false);
     shooter.stopShooter();
   }
 
@@ -151,6 +156,7 @@ public class Robot extends TimedRobot {
       // intake controller
       intakeControls.schedule();
       // climber controller
+      climberCommand.schedule();
 
     // }
 
@@ -177,6 +183,9 @@ public class Robot extends TimedRobot {
     // } else {
     //   shooter.stop();
     // }
+    if(gamepad.getRawButtonReleased(Constants.A_Button)){
+       climber.toggleSwitchToClimberMode();   
+    }
 
     updateShuffleBoard();
   }

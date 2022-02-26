@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -13,13 +14,15 @@ public class ShootingProcess extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Shooter shooter;
   private final Joystick gamepad;
+  private final Climber climber;
 
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public ShootingProcess(Shooter shooter, Joystick gamepad) {
+  public ShootingProcess(Shooter shooter, Joystick gamepad, Climber climber) {
     this.shooter = shooter;
     this.gamepad = gamepad;
+    this.climber = climber;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
@@ -34,6 +37,21 @@ public class ShootingProcess extends CommandBase {
   @Override
   public void execute() {                           // what the fuck is this sensor for
     // boolean[] tofArray = {shooter.getBallReadyToFeed(),shooter.getBallLeaving()};
+
+    // Gamepad D-pad right -> shooter solenoid up
+    if (gamepad.getPOV() == Constants.D_Pad_Right && !climber.isClimberMode()) {
+      if (!shooter.isShooterSolenoidExtended()) {
+        System.out.println("D-pad right - shooter solenoid up");
+        shooter.setShooterSolenoidExtended(true);
+      }
+    }
+    // Gamepad D-pad left -> shooter solenoid down
+    else if (gamepad.getPOV() == Constants.D_Pad_Left && !climber.isClimberMode()) {
+      if (shooter.isShooterSolenoidExtended()) {
+        System.out.println("D-pad left - shooter solenoid down");
+        shooter.setShooterSolenoidExtended(false);
+      }
+    }
 
     // Gamepad left bumper button -> run shooter
     if (gamepad.getRawButton(Constants.Left_Bumper_Button)) {

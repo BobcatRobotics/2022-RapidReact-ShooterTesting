@@ -5,11 +5,9 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-
-import java.lang.invoke.ConstantCallSite;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -19,12 +17,14 @@ public class intakeControls extends CommandBase {
 
   private Intake intake;
   private Shooter shooter;
+  private Climber climber;
   private Joystick gp;
 
-  public intakeControls(Intake in, Joystick gp, Shooter shoot) {
+  public intakeControls(Intake in, Joystick gp, Shooter shoot, Climber climber) {
     this.intake = in;
     this.gp = gp;
     this.shooter = shoot;
+    this.climber = climber;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.intake);
   }
@@ -41,7 +41,22 @@ public class intakeControls extends CommandBase {
 
     boolean feedReady = shooter.getBallReadyToFeed();
 
-    // Gamepad B button --> intake + vertical wheels out
+    // Gamepad X button -> intake up
+    if (gp.getRawButton(Constants.X_Button) && !climber.isClimberMode()) {
+      if (intake.isDeployed()) {
+        System.out.println("X button - intake up");
+        intake.deploy(false);
+      }
+    }
+    // Gamepad Y button -> intake down
+    else if (gp.getRawButton(Constants.Y_Button) && !climber.isClimberMode()) {
+      if (!intake.isDeployed()) {
+        System.out.println("Y button - intake down");
+        intake.deploy(true);
+      }
+    }
+
+    // Gamepad B button -> intake + vertical wheels out
     if (gp.getRawButton(Constants.B_Button)) {
       System.out.println("B button");
       intake.feedOut();
@@ -65,7 +80,7 @@ public class intakeControls extends CommandBase {
         intake.runIntakeBarIn(true);
       }
       // Gamepad D-pad down -> intake out
-      else if (gp.getRawButton(Constants.A_Button)) {
+      else if (gp.getPOV() == Constants.D_Pad_Down) {
         System.out.println("D-pad down button");
         intake.runIntakeBarOut(true);
       }
@@ -109,7 +124,7 @@ public class intakeControls extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    // intake.deploy(false);
   }
 
   // Returns true when the command should end.

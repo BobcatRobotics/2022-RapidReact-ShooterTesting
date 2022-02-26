@@ -56,9 +56,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants.BallCameraConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Climber;
 // import frc.robot.Constants.FeederConstants;
-// import frc.robot.subsystems.Climber;
 // import frc.robot.subsystems.ColorWheel;
 import frc.robot.subsystems.Drivetrain;
 // import frc.robot.subsystems.Feeder;
@@ -79,7 +79,7 @@ public class RobotContainer {
   public static final Joystick gamepad = new Joystick(gamepadPort);
 
   // Compressor
-  public static final Compressor compressor = new Compressor(IntakeConstants.compressorModelPort, PneumaticsModuleType.REVPH);
+  // public static final Compressor compressor = new Compressor(Constants.compressorModelPort, PneumaticsModuleType.REVPH);
 
   // Drivetrain
   public static final Drivetrain drivetrain = new Drivetrain();
@@ -98,7 +98,7 @@ public class RobotContainer {
 
   //Gyro
   public static final NavxGyro navx = new NavxGyro(SPI.Port.kMXP);
-
+  
   //Color Wheel
   // public static final ColorWheel colorwheel = new ColorWheel();
   // public static final ColorWheel colorwheel = null;
