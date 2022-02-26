@@ -95,6 +95,7 @@ public class Shooter extends SubsystemBase {
         // ballPresentSensor = new TimeOfFlight(FeederConstants.feederBallPresentId);
         // ballLeavingSensor = new TimeOfFlight(FeederConstants.feederBallLeavingId);
         shooterAngleSolenoid = new Solenoid(PneumaticsModuleType.REVPH, ShooterConstants.shooterAngleSolenoidPort);
+        shooterAngleSolenoid.set(false);
         isShooterSolenoidExtended = shooterAngleSolenoid.get();
     }
 
@@ -159,14 +160,14 @@ public class Shooter extends SubsystemBase {
 
     public void feed(boolean fullSpeed) {
         if (fullSpeed) {
-            feedMotor.set(FeederConstants.speedLimiter);
+            feedMotor.set(-FeederConstants.speedLimiter);
         } else {
-            feedMotor.set(FeederConstants.speedLimiterSlow);
+            feedMotor.set(-FeederConstants.speedLimiterSlow);
         }
     }
 
     public void reverseFeed() {
-        feedMotor.set(-FeederConstants.speedLimiter);
+        feedMotor.set(FeederConstants.speedLimiter);
     }
 
     public void stopFeeding() {

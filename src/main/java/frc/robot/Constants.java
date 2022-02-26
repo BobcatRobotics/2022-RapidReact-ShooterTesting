@@ -80,11 +80,9 @@ public final class Constants {
   public static final class ClimberConstants
   {
     public static final int winchMotorPort = 42; // DONT MAKE THIS THE SAME AS SHOOTER PLS
-    public static final int climberSolenoidPort = 20;
+    public static final int climberSolenoidPort = 2;
     public static final int leftWinchSwitchPort = 8;
     public static final int rightWinchSwitchPort = 9;
-
-    public static final int compressorModelPort = 1;
   }
 
    /**
@@ -151,7 +149,7 @@ public final class Constants {
 
     // Compressor config
     // TODO: change to the correct value
-    public static final int compressorModelPort = 1;
+    // public static final int compressorModelPort = 1;
 
     // Intake motors
     public static final int intakeLeftWheelPort = 7;
@@ -159,12 +157,17 @@ public final class Constants {
     public static final int intakeBarPort = 6;
 
     // Intake solenoids
-    public static final int intakeSolenoidPort = 21;
+    public static final int intakeSolenoidPort = 0;
   }
 
   /**
    * Constants for the input device ports
    */
+  
+  
+  public static final int compressorModelPort = 1;
+
+
   public static final class RobotContainerConstants {
     // Sticks
     public static final int leftStickPort = 0;
@@ -182,7 +185,7 @@ public final class Constants {
     public static final int povLeft = 270;
     // public static final int povUpperLeft = 315;
   }
-
+  
   /**
    * Constants for path finding and trajectories
    */
@@ -212,17 +215,16 @@ public final class Constants {
     public static final int pointy = 0;
     public static final int rotation = 0;
   }
-
+  
   /**
    * Constants for the shooter subsystem
    */
   public static final class ShooterConstants {
     // Shooter spinner motors
-    public static final int compressorModelPort = 1;
     public static final int shooterFalcon1Port = 8; //changed from 8 in Phoenix tuner
     public static final int shooterFalcon2Port = 9;
     public static final int feedMotorPort = 10;
-    public static final int shooterAngleSolenoidPort = 22;
+    public static final int shooterAngleSolenoidPort = 1;
   }
 
   // /**

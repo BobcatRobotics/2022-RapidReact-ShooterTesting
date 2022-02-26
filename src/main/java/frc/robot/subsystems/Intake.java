@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.IntakeConstants.*;
+import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -49,6 +50,7 @@ public class Intake extends SubsystemBase {
 
         // Init solenoids
         intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, intakeSolenoidPort);
+        intakeSolenoid.set(false);
         isDeployed = intakeSolenoid.get();
 
         // When in neutral mode for intake motors, allow for coasting
@@ -152,7 +154,7 @@ public class Intake extends SubsystemBase {
      * @param state True if we want to deploy, false if we want to retract
      */
     public void deploy(boolean state) {
-        intakeSolenoid.set(!state); // Deployed = piston retracted
+        intakeSolenoid.set(!state); // Deployed = intake up
         isDeployed = state;
     }
 

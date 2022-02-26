@@ -42,16 +42,16 @@ public class intakeControls extends CommandBase {
     boolean feedReady = shooter.getBallReadyToFeed();
 
     // Gamepad Y button -> intake up
-    if (gp.getRawButton(Constants.Y_Button) && !climber.isClimberMode()) {
+    if (gp.getRawButton(Constants.X_Button) && !climber.isClimberMode()) {
       if (intake.isDeployed()) {
-        System.out.println("Y button - intake up");
+        System.out.println("X button - intake up");
         intake.deploy(false);
       }
     }
     // Gamepad X button -> intake down
-    else if (gp.getRawButton(Constants.X_Button) && !climber.isClimberMode()) {
+    else if (gp.getRawButton(Constants.Y_Button) && !climber.isClimberMode()) {
       if (!intake.isDeployed()) {
-        System.out.println("X button - intake down");
+        System.out.println("Y button - intake down");
         intake.deploy(true);
       }
     }
@@ -124,7 +124,7 @@ public class intakeControls extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    // intake.deploy(false);
   }
 
   // Returns true when the command should end.

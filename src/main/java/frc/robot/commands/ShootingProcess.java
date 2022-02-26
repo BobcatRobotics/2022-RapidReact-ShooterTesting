@@ -47,7 +47,7 @@ public class ShootingProcess extends CommandBase {
     }
     // Gamepad D-pad left -> shooter solenoid down
     else if (gamepad.getPOV() == Constants.D_Pad_Left && !climber.isClimberMode()) {
-      if (!shooter.isShooterSolenoidExtended()) {
+      if (shooter.isShooterSolenoidExtended()) {
         System.out.println("D-pad left - shooter solenoid down");
         shooter.setShooterSolenoidExtended(false);
       }

@@ -2,11 +2,11 @@ GAMEPAD MAPPING
 
 A:              Climber toggle
 B:              Intake + vertical wheels out
-X:              Intake down / Climber solenoid off
-Y:              Intake up / Climber solenoid on
+X:              Intake solenoid on / Climber solenoid off
+Y:              Intake solenoid off / Climber solenoid on
+D-Pad right:    Shooter solenoid on / Climber winch unwind
+D-Pad left:     Shooter solenoid off
 D-Pad down:     Intake wheels out / Climber winch rewind
-D-Pad right:    Shooter solenoid up / Climber winch unwind
-D-Pad left:     Shooter solenoid down
 Left bumper:    Run shooter
 Left trigger:   Run tower in
 Right bumper:   Intake bar in
