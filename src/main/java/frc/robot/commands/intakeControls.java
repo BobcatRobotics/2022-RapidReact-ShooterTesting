@@ -41,14 +41,14 @@ public class intakeControls extends CommandBase {
 
     boolean feedReady = shooter.getBallReadyToFeed();
 
-    // Gamepad Y button -> intake up
+    // Gamepad X button -> intake up
     if (gp.getRawButton(Constants.X_Button) && !climber.isClimberMode()) {
       if (intake.isDeployed()) {
         System.out.println("X button - intake up");
         intake.deploy(false);
       }
     }
-    // Gamepad X button -> intake down
+    // Gamepad Y button -> intake down
     else if (gp.getRawButton(Constants.Y_Button) && !climber.isClimberMode()) {
       if (!intake.isDeployed()) {
         System.out.println("Y button - intake down");
