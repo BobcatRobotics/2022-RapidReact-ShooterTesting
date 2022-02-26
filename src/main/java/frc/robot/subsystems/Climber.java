@@ -13,10 +13,9 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Climber extends SubsystemBase
-{
-    private Compressor compressorModel;
-    
+public class Climber extends SubsystemBase {
+    // private Compressor compressorModel;
+
     private WPI_TalonFX winchMotor;
     private DigitalInput leftWinchSwitch;
     private DigitalInput rightWinchSwitch;
@@ -31,16 +30,16 @@ public class Climber extends SubsystemBase
     private double fullClimbingSpeed = 0.5;
     private double slowClimbingSpeed = 0.1;
 
-
     public Climber() {
-        compressorModel = new Compressor(compressorModelPort, PneumaticsModuleType.REVPH);
+        // compressorModel = new Compressor(compressorModelPort,
+        // PneumaticsModuleType.REVPH);
 
         winchMotor = new WPI_TalonFX(winchMotorPort);
-        
+
         winchMotor.configFactoryDefault();
         winchMotor.setNeutralMode(NeutralMode.Brake);
-        winchMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,0);
-        
+        winchMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
+
         leftWinchSwitch = new DigitalInput(leftWinchSwitchPort);
         rightWinchSwitch = new DigitalInput(rightWinchSwitchPort);
 

@@ -17,7 +17,7 @@ import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
     // Compressor
-    private Compressor compressorModel;
+    // private Compressor compressorModel;
 
     // TalonFXs for shooter motors
     private final WPI_TalonFX shooterFalconLeft;
@@ -41,7 +41,8 @@ public class Shooter extends SubsystemBase {
 
     public Shooter() {
         // Init new compressor object from port in Constants
-        compressorModel = new Compressor(ShooterConstants.compressorModelPort, PneumaticsModuleType.REVPH);
+        // compressorModel = new Compressor(ShooterConstants.compressorModelPort,
+        // PneumaticsModuleType.REVPH);
 
         // Instantiate new talons
         shooterFalconLeft = new WPI_TalonFX(Constants.ShooterConstants.shooterFalcon1Port);
@@ -52,7 +53,6 @@ public class Shooter extends SubsystemBase {
         shooterFalconLeft.configFactoryDefault();
         shooterFalconRight.configFactoryDefault();
         feedMotor.configFactoryDefault();
-
 
         // In neutral, set motors to coast
         shooterFalconLeft.setNeutralMode(NeutralMode.Coast);
@@ -70,25 +70,25 @@ public class Shooter extends SubsystemBase {
         shooterFalconRight.setInverted(false);
 
         // setup sensors
-        shooterFalconLeft.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,0);
-        shooterFalconLeft.setSelectedSensorPosition(0,0,0);
+        shooterFalconLeft.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
+        shooterFalconLeft.setSelectedSensorPosition(0, 0, 0);
         shooterFalconLeft.setSensorPhase(false);
-        shooterFalconRight.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,0);
-        shooterFalconRight.setSelectedSensorPosition(0,0,0);
+        shooterFalconRight.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
+        shooterFalconRight.setSelectedSensorPosition(0, 0, 0);
         shooterFalconRight.setSensorPhase(false);
 
-        //setup pid values
-        shooterFalconLeft.config_kF(0,0.047,0);
-        shooterFalconLeft.config_kP(0,0.0015,0);
-        shooterFalconLeft.config_kI(0,0.00002,0);
-        shooterFalconLeft.config_kD(0,0.0,0);
-        shooterFalconLeft.config_IntegralZone(0,3,0);
-        shooterFalconRight.config_kF(0,0.047,0);
-        shooterFalconRight.config_kP(0,0.0015,0);
-        shooterFalconRight.config_kI(0,0.00002,0);
-        shooterFalconRight.config_kD(0,0.0,0);
-        shooterFalconRight.config_IntegralZone(0,3,0);
-        
+        // setup pid values
+        shooterFalconLeft.config_kF(0, 0.047, 0);
+        shooterFalconLeft.config_kP(0, 0.0015, 0);
+        shooterFalconLeft.config_kI(0, 0.00002, 0);
+        shooterFalconLeft.config_kD(0, 0.0, 0);
+        shooterFalconLeft.config_IntegralZone(0, 3, 0);
+        shooterFalconRight.config_kF(0, 0.047, 0);
+        shooterFalconRight.config_kP(0, 0.0015, 0);
+        shooterFalconRight.config_kI(0, 0.00002, 0);
+        shooterFalconRight.config_kD(0, 0.0, 0);
+        shooterFalconRight.config_IntegralZone(0, 3, 0);
+
         // TODO: Need to do any sensor/voltage/solenoid stuff?
 
         // Feeder stuff
@@ -102,9 +102,9 @@ public class Shooter extends SubsystemBase {
     public void getToSpeed() {
         // shooterFalconLeft.set(-0.7);
         // shooterFalconLeft.set(ControlMode.Velocity, 4800);
-      //  System.out.println("getting to speed: " + (-(speed/targetRPM*encoderEPR)));
-        shooterFalconLeft.set(ControlMode.Velocity, (-speed/targetRPM*encoderEPR));
-        shooterFalconRight.set(ControlMode.Velocity, (-speed/targetRPM*encoderEPR));
+        // System.out.println("getting to speed: " + (-(speed/targetRPM*encoderEPR)));
+        shooterFalconLeft.set(ControlMode.Velocity, (-speed / targetRPM * encoderEPR));
+        shooterFalconRight.set(ControlMode.Velocity, (-speed / targetRPM * encoderEPR));
     }
 
     public void stop() {
@@ -122,7 +122,7 @@ public class Shooter extends SubsystemBase {
     public double getRightRPM() {
         return shooterFalconRight.getSelectedSensorVelocity() * targetRPM / encoderEPR;
     }
-    
+
     // Get left RPM
     public double getLeftRPM() {
         return shooterFalconLeft.getSelectedSensorVelocity() * targetRPM / encoderEPR;
@@ -197,11 +197,11 @@ public class Shooter extends SubsystemBase {
     public boolean getBallReadyToFeed() {
         return false;
         // if(ballPresentSensor == null)
-        //     return false;
+        // return false;
         // double range = ballPresentSensor.getRange();
         // boolean ballPresent = false;
         // if (range <= FeederConstants.feederBallPresentThreshold) {
-        //     ballPresent = true;
+        // ballPresent = true;
         // }
         // return ballPresent;
     }
@@ -209,12 +209,12 @@ public class Shooter extends SubsystemBase {
     public boolean getBallLeaving() {
         return false;
         // if (ballLeavingSensor == null) {
-        //     return false;
+        // return false;
         // }
         // double range = ballLeavingSensor.getRange();
         // boolean ballLeaving = false;
         // if (range <= FeederConstants.feederBallLeavingThreshold) {
-        //     ballLeaving = true;
+        // ballLeaving = true;
         // }
         // return ballLeaving;
     }
@@ -241,20 +241,21 @@ public class Shooter extends SubsystemBase {
         return isShooterSolenoidExtended;
     }
 
-    // [PR] May not need stuff below because it is in intake - although we might have to call that particular toggleCompressor() method in Robot.java
+    // [PR] May not need stuff below because it is in intake - although we might
+    // have to call that particular toggleCompressor() method in Robot.java
     // /**
-    //  * Toggles compressor and returns new state
-    //  */
+    // * Toggles compressor and returns new state
+    // */
     // public boolean toggleCompressor() {
-    //     if (compressorModel.enabled()) compressorModel.disable();
-    //     else compressorModel.enableDigital();
-    //     return compressorModel.enabled();
+    // if (compressorModel.enabled()) compressorModel.disable();
+    // else compressorModel.enableDigital();
+    // return compressorModel.enabled();
     // }
 
     // /**
-    //  * Returns state of compressor
-    //  */
+    // * Returns state of compressor
+    // */
     // public boolean compressorIsEnabled() {
-    //     return compressorModel.enabled();
+    // return compressorModel.enabled();
     // }
 }
