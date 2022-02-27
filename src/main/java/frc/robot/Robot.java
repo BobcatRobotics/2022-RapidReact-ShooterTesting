@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
 
     drivetrain = m_robotContainer.drivetrain;
     // compressor = m_robotContainer.compressor;
-    SmartDashboard.putNumber("Set Speed", 4800);
+    SmartDashboard.putNumber("Set Speed", 4400);
     tab.add("Shooter current RPM",0);
     // commandGroup.addCommands(intakeControls,drivetele,shootingProcess);
   }
@@ -109,6 +109,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     intake.stopIntake();
+    drivetrain.coast();
     // intake.deploy(false);
     shooter.stopShooter();
   }
@@ -116,17 +117,20 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.deadAutoOne();
 
     // schedule the autonomous command (example)
-    // if (m_autonomousCommand != null) {
-    //   m_autonomousCommand.schedule();
-    // }
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    
+    updateShuffleBoard();
+  }
 
   @Override
   public void teleopInit() {

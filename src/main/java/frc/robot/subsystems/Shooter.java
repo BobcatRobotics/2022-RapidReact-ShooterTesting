@@ -25,12 +25,12 @@ public class Shooter extends SubsystemBase {
     private final WPI_TalonFX feedMotor;
 
     private double speed = 4800.0;
-    private final double targetSpeed = 4800.0;
+    private final double targetSpeed = 3000.0;
     private boolean isRunning = false;
 
     private double targetRPM = 600.0;
     private double encoderEPR = 2048.0;
-    private final double rpmThreshold = 800.0;
+    private final double rpmThreshold = 500.0;
 
     // Feeder Motor & Sensors & Other ****
     // private final TimeOfFlight ballPresentSensor;
@@ -141,7 +141,7 @@ public class Shooter extends SubsystemBase {
 
     // Check if motor is at speed
     public boolean atSpeed() {
-        return ((getRightRPM() >= (speed - rpmThreshold)) || (getLeftRPM() >= (speed - rpmThreshold)));
+        return ((Math.abs(getRightRPM()) >= (speed - rpmThreshold)) || (getLeftRPM() >= (speed - rpmThreshold)));
     }
 
     // Check if shooter is running
