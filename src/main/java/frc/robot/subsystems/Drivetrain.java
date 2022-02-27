@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.DrivetrainConstants.GYRO_REVERSED;
 import static frc.robot.Constants.DrivetrainConstants.INVERT_MOTOR;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -19,6 +20,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -52,7 +54,7 @@ public class Drivetrain extends SubsystemBase {
     // motor properties
     private double rightPower = 0.0;
     private double leftPower = 0.0;
-
+    private double wheelCircumferenceInches = 4 *Math.PI;
     private boolean invertRight = false; // Whether or not to invert the right motor
     private boolean invertLeft = true; // Whether or not to invert the left motor
     private double voltageRegScaleFactor = 1.0; // TODO: Use this to adjust motor speed
@@ -111,6 +113,15 @@ public class Drivetrain extends SubsystemBase {
      */
     public double getLeftPower() {
         return leftPower;
+    }
+
+    public void coast() {
+        ltMotor.setNeutralMode(NeutralMode.Coast);
+        lmMotor.setNeutralMode(NeutralMode.Coast);
+        lbMotor.setNeutralMode(NeutralMode.Coast);
+        rtMotor.setNeutralMode(NeutralMode.Coast);
+        rmMotor.setNeutralMode(NeutralMode.Coast);
+        rbMotor.setNeutralMode(NeutralMode.Coast);
     }
 
     /**
@@ -202,6 +213,12 @@ public class Drivetrain extends SubsystemBase {
         lmMotor.set(leftP);
         lbMotor.set(leftP);
     }
+
+
+    // public void driveSpeed(double speed) {
+    //     double test = (ltMotor.getSelectedSensorVelocity() * Units.inchesToMeters(wheelCircumferenceInches))/ (Constants.DrivetrainConstants.gearRatio * 10.0* Constants.DrivetrainConstants.encoderTicksPerRev);
+    //     // ltMotor.set(ControlMode.Velocity, (-speed / targetRPM * encoderEPR)); 
+    // }
 
     public void checkmotors(){
         rtMotor.getSelectedSensorVelocity();

@@ -54,9 +54,13 @@ import frc.robot.utils.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BallCameraConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.driveStraightCommand;
+import frc.robot.commands.dropAndSuck;
+import frc.robot.commands.shootBalls;
 import frc.robot.subsystems.Climber;
 // import frc.robot.Constants.FeederConstants;
 // import frc.robot.subsystems.ColorWheel;
@@ -84,6 +88,7 @@ public class RobotContainer {
   // Drivetrain
   public static final Drivetrain drivetrain = new Drivetrain();
 
+  
   // Shooter
   public static final Shooter shooter = new Shooter();
 
@@ -182,89 +187,15 @@ public class RobotContainer {
   private double safeAutoTurnSpeed = 0.1; // TODO: Tune this (I'm guessing it's between -1 and 1)
   private double safeAutoForwardSpeed = 0.1; // TODO: Tune this (I'm guessing it's between -1 and 1)
 
-  /*
-  public Command ball_auto_sniffer() {
-    // [PR] Description of this mutilated code - plz unmutilate it
-    // Robot will start turning, looking around for ball of particular color within a certain radius range
-    // It's probably between 1 and 6 feet but idk
-    // Once it sees the closest ball it will stop turning and drive forward toward the ball
-    // 
-    Ball closestBall = getClosestBall();
-    if (closestBall == null) {
-      // TODO: Turn robot in a circle
-      System.out.println("(ball_auto_sniffer) Turn robot in a circle");
-      drivetrain.drive(-safeAutoTurnSpeed*drivetrain.getVoltageRegScaleFactor(), safeAutoTurnSpeed*drivetrain.getVoltageRegScaleFactor()); // Robot is rotating right
-      return null;
-    }
-    // Check if need to turn - not needed if ball is almost in the center of the frame (2px away)
-    if (Math.abs(closestBall.getCenterX()-BallCameraConstants.FRAME_WIDTH)/2 <= 2) {
-      // If ball is close enough, stop moving closer - 450 is largest radius until we stop
-      if (closestBall.getRadius() >= 450) {
-        System.out.println("(ball_auto_sniffer) Ball is close enough, stop moving");
-        drivetrain.stop();
-      }
-      // Move robot closer to robot
-      else {
-        System.out.println("(ball_auto_sniffer) Move robot forward in straight line to ball");
-        drivetrain.drive(safeAutoForwardSpeed*drivetrain.getVoltageRegScaleFactor(), safeAutoForwardSpeed*drivetrain.getVoltageRegScaleFactor());
-      }
-    }
-    // Need to turn
-    else {
-      // Figure out which direction to turn (left or right)
-      if (closestBall.getCenterX() > BallCameraConstants.FRAME_WIDTH/2) {
-        // Turn left
-        System.out.println("(ball_auto_sniffer) Turn robot left to center ball");
-        drivetrain.drive(safeAutoTurnSpeed*drivetrain.getVoltageRegScaleFactor(), -safeAutoTurnSpeed*drivetrain.getVoltageRegScaleFactor());
-      } else {
-        // Turn right
-        System.out.println("(ball_auto_sniffer) Turn robot right to center ball");
-        drivetrain.drive(-safeAutoTurnSpeed*drivetrain.getVoltageRegScaleFactor(), safeAutoTurnSpeed*drivetrain.getVoltageRegScaleFactor());
-      }
-    }
-    return null;
-  }
-  */
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  /*
-    public Command getAutonomousCommand() {
-      var kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
-
-      String trajectoryJSON = "paths/tenFt_backforth_test.json";
-      try {
-        
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-
-        
-      } catch (IOException ex) {
-        DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-      }
-
-    // Create a voltage constraint to ensure we don't accelerate too fast
-      DifferentialDriveVoltageConstraint autoVoltageConstraint =
-        new DifferentialDriveVoltageConstraint(
-        new SimpleMotorFeedforward(Constants.RouteFinderConstants.ksVolts,
-                                      Constants.RouteFinderConstants.kvVoltSecondsPerMeter,
-                                       Constants.RouteFinderConstants.kaVoltSecondsSquaredPerMeter),
-            kDriveKinematics,
-            10);
+  //One of the dead autos(if our auto is bricked :( ))
+  public SequentialCommandGroup deadAutoOne() {
+    //Drive forward setCommandVelocity = 1 meter/s
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
     
-     // Reset odometry, then run path following command, then stop at the end.
-     drivetrain.resetOdometry(trajectory.getInitialPose());
-    RamseteCommand ramseteCommand = new RamseteCommand(trajectory, // We input our desired trajectory here
-        drivetrain::getPose, new RamseteController(Constants.RouteFinderConstants.kRamseteB, Constants.RouteFinderConstants.kRamseteZeta),
-        new SimpleMotorFeedforward(ksVolts, kvVoltSecondsPerMeter, kaVoltSecondsSquaredPerMeter), kDriveKinematics,
-        drivetrain::getWheelSpeeds, new PIDController(Constants.RouteFinderConstants.kPDriveVel, 0, 0), new PIDController(Constants.RouteFinderConstants.kPDriveVel, 0, 0),
-        // RamseteCommand passes volts to the callback
-        drivetrain::tankDriveVolts, drivetrain);
-
-    return ramseteCommand.andThen(() -> drivetrain.tankDriveVolts(0, 0));
+    Command drive = new driveStraightCommand(drivetrain, 0.8);
+    Command dns = new dropAndSuck(intake);
+    Command shoot = new shootBalls(shooter, intake);
+    commandGroup.addCommands(dns,drive,shoot);
+    return commandGroup;
   }
-  */
-
 }
