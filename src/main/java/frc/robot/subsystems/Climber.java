@@ -83,6 +83,7 @@ public class Climber extends SubsystemBase {
         // of a climber speed, limit it to between -1 and 1.
         if (climbSpeed > 1) climbSpeed = 1.0;
         if (climbSpeed < -1) climbSpeed = -1.0;
+
         // If the joystick is drifting for some reason at rest,
         // stop the winch motor.
         if (Math.abs(climbSpeed) < 0.01) {

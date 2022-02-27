@@ -53,6 +53,8 @@ public class Robot extends TimedRobot {
   private ShuffleboardTab tab = Shuffleboard.getTab("Things Tab");
   private double waitTime = 0;
 
+  private boolean use_RS_Shift_Switch = true;
+
   // set to true to use Parallel Command Groups
   private boolean commandGroupTest = true;
   private ParallelCommandGroup commandGroup = new ParallelCommandGroup();
@@ -81,6 +83,9 @@ public class Robot extends TimedRobot {
     // compressor = m_robotContainer.compressor;
     SmartDashboard.putNumber("Set Speed", 4400);
     tab.add("Shooter current RPM",0);
+    // Add Shuffleboard toggle for switching between RS shift switch and A button
+    SmartDashboard.putBoolean("Use RS shift switch?", true);
+
     // commandGroup.addCommands(intakeControls,drivetele,shootingProcess);
   }
 
@@ -190,6 +195,7 @@ public class Robot extends TimedRobot {
     
     // Turn on climber mode
     if(gamepad.getRawButtonReleased(Constants.A_Button)){
+    if (use_RS_Shift_Switch ? gamepad.getRawButton(Constants.RS_Shift_Switch) : gamepad.getRawButtonReleased(Constants.A_Button))
       // Intake up
       intake.deploy(false);
       // Switch to climber mode
@@ -204,6 +210,10 @@ public class Robot extends TimedRobot {
     // System.out.println("SET SPEED IS " + speed);
     shooter.setSpeed(speed);
     SmartDashboard.putNumber("Current RPM", shooter.getLeftRPM());
+
+    // Update button used to toggle climber mode based on Shuffleboard input
+    use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
+
     // SmartDashboard.putNumber("Current RPM", shooter.getRightRPM());
     
     // SmartDashboard.putNumber("NavX heading cos", RobotContainer.navx.getRotation2d().getCos());
