@@ -28,7 +28,6 @@ public class Climber extends SubsystemBase {
     private double climbMotorSpeedLimiter = 1.0;
 
     private double fullClimbingSpeed = 0.5;
-    private double slowClimbingSpeed = 0.1;
 
     public Climber() {
         // compressorModel = new Compressor(compressorModelPort,
@@ -63,22 +62,46 @@ public class Climber extends SubsystemBase {
     }
 
     public boolean switchTripped() {
-        return leftWinchSwitch.get() || rightWinchSwitch.get();
+        return !(leftWinchSwitch.get() && rightWinchSwitch.get());
     }
 
     public void climb(boolean isUnwinding) {
-        // If limit switch has been hit, go slowly
-        if (switchTripped()) {
-            winchMotor.set(isUnwinding ? -slowClimbingSpeed : slowClimbingSpeed);
+        // If either limit switch has been hit and the climber is being commanded
+        // to go down, stop the winch motor 
+        if (switchTripped() && !isUnwinding) {
+            winchMotor.stopMotor();
         }
-        // Otherwise, go at normal speed
+        // Otherwise, if neither limit switch is being pressed or
+        // the climber is being commanded to go up, go full speed
         else {
             winchMotor.set(isUnwinding ? -fullClimbingSpeed : fullClimbingSpeed);
         }
     }
 
     public void climb(Double climbSpeed) {
-        winchMotor.set(climbSpeed * climbMotorSpeedLimiter);
+        // If some idiot decides to give too large or too small
+        // of a climber speed, limit it to between -1 and 1.
+        if (climbSpeed > 1) climbSpeed = 1.0;
+        if (climbSpeed < -1) climbSpeed = -1.0;
+        // If the joystick is drifting for some reason at rest,
+        // stop the winch motor.
+        if (Math.abs(climbSpeed) < 0.01) {
+            // climbSpeed = 0.0;
+            stop();
+            return;
+        }
+        // If either limit switch has been hit and the climber is being commanded
+        // to go down, stop the winch motor
+        if (switchTripped() && climbSpeed > 0) {
+            winchMotor.stopMotor();
+        }
+        // Otherwise, if neither limit switch is being pressed or
+        // the climber is being commanded to go up, go full speed
+        else {
+            winchMotor.set(climbSpeed);
+        }
+
+        // winchMotor.set(climbSpeed * climbMotorSpeedLimiter);
     }
 
     public void withdraw() {

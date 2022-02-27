@@ -192,7 +192,7 @@ public class RobotContainer {
     //Drive forward setCommandVelocity = 1 meter/s
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
     
-    Command drive = new driveStraightCommand(drivetrain, 0.8);
+    Command drive = new driveStraightCommand(drivetrain, 0.9);
     Command dns = new dropAndSuck(intake);
     Command shoot = new shootBalls(shooter, intake);
     commandGroup.addCommands(dns,drive,shoot);

@@ -28,27 +28,42 @@ public class ClimberCommand extends CommandBase {
     */
     @Override
     public void execute() {
-        // D-pad left -> winch motor rewind
-        if (gp.getPOV() == Constants.D_Pad_Left && climber.isClimberMode()) {
-            climber.climb(false);
+
+        // Check if currently in climber mode
+        if (climber.isClimberMode()) {
+            climber.climb(gp.getRawAxis(1)); // Raw axis 1 is left joystick
         }
-        // D-pad right -> winch motor unwind
-        else if (gp.getPOV() == Constants.D_Pad_Right && climber.isClimberMode()) {
-            climber.climb(true);
-        }
-        // Otherwise, stop moving motor
+        // If not on climber mode, stop the climber
         else {
             climber.stop();
         }
+
+        // // D-pad left -> winch motor rewind
+        // if (gp.getPOV() == Constants.D_Pad_Left && climber.isClimberMode()) {
+        //     climber.climb(false);
+        // }
+        // // D-pad right -> winch motor unwind
+        // else if (gp.getPOV() == Constants.D_Pad_Right && climber.isClimberMode()) {
+        //     climber.climb(true);
+        // }
+        // // Otherwise, stop moving motor
+        // else {
+        //     climber.stop();
+        // }
+
         // X button -> climber solenoid withdraw
         if (gp.getRawButton(Constants.X_Button) && climber.isClimberMode()) {
+            System.out.println("X pressed");
             if (climber.isDeployed()) {
+                System.out.println("X pressed - climber solenoid withdraw");
                 climber.withdraw();
             }
         }
         // Y button -> climber solenoid deploy
         if (gp.getRawButton(Constants.Y_Button) && climber.isClimberMode()) {
+            System.out.println("Y pressed");
             if (!climber.isDeployed()) {
+                System.out.println("Y pressed - climber solenoid deployed");
                 climber.deploy();
             }
         }
