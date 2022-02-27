@@ -31,7 +31,7 @@ public class ClimberCommand extends CommandBase {
 
         // Check if currently in climber mode
         if (climber.isClimberMode()) {
-            climber.climb(gp.getRawAxis(1)); // Raw axis 1 is left joystick
+            climber.climb(gp.getRawAxis(Constants.Gamepad_Left_Joystick_Y_Axis));
         }
         // If not on climber mode, stop the climber
         else {
@@ -53,17 +53,17 @@ public class ClimberCommand extends CommandBase {
 
         // X button -> climber solenoid withdraw
         if (gp.getRawButton(Constants.X_Button) && climber.isClimberMode()) {
-            System.out.println("X pressed");
+            // System.out.println("X pressed");
             if (climber.isDeployed()) {
-                System.out.println("X pressed - climber solenoid withdraw");
+                // System.out.println("X pressed - climber solenoid withdraw");
                 climber.withdraw();
             }
         }
         // Y button -> climber solenoid deploy
         if (gp.getRawButton(Constants.Y_Button) && climber.isClimberMode()) {
-            System.out.println("Y pressed");
+            // System.out.println("Y pressed");
             if (!climber.isDeployed()) {
-                System.out.println("Y pressed - climber solenoid deployed");
+                // System.out.println("Y pressed - climber solenoid deployed");
                 climber.deploy();
             }
         }

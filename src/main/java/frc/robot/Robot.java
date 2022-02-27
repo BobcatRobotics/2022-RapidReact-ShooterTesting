@@ -187,8 +187,13 @@ public class Robot extends TimedRobot {
     // } else {
     //   shooter.stop();
     // }
+    
+    // Turn on climber mode
     if(gamepad.getRawButtonReleased(Constants.A_Button)){
-       climber.toggleSwitchToClimberMode();   
+      // Intake up
+      intake.deploy(false);
+      // Switch to climber mode
+      climber.toggleSwitchToClimberMode();   
     }
 
     updateShuffleBoard();

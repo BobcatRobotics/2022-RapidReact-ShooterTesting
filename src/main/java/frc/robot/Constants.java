@@ -44,6 +44,8 @@ public final class Constants {
   public static final int Left_Joystick_Pressed = 11;
   public static final int Right_Joystick_Pressed = 12;
 
+  public static final int Gamepad_Left_Joystick_Y_Axis = 1;
+
 
   // public static final int Left_Joystick_X_Axis = 1;
   // public static final int Left_Joystick_Y_Axis = 0;
