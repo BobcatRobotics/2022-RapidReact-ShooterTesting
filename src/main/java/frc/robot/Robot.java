@@ -85,7 +85,10 @@ public class Robot extends TimedRobot {
     tab.add("Shooter current RPM",0);
     // Add Shuffleboard toggle for switching between RS shift switch and A button
     SmartDashboard.putBoolean("Use RS shift switch?", true);
-
+    SmartDashboard.putNumber("Left shooter current", shooter.getLeftCurrent());
+    SmartDashboard.putNumber("Right shooter current", shooter.getRightCurrent());
+    SmartDashboard.putNumber("Left shooter voltage", shooter.getLeftVoltage());
+    SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
     // commandGroup.addCommands(intakeControls,drivetele,shootingProcess);
   }
 
@@ -196,10 +199,14 @@ public class Robot extends TimedRobot {
     // Turn on climber mode
     if(gamepad.getRawButtonReleased(Constants.A_Button)){
     if (use_RS_Shift_Switch ? gamepad.getRawButton(Constants.RS_Shift_Switch) : gamepad.getRawButtonReleased(Constants.A_Button))
-      // Intake up
-      intake.deploy(false);
-      // Switch to climber mode
-      climber.toggleSwitchToClimberMode();   
+    // Intake up
+    intake.deploy(false);
+    // Switch to climber mode
+    climber.toggleSwitchToClimberMode();   
+    // Turn off shooter if on climber mode
+    if (climber.isClimberMode()) shooter.stop();
+    // Reset shooter to lower hub shooting speed otherwise
+    else shooter.resetToLowerHubSpeed();
     }
 
     updateShuffleBoard();
@@ -213,6 +220,11 @@ public class Robot extends TimedRobot {
 
     // Update button used to toggle climber mode based on Shuffleboard input
     use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
+  
+    SmartDashboard.putNumber("Left shooter current", shooter.getLeftCurrent());
+    SmartDashboard.putNumber("Right shooter current", shooter.getRightCurrent());
+    SmartDashboard.putNumber("Left shooter voltage", shooter.getLeftVoltage());
+    SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
 
     // SmartDashboard.putNumber("Current RPM", shooter.getRightRPM());
     

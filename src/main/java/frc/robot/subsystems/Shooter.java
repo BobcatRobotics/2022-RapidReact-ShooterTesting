@@ -24,7 +24,8 @@ public class Shooter extends SubsystemBase {
     private final WPI_TalonFX shooterFalconRight;
     private final WPI_TalonFX feedMotor;
 
-    private double speed = 4800.0;
+    private double upperHubShootingSpeed = 4800.0;
+    private double lowerHubShootingSpeed = 1800.0;
     private final double targetSpeed = 3000.0;
     private boolean isRunning = false;
 
@@ -97,20 +98,44 @@ public class Shooter extends SubsystemBase {
         shooterAngleSolenoid = new Solenoid(PneumaticsModuleType.REVPH, ShooterConstants.shooterAngleSolenoidPort);
         shooterAngleSolenoid.set(false);
         isShooterSolenoidExtended = shooterAngleSolenoid.get();
+
+        // Set starting speed to lower hub shooting speed
+        resetToLowerHubSpeed();
+    }
+
+    public double getLeftCurrent() {
+        return shooterFalconLeft.getStatorCurrent();
+    }
+
+    public double getRightCurrent() {
+        return shooterFalconRight.getStatorCurrent();
+    }
+
+    public double getLeftVoltage() {
+        return shooterFalconLeft.getMotorOutputVoltage();
+    }
+    
+    public double getRightVoltage() {
+        return shooterFalconRight.getMotorOutputVoltage();
     }
 
     // Start shooter motors
     public void getToSpeed() {
+        double s = isRunning() ? upperHubShootingSpeed : lowerHubShootingSpeed;
         // shooterFalconLeft.set(-0.7);
         // shooterFalconLeft.set(ControlMode.Velocity, 4800);
         // System.out.println("getting to speed: " + (-(speed/targetRPM*encoderEPR)));
-        shooterFalconLeft.set(ControlMode.Velocity, (-speed / targetRPM * encoderEPR));
-        shooterFalconRight.set(ControlMode.Velocity, (-speed / targetRPM * encoderEPR));
+        shooterFalconLeft.set(ControlMode.Velocity, (-s / targetRPM * encoderEPR));
+        shooterFalconRight.set(ControlMode.Velocity, (-s / targetRPM * encoderEPR));
     }
 
     public void stop() {
         stopShooter();
         stopFeeding();
+    }
+
+    public void resetToLowerHubSpeed() {
+        setSpeed(lowerHubShootingSpeed);
     }
 
     // Stop shooter motors
@@ -131,17 +156,18 @@ public class Shooter extends SubsystemBase {
 
     // Set speed
     public void setSpeed(double speed) {
-        this.speed = speed;
+        this.upperHubShootingSpeed = speed;
     }
 
     // Get speed
     public double getSpeed() {
-        return speed;
+        return upperHubShootingSpeed;
     }
 
     // Check if motor is at speed
     public boolean atSpeed() {
-        return ((Math.abs(getRightRPM()) >= (speed - rpmThreshold)) || (getLeftRPM() >= (speed - rpmThreshold)));
+        double s = isRunning() ? upperHubShootingSpeed : lowerHubShootingSpeed;
+        return ((Math.abs(getRightRPM()) >= (s - rpmThreshold)) || (getLeftRPM() >= (s - rpmThreshold)));
     }
 
     // Check if shooter is running
