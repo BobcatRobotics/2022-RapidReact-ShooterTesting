@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,6 +18,7 @@ import frc.robot.lib.RioLogger;
 public class Intake extends SubsystemBase {
     // Compressor
     private Compressor compressorModel;
+    private PneumaticHub phub = new PneumaticHub(1);
 
     // Horizontal BAG wheels
     private WPI_VictorSPX intakeLeftWheel;
@@ -69,6 +71,17 @@ public class Intake extends SubsystemBase {
         
     }
 
+    
+    @Override
+    public void periodic() {
+        double pressure = phub.getPressure(0);
+        if (pressure >= 120) {
+            compressorModel.disable();
+
+        } else if (pressure <= 90) {
+            compressorModel.enableDigital();
+        }
+    }
     /**
      * Runs the intake wheels inward
      * @param fullSpeed True if we want to run at full speed, false if we want to run at half speed
