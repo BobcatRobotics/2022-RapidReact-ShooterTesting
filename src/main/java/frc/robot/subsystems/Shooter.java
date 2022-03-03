@@ -99,8 +99,7 @@ public class Shooter extends SubsystemBase {
         shooterAngleSolenoid.set(false);
         isShooterSolenoidExtended = shooterAngleSolenoid.get();
 
-        // Set starting speed to lower hub shooting speed
-        resetToLowerHubSpeed();
+        getToSpeed();
     }
 
     public double getLeftCurrent() {
@@ -135,7 +134,6 @@ public class Shooter extends SubsystemBase {
     }
 
     public void resetToLowerHubSpeed() {
-        setSpeed(lowerHubShootingSpeed);
     }
 
     // Stop shooter motors

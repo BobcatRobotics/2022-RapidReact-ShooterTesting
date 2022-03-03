@@ -89,6 +89,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Right shooter current", shooter.getRightCurrent());
     SmartDashboard.putNumber("Left shooter voltage", shooter.getLeftVoltage());
     SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
+    SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     // commandGroup.addCommands(intakeControls,drivetele,shootingProcess);
   }
 
@@ -197,16 +198,21 @@ public class Robot extends TimedRobot {
     // }
     
     // Turn on climber mode
-    if(gamepad.getRawButtonReleased(Constants.A_Button)){
-    if (use_RS_Shift_Switch ? gamepad.getRawButton(Constants.RS_Shift_Switch) : gamepad.getRawButtonReleased(Constants.A_Button))
-    // Intake up
-    intake.deploy(false);
-    // Switch to climber mode
-    climber.toggleSwitchToClimberMode();   
-    // Turn off shooter if on climber mode
-    if (climber.isClimberMode()) shooter.stop();
-    // Reset shooter to lower hub shooting speed otherwise
-    else shooter.resetToLowerHubSpeed();
+    // if (use_RS_Shift_Switch ? gamepad.getRawButton(Constants.RS_Shift_Switch) : gamepad.getRawButtonReleased(Constants.A_Button))
+    if (gamepad.getRawButtonReleased(Constants.A_Button)) {
+      // Intake up
+      intake.deploy(false);
+      // Switch to climber mode
+      climber.toggleSwitchToClimberMode();   
+      // Turn off shooter if on climber mode
+      if (climber.isClimberMode()) {
+        shooter.setRunning(false);
+        shooter.stop();
+      }
+    } else {
+      // Reset shooter to lower hub shooting speed otherwise
+      shooter.setRunning(false);
+      shooter.getToSpeed();
     }
 
     updateShuffleBoard();
@@ -225,6 +231,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Right shooter current", shooter.getRightCurrent());
     SmartDashboard.putNumber("Left shooter voltage", shooter.getLeftVoltage());
     SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
+    SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
 
     // SmartDashboard.putNumber("Current RPM", shooter.getRightRPM());
     

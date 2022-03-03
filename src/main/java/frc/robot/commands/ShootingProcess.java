@@ -59,17 +59,17 @@ public class ShootingProcess extends CommandBase {
       shooter.setRunning(true);
       shooter.getToSpeed();
     } else {
-      // If climber mode, shooter should default to stop motor if button not pressed
-      if (climber.isClimberMode()) shooter.stopShooter();
-      // Otherwise shooter should default to lower hub shooting speed
-      else shooter.resetToLowerHubSpeed();
       shooter.setRunning(false);
+      // If climber mode, shooter should default to stop motor if button not pressed
+      if (climber.isClimberMode()) {
+        shooter.stopShooter();
+      }
     }
     // Gamepad left trigger -> run tower in
     if (gamepad.getRawButton(Constants.Left_Trigger_Button)) {
-      if (shooter.atSpeed()) {
+      // if (shooter.atSpeed()) {
         shooter.feed();
-      }
+      // }
     } else {
       shooter.stopFeeding();
     }
