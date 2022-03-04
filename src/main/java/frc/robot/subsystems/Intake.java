@@ -4,6 +4,7 @@ import static frc.robot.Constants.IntakeConstants.*;
 import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.lib.RioLogger;
@@ -23,7 +25,6 @@ public class Intake extends SubsystemBase {
 
     // Horizontal BAG wheels
     private WPI_VictorSPX intakeLeftWheel;
-    private WPI_TalonSRX intakeRightWheel;
 
     // Falcon intake
     private WPI_TalonFX intakeBar;
@@ -60,6 +61,8 @@ public class Intake extends SubsystemBase {
         intakeLeftWheel.setNeutralMode(NeutralMode.Coast);
         // intakeRightWheel.setNeutralMode(NeutralMode.Coast);
         intakeBar.setNeutralMode(NeutralMode.Coast);
+
+        prettyPrintStatusFrames();
     }
 
     public void feedOut() {
@@ -68,8 +71,52 @@ public class Intake extends SubsystemBase {
     }
     public void feedIn() {
         runIntakeBarIn(true);
-        runIntakeWheelsIn(true);
-        
+        runIntakeWheelsIn(true);   
+    }
+
+    public void lowerCANBusUtilization() {
+        // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
+        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_1_General, 50);
+        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 50);
+        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 255);
+        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_6_Misc, 255);
+        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 255);
+        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 255);
+        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_10_Targets, 255);
+        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 255);
+        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 255);
+        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 255);
+        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 255);
+        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 255);
+    }
+
+    public void prettyPrintStatusFrames() {
+        System.out.println("Intake wheel:");
+        System.out.println("\t Status_1_General: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_1_General) + " ms");
+        System.out.println("\t Status_2_Feedback0: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_2_Feedback0) + " ms");
+        System.out.println("\t Status_4_AinTempVbat: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_4_AinTempVbat) + " ms");
+        System.out.println("\t Status_6_Misc: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_6_Misc) + " ms");
+        System.out.println("\t Status_7_CommStatus: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_7_CommStatus) + " ms");
+        System.out.println("\t Status_10_MotionMagic: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_10_MotionMagic) + " ms");
+        System.out.println("\t Status_10_Targets: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_10_Targets) + " ms");
+        System.out.println("\t Status_12_Feedback1: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_12_Feedback1) + " ms");
+        System.out.println("\t Status_13_Base_PIDF0: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0) + " ms");
+        System.out.println("\t Status_14_Turn_PIDF1: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1) + " ms");
+        System.out.println("\t Status_15_FirmwareApiStatus: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus) + " ms");
+        System.out.println("\t Status_17_Targets1: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_17_Targets1) + " ms");
+        System.out.println("Intake bar:");
+        System.out.println("\t Status_1_General: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_1_General) + " ms");
+        System.out.println("\t Status_2_Feedback0: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_2_Feedback0) + " ms");
+        System.out.println("\t Status_4_AinTempVbat: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_4_AinTempVbat) + " ms");
+        System.out.println("\t Status_6_Misc: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_6_Misc) + " ms");
+        System.out.println("\t Status_7_CommStatus: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_7_CommStatus) + " ms");
+        System.out.println("\t Status_10_MotionMagic: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_10_MotionMagic) + " ms");
+        System.out.println("\t Status_10_Targets: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_10_Targets) + " ms");
+        System.out.println("\t Status_12_Feedback1: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_12_Feedback1) + " ms");
+        System.out.println("\t Status_13_Base_PIDF0: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0) + " ms");
+        System.out.println("\t Status_14_Turn_PIDF1: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1) + " ms");
+        System.out.println("\t Status_15_FirmwareApiStatus: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus) + " ms");
+        System.out.println("\t Status_17_Targets1: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_17_Targets1) + " ms");
     }
 
     public PneumaticHub pneumaticHub() {
