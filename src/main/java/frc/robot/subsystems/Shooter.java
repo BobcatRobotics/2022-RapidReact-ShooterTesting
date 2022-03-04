@@ -133,9 +133,6 @@ public class Shooter extends SubsystemBase {
         stopFeeding();
     }
 
-    public void resetToLowerHubSpeed() {
-    }
-
     // Stop shooter motors
     public void stopShooter() {
         shooterFalconLeft.stopMotor();

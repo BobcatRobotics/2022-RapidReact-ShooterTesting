@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.lib.RioLogger;
 
@@ -71,17 +72,23 @@ public class Intake extends SubsystemBase {
         
     }
 
+    public PneumaticHub pneumaticHub() {
+        return phub;
+    }
     
     @Override
     public void periodic() {
         double pressure = phub.getPressure(0);
+        SmartDashboard.putNumber("Compressor pressure", pressure);
         if (pressure >= 120) {
             compressorModel.disable();
 
         } else if (pressure <= 90) {
-            compressorModel.enableDigital();
+            // compressorModel.enableDigital();
+            compressorModel.enableAnalog(90, 120);
         }
     }
+
     /**
      * Runs the intake wheels inward
      * @param fullSpeed True if we want to run at full speed, false if we want to run at half speed

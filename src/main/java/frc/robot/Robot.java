@@ -90,6 +90,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Left shooter voltage", shooter.getLeftVoltage());
     SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
+    SmartDashboard.putNumber("Compressor pressure", intake.pneumaticHub().getPressure(0));
     // commandGroup.addCommands(intakeControls,drivetele,shootingProcess);
   }
 
@@ -119,7 +120,7 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     intake.stopIntake();
     drivetrain.coast();
-    // intake.deploy(false);
+    // intake.deploy(true);
     shooter.stopShooter();
   }
 
@@ -203,7 +204,9 @@ public class Robot extends TimedRobot {
       // Intake up
       intake.deploy(false);
       // Switch to climber mode
-      climber.toggleSwitchToClimberMode();   
+      climber.toggleSwitchToClimberMode();
+      // Lift hood up
+      shooter.setShooterSolenoidExtended(false);
       // Turn off shooter if on climber mode
       if (climber.isClimberMode()) {
         shooter.setRunning(false);
