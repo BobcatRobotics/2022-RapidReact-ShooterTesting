@@ -25,8 +25,8 @@ public class Shooter extends SubsystemBase {
     private final WPI_TalonFX shooterFalconRight;
     private final WPI_TalonFX feedMotor;
 
-    private double upperHubShootingSpeed = 4800.0;
-    private double lowerHubShootingSpeed = 1800.0;
+    public double upperHubShootingSpeed = 4800.0;
+    public double lowerHubShootingSpeed = 1800.0;
     private final double targetSpeed = 3000.0;
     private boolean isRunning = false;
 
@@ -42,6 +42,9 @@ public class Shooter extends SubsystemBase {
     private boolean isShooterSolenoidExtended;
 
     private int[][] originalStatusFrames = new int[3][12];
+
+    private boolean highMode = true;
+    public void setHighMode(boolean status) {highMode = status;}
 
     public Shooter() {
         // Init new compressor object from port in Constants
@@ -191,7 +194,7 @@ public class Shooter extends SubsystemBase {
 
     // Start shooter motors
     public void getToSpeed() {
-        double s = isRunning() ? upperHubShootingSpeed : lowerHubShootingSpeed;
+        double s = highMode ? upperHubShootingSpeed : lowerHubShootingSpeed;
         // shooterFalconLeft.set(-0.7);
         // shooterFalconLeft.set(ControlMode.Velocity, 4800);
         // System.out.println("getting to speed: " + (-(speed/targetRPM*encoderEPR)));

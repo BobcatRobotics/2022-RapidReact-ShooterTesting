@@ -85,10 +85,10 @@ public class Robot extends TimedRobot {
     tab.add("Shooter current RPM",0);
     // Add Shuffleboard toggle for switching between RS shift switch and A button
     SmartDashboard.putBoolean("Use RS shift switch?", true);
-    SmartDashboard.putNumber("Left shooter current", shooter.getLeftCurrent());
-    SmartDashboard.putNumber("Right shooter current", shooter.getRightCurrent());
-    SmartDashboard.putNumber("Left shooter voltage", shooter.getLeftVoltage());
-    SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
+    // SmartDashboard.putNumber("Left shooter current", shooter.getLeftCurrent());
+    // SmartDashboard.putNumber("Right shooter current", shooter.getRightCurrent());
+    // SmartDashboard.putNumber("Left shooter voltage", shooter.getLeftVoltage());
+    // SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     SmartDashboard.putNumber("Compressor pressure", intake.pneumaticHub().getPressure(0));
     SmartDashboard.putString("Use low can util", "no");
@@ -228,7 +228,8 @@ public class Robot extends TimedRobot {
     } else {
       // Reset shooter to lower hub shooting speed otherwise
       shooter.setRunning(false);
-      shooter.getToSpeed();
+      shooter.stop();
+      // shooter.getToSpeed();
     }
 
     updateShuffleBoard();
@@ -243,10 +244,10 @@ public class Robot extends TimedRobot {
     // Update button used to toggle climber mode based on Shuffleboard input
     use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
   
-    SmartDashboard.putNumber("Left shooter current", shooter.getLeftCurrent());
-    SmartDashboard.putNumber("Right shooter current", shooter.getRightCurrent());
-    SmartDashboard.putNumber("Left shooter voltage", shooter.getLeftVoltage());
-    SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
+    // SmartDashboard.putNumber("Left shooter current", shooter.getLeftCurrent());
+    // SmartDashboard.putNumber("Right shooter current", shooter.getRightCurrent());
+    // SmartDashboard.putNumber("Left shooter voltage", shooter.getLeftVoltage());
+    // SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
 
     // SmartDashboard.putNumber("Current RPM", shooter.getRightRPM());

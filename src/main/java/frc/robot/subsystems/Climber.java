@@ -59,11 +59,28 @@ public class Climber extends SubsystemBase {
 
     public void lowerCANBusUtilization() {
         // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
-        for (int i = 0; i < originalStatusFrames.length; i++) {
-            winchMotor.setStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i], Constants.kTimeoutMs);
-        }
+        winchMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 20, Constants.kTimeoutMs);
+        winchMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20, Constants.kTimeoutMs);
+        winchMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 255, Constants.kTimeoutMs);
+        winchMotor.setStatusFramePeriod(StatusFrame.Status_6_Misc, 255, Constants.kTimeoutMs);
+        winchMotor.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 255, Constants.kTimeoutMs);
+        winchMotor.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 255, Constants.kTimeoutMs);
+        winchMotor.setStatusFramePeriod(StatusFrame.Status_10_Targets, 255, Constants.kTimeoutMs);
+        winchMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 255, Constants.kTimeoutMs);
+        winchMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 255, Constants.kTimeoutMs);
+        winchMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 255, Constants.kTimeoutMs);
+        winchMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 255, Constants.kTimeoutMs);
+        winchMotor.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 255, Constants.kTimeoutMs);
         prettyPrintStatusFrames();
     }
+
+    // public void lowerCANBusUtilization() {
+    //     // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
+    //     for (int i = 0; i < originalStatusFrames.length; i++) {
+    //         winchMotor.setStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i], Constants.kTimeoutMs);
+    //     }
+    //     prettyPrintStatusFrames();
+    // }
 
     // public void configDefault() {
     //     for (int i = 0; i < originalStatusFrames.length; i++) {
