@@ -36,6 +36,7 @@ public class Drivetrain extends SubsystemBase {
    private WPI_TalonFX rmMotor;
    private WPI_TalonFX rbMotor;
    private TalonSRX srx;
+   private boolean isBreak = true;
 
 
     // The motors on the left side of the drive.
@@ -106,7 +107,7 @@ public class Drivetrain extends SubsystemBase {
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
         resetEncoders();
         zeroHeading();
-
+        isBreak = true;
         lowerCANBusUtilization();
         // prettyPrintStatusFrames();
     }
@@ -158,12 +159,26 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void coast() {
+        isBreak = false;
         ltMotor.setNeutralMode(NeutralMode.Coast);
         lmMotor.setNeutralMode(NeutralMode.Coast);
         lbMotor.setNeutralMode(NeutralMode.Coast);
         rtMotor.setNeutralMode(NeutralMode.Coast);
         rmMotor.setNeutralMode(NeutralMode.Coast);
         rbMotor.setNeutralMode(NeutralMode.Coast);
+    } 
+    public void brake() {
+        isBreak = true;
+        ltMotor.setNeutralMode(NeutralMode.Brake);
+        lmMotor.setNeutralMode(NeutralMode.Brake);
+        lbMotor.setNeutralMode(NeutralMode.Brake);
+        rtMotor.setNeutralMode(NeutralMode.Brake);
+        rmMotor.setNeutralMode(NeutralMode.Brake);
+        rbMotor.setNeutralMode(NeutralMode.Brake);
+    }
+
+    public boolean isBrake() {
+        return isBreak;
     }
 
     /**

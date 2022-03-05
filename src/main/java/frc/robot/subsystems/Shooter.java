@@ -25,7 +25,7 @@ public class Shooter extends SubsystemBase {
     private final WPI_TalonFX shooterFalconRight;
     private final WPI_TalonFX feedMotor;
 
-    public double upperHubShootingSpeed = 4800.0;
+    public double upperHubShootingSpeed = 4000.0;
     public double lowerHubShootingSpeed = 1800.0;
     private final double targetSpeed = 3000.0;
     private boolean isRunning = false;
@@ -242,7 +242,7 @@ public class Shooter extends SubsystemBase {
 
     // Check if motor is at speed
     public boolean atSpeed() {
-        double s = isRunning() ? upperHubShootingSpeed : lowerHubShootingSpeed;
+        double s = highMode ? upperHubShootingSpeed : lowerHubShootingSpeed;
         return ((Math.abs(getRightRPM()) >= (s - rpmThreshold)) || (getLeftRPM() >= (s - rpmThreshold)));
     }
 

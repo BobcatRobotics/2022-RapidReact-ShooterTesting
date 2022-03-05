@@ -39,6 +39,7 @@ public class driveStraightCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         drivetrain.stop();
+        drivetrain.brake();
     }
     // Returns true when the command should end.
     @Override

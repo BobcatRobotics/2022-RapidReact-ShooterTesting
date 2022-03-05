@@ -39,7 +39,6 @@ public class Robot extends TimedRobot {
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
 
 
-
   private RobotContainer m_robotContainer;
   private Command m_autonomousCommand;
   private Joystick gamepad;
@@ -81,7 +80,7 @@ public class Robot extends TimedRobot {
 
     drivetrain = m_robotContainer.drivetrain;
     // compressor = m_robotContainer.compressor;
-    SmartDashboard.putNumber("Set High Speed", 4400);
+    SmartDashboard.putNumber("Set High Speed", 4000);
     SmartDashboard.putNumber("Set Low Speed", 1800);
     tab.add("Shooter current RPM",0);
     // Add Shuffleboard toggle for switching between RS shift switch and A button
@@ -175,7 +174,7 @@ public class Robot extends TimedRobot {
     // parallel race will run all commands at the same time but kill all of them when one finishes (race conditions)
     // parallel deadline will run all commands in parallel but will end them when a specific command gets executed
     // if(commandGroupTest) {
-    //   commandGroup.schedule();
+    //   commandGroup.schedules();
     // } else {
       // drive controller
       drivetele.schedule();
@@ -196,6 +195,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    if (!drivetrain.isBrake()) {
+      drivetrain.brake();
+    }
     CommandScheduler.getInstance().run();
     // if (gamepad.getRawButton(Constants.Left_Trigger_Button)) {
     //   shooter.setRunning(true);
@@ -237,7 +239,7 @@ public class Robot extends TimedRobot {
   }
 
   public void updateShuffleBoard() {
-    double highSpeed = SmartDashboard.getNumber("Set High Speed", 4400);
+    double highSpeed = SmartDashboard.getNumber("Set High Speed", 4000);
     double lowSpeed = SmartDashboard.getNumber("Set Low Speed", 1800);
     // System.out.println("SET SPEED IS " + speed);
     shooter.setHighSpeed(highSpeed);
