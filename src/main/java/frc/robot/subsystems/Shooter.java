@@ -225,9 +225,14 @@ public class Shooter extends SubsystemBase {
         return shooterFalconLeft.getSelectedSensorVelocity() * targetRPM / encoderEPR;
     }
 
-    // Set speed
-    public void setSpeed(double speed) {
+    // Set high speed
+    public void setHighSpeed(double speed) {
         this.upperHubShootingSpeed = speed;
+    }
+
+    // Set low speed
+    public void setLowSpeed(double speed) {
+        this.lowerHubShootingSpeed = speed;
     }
 
     // Get speed

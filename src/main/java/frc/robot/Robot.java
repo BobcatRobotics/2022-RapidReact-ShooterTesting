@@ -81,7 +81,8 @@ public class Robot extends TimedRobot {
 
     drivetrain = m_robotContainer.drivetrain;
     // compressor = m_robotContainer.compressor;
-    SmartDashboard.putNumber("Set Speed", 4400);
+    SmartDashboard.putNumber("Set High Speed", 4400);
+    SmartDashboard.putNumber("Set Low Speed", 1800);
     tab.add("Shooter current RPM",0);
     // Add Shuffleboard toggle for switching between RS shift switch and A button
     SmartDashboard.putBoolean("Use RS shift switch?", true);
@@ -236,9 +237,11 @@ public class Robot extends TimedRobot {
   }
 
   public void updateShuffleBoard() {
-    double speed = SmartDashboard.getNumber("Set Speed", 4800);
+    double highSpeed = SmartDashboard.getNumber("Set High Speed", 4400);
+    double lowSpeed = SmartDashboard.getNumber("Set Low Speed", 1800);
     // System.out.println("SET SPEED IS " + speed);
-    shooter.setSpeed(speed);
+    shooter.setHighSpeed(highSpeed);
+    shooter.setLowSpeed(lowSpeed);
     SmartDashboard.putNumber("Current RPM", shooter.getLeftRPM());
 
     // Update button used to toggle climber mode based on Shuffleboard input
