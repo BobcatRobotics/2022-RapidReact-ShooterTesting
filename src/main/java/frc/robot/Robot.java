@@ -91,6 +91,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     SmartDashboard.putNumber("Compressor pressure", intake.pneumaticHub().getPressure(0));
+    SmartDashboard.putString("Use low can util", "no");
     // commandGroup.addCommands(intakeControls,drivetele,shootingProcess);
   }
 
@@ -108,6 +109,14 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    String util = SmartDashboard.getString("Use low can util", "no");
+
+    if (util.equalsIgnoreCase("yes")) {
+      intake.lowerCANBusUtilization();
+      shooter.lowerCANBusUtilization();
+      drivetrain.lowerCANBusUtilization();
+      climber.lowerCANBusUtilization();
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
