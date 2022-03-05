@@ -39,7 +39,6 @@ public class Robot extends TimedRobot {
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
 
 
-
   private RobotContainer m_robotContainer;
   private Command m_autonomousCommand;
   private Joystick gamepad;
@@ -81,11 +80,18 @@ public class Robot extends TimedRobot {
 
     drivetrain = m_robotContainer.drivetrain;
     // compressor = m_robotContainer.compressor;
-    SmartDashboard.putNumber("Set Speed", 4400);
+    SmartDashboard.putNumber("Set High Speed", 4000);
+    SmartDashboard.putNumber("Set Low Speed", 1800);
     tab.add("Shooter current RPM",0);
     // Add Shuffleboard toggle for switching between RS shift switch and A button
     SmartDashboard.putBoolean("Use RS shift switch?", true);
-
+    // SmartDashboard.putNumber("Left shooter current", shooter.getLeftCurrent());
+    // SmartDashboard.putNumber("Right shooter current", shooter.getRightCurrent());
+    // SmartDashboard.putNumber("Left shooter voltage", shooter.getLeftVoltage());
+    // SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
+    SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
+    SmartDashboard.putNumber("Compressor pressure", intake.pneumaticHub().getPressure(0));
+    SmartDashboard.putString("Use low can util", "no");
     // commandGroup.addCommands(intakeControls,drivetele,shootingProcess);
   }
 
@@ -103,6 +109,18 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    String util = SmartDashboard.getString("Use low can util", "no");
+
+    if (util.equalsIgnoreCase("yes")) {
+      // drivetrain.lowerCANBusUtilization();
+      // intake.lowerCANBusUtilization();
+      // shooter.lowerCANBusUtilization();
+      // climber.lowerCANBusUtilization();
+    } else {
+      // intake.defaultStatusFrames();
+      // shooter.defaultStatusFrames();
+      // climber.defaultStatusFrames();
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -115,7 +133,7 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     intake.stopIntake();
     drivetrain.coast();
-    // intake.deploy(false);
+    // intake.deploy(true);
     shooter.stopShooter();
   }
 
@@ -156,7 +174,7 @@ public class Robot extends TimedRobot {
     // parallel race will run all commands at the same time but kill all of them when one finishes (race conditions)
     // parallel deadline will run all commands in parallel but will end them when a specific command gets executed
     // if(commandGroupTest) {
-    //   commandGroup.schedule();
+    //   commandGroup.schedules();
     // } else {
       // drive controller
       drivetele.schedule();
@@ -177,6 +195,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    if (!drivetrain.isBrake()) {
+      drivetrain.brake();
+    }
     CommandScheduler.getInstance().run();
     // if (gamepad.getRawButton(Constants.Left_Trigger_Button)) {
     //   shooter.setRunning(true);
@@ -194,25 +215,45 @@ public class Robot extends TimedRobot {
     // }
     
     // Turn on climber mode
-    if(gamepad.getRawButtonReleased(Constants.A_Button)){
-    if (use_RS_Shift_Switch ? gamepad.getRawButton(Constants.RS_Shift_Switch) : gamepad.getRawButtonReleased(Constants.A_Button))
+    // if (use_RS_Shift_Switch ? gamepad.getRawButton(Constants.RS_Shift_Switch) : gamepad.getRawButtonReleased(Constants.A_Button))
+    if (gamepad.getRawButtonReleased(Constants.A_Button)) {
       // Intake up
       intake.deploy(false);
       // Switch to climber mode
-      climber.toggleSwitchToClimberMode();   
+      climber.toggleSwitchToClimberMode();
+      // Lift hood up
+      shooter.setShooterSolenoidExtended(false);
+      // Turn off shooter if on climber mode
+      if (climber.isClimberMode()) {
+        shooter.setRunning(false);
+        shooter.stop();
+      }
+    } else {
+      // Reset shooter to lower hub shooting speed otherwise
+      shooter.setRunning(false);
+      shooter.stop();
+      // shooter.getToSpeed();
     }
 
     updateShuffleBoard();
   }
 
   public void updateShuffleBoard() {
-    double speed = SmartDashboard.getNumber("Set Speed", 4800);
+    double highSpeed = SmartDashboard.getNumber("Set High Speed", 4000);
+    double lowSpeed = SmartDashboard.getNumber("Set Low Speed", 1800);
     // System.out.println("SET SPEED IS " + speed);
-    shooter.setSpeed(speed);
+    shooter.setHighSpeed(highSpeed);
+    shooter.setLowSpeed(lowSpeed);
     SmartDashboard.putNumber("Current RPM", shooter.getLeftRPM());
 
     // Update button used to toggle climber mode based on Shuffleboard input
     use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
+  
+    // SmartDashboard.putNumber("Left shooter current", shooter.getLeftCurrent());
+    // SmartDashboard.putNumber("Right shooter current", shooter.getRightCurrent());
+    // SmartDashboard.putNumber("Left shooter voltage", shooter.getLeftVoltage());
+    // SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
+    SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
 
     // SmartDashboard.putNumber("Current RPM", shooter.getRightRPM());
     

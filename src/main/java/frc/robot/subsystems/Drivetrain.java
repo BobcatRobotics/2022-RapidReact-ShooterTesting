@@ -6,6 +6,7 @@ import static frc.robot.Constants.DrivetrainConstants.INVERT_MOTOR;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -35,6 +36,7 @@ public class Drivetrain extends SubsystemBase {
    private WPI_TalonFX rmMotor;
    private WPI_TalonFX rbMotor;
    private TalonSRX srx;
+   private boolean isBreak = true;
 
 
     // The motors on the left side of the drive.
@@ -105,6 +107,47 @@ public class Drivetrain extends SubsystemBase {
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
         resetEncoders();
         zeroHeading();
+        isBreak = true;
+        lowerCANBusUtilization();
+        // prettyPrintStatusFrames();
+    }
+
+    public void lowerCANBusUtilization() {
+        for (WPI_TalonFX talon: new WPI_TalonFX[]{ltMotor, lmMotor, lbMotor, rtMotor, rmMotor, rbMotor}) {
+            // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
+            talon.setStatusFramePeriod(StatusFrame.Status_1_General, 20, Constants.kTimeoutMs);
+            talon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20, Constants.kTimeoutMs);
+            talon.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 255, Constants.kTimeoutMs);
+            talon.setStatusFramePeriod(StatusFrame.Status_6_Misc, 255, Constants.kTimeoutMs);
+            talon.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 255, Constants.kTimeoutMs);
+            talon.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 255, Constants.kTimeoutMs);
+            talon.setStatusFramePeriod(StatusFrame.Status_10_Targets, 255, Constants.kTimeoutMs);
+            talon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 255, Constants.kTimeoutMs);
+            talon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 255, Constants.kTimeoutMs);
+            talon.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 255, Constants.kTimeoutMs);
+            talon.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 255, Constants.kTimeoutMs);
+            talon.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 255, Constants.kTimeoutMs);
+        }
+    }
+
+    public void prettyPrintStatusFrames() {
+        WPI_TalonFX[] motors = {ltMotor, lmMotor, lbMotor, rtMotor, rmMotor, rbMotor};
+        String[] motorNames = {"ltMotor", "lmMotor", "lbMotor", "rtMotor", "rmMotor", "rbMotor"};
+        for (int i = 0; i < motors.length; i++) {
+            System.out.println(motorNames[i]);
+            System.out.println("\t Status_1_General: " + motors[i].getStatusFramePeriod(StatusFrame.Status_1_General) + " ms");
+            System.out.println("\t Status_2_Feedback0: " + motors[i].getStatusFramePeriod(StatusFrame.Status_2_Feedback0) + " ms");
+            System.out.println("\t Status_4_AinTempVbat: " + motors[i].getStatusFramePeriod(StatusFrame.Status_4_AinTempVbat) + " ms");
+            System.out.println("\t Status_6_Misc: " + motors[i].getStatusFramePeriod(StatusFrame.Status_6_Misc) + " ms");
+            System.out.println("\t Status_7_CommStatus: " + motors[i].getStatusFramePeriod(StatusFrame.Status_7_CommStatus) + " ms");
+            System.out.println("\t Status_10_MotionMagic: " + motors[i].getStatusFramePeriod(StatusFrame.Status_10_MotionMagic) + " ms");
+            System.out.println("\t Status_10_Targets: " + motors[i].getStatusFramePeriod(StatusFrame.Status_10_Targets) + " ms");
+            System.out.println("\t Status_12_Feedback1: " + motors[i].getStatusFramePeriod(StatusFrame.Status_12_Feedback1) + " ms");
+            System.out.println("\t Status_13_Base_PIDF0: " + motors[i].getStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0) + " ms");
+            System.out.println("\t Status_14_Turn_PIDF1: " + motors[i].getStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1) + " ms");
+            System.out.println("\t Status_15_FirmwareApiStatus: " + motors[i].getStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus) + " ms");
+            System.out.println("\t Status_17_Targets1: " + motors[i].getStatusFramePeriod(StatusFrame.Status_17_Targets1) + " ms");
+        }
     }
 
     /**
@@ -116,12 +159,26 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void coast() {
+        isBreak = false;
         ltMotor.setNeutralMode(NeutralMode.Coast);
         lmMotor.setNeutralMode(NeutralMode.Coast);
         lbMotor.setNeutralMode(NeutralMode.Coast);
         rtMotor.setNeutralMode(NeutralMode.Coast);
         rmMotor.setNeutralMode(NeutralMode.Coast);
         rbMotor.setNeutralMode(NeutralMode.Coast);
+    } 
+    public void brake() {
+        isBreak = true;
+        ltMotor.setNeutralMode(NeutralMode.Brake);
+        lmMotor.setNeutralMode(NeutralMode.Brake);
+        lbMotor.setNeutralMode(NeutralMode.Brake);
+        rtMotor.setNeutralMode(NeutralMode.Brake);
+        rmMotor.setNeutralMode(NeutralMode.Brake);
+        rbMotor.setNeutralMode(NeutralMode.Brake);
+    }
+
+    public boolean isBrake() {
+        return isBreak;
     }
 
     /**

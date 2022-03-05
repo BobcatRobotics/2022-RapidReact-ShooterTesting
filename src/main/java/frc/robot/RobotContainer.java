@@ -194,8 +194,9 @@ public class RobotContainer {
     
     Command drive = new driveStraightCommand(drivetrain, 0.9);
     Command dns = new dropAndSuck(intake);
-    Command shoot = new shootBalls(shooter, intake);
-    commandGroup.addCommands(dns,drive,shoot);
+    Command shoot = new shootBalls(shooter, intake, 5);
+    Command dummy = new driveStraightCommand(drivetrain, 1);
+    commandGroup.addCommands(dns,drive,shoot,dummy);
     return commandGroup;
   }
 }

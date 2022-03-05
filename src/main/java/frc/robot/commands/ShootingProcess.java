@@ -53,24 +53,43 @@ public class ShootingProcess extends CommandBase {
       }
     }
 
-    // Gamepad left bumper button -> run shooter
+    // Gamepad left bumper button -> run shooter high speed
     if (gamepad.getRawButton(Constants.Left_Bumper_Button)) {
-      // WORKING
+      shooter.setHighMode(true);
       shooter.setRunning(true);
       shooter.getToSpeed();
-      if (shooter.atSpeed()) {
-        System.out.println("Ready to feed -> shoot");
-      }
-    } else {
+    }
+    // Gamepad D pad up -> run shooter low speed
+    else if (gamepad.getPOV() == Constants.D_Pad_Up) {
+      shooter.setHighMode(false);
+      shooter.setRunning(true);
+      shooter.getToSpeed();
+    }
+    // Stop shooter
+    else {
       shooter.stopShooter();
       shooter.setRunning(false);
+      // If climber mode, shooter should default to stop motor if button not pressed
+      // if (climber.isClimberMode()) {
+      //   shooter.stopShooter();
+      // }
     }
     // Gamepad left trigger -> run tower in
     if (gamepad.getRawButton(Constants.Left_Trigger_Button)) {
-      shooter.feed();
+      // if (shooter.atSpeed()) {
+        shooter.feed();
+      // }
     } else {
       shooter.stopFeeding();
     }
+
+    // if (gamepad.getPOV() == Constants.D_Pad_Up) {
+    //   shooter.setHighMode(true);
+    // } else if (gamepad.getPOV() == Constants.D_Pad_Down) {
+    //   shooter.setHighMode(false);
+    // }
+
+    //
 
 
     // // Shooter controls
