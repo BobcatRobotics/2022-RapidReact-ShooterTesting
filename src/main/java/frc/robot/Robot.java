@@ -112,10 +112,14 @@ public class Robot extends TimedRobot {
     String util = SmartDashboard.getString("Use low can util", "no");
 
     if (util.equalsIgnoreCase("yes")) {
-      intake.lowerCANBusUtilization();
-      shooter.lowerCANBusUtilization();
-      drivetrain.lowerCANBusUtilization();
-      climber.lowerCANBusUtilization();
+      // drivetrain.lowerCANBusUtilization();
+      // intake.lowerCANBusUtilization();
+      // shooter.lowerCANBusUtilization();
+      // climber.lowerCANBusUtilization();
+    } else {
+      // intake.defaultStatusFrames();
+      // shooter.defaultStatusFrames();
+      // climber.defaultStatusFrames();
     }
   }
 

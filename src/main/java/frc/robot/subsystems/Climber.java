@@ -1,12 +1,14 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.ClimberConstants.*;
+import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.LowerCamelCaseStrategy;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -30,6 +32,8 @@ public class Climber extends SubsystemBase {
 
     private double fullClimbingSpeed = 0.5;
 
+    private int[] originalStatusFrames = new int[12];
+
     public Climber() {
         // compressorModel = new Compressor(compressorModelPort,
         // PneumaticsModuleType.REVPH);
@@ -47,23 +51,31 @@ public class Climber extends SubsystemBase {
         if (climberSolenoid.get()) {
             System.out.println("Climber pistons have been extended to start with.");
         }
+
+        // configDefault();
+        // defaultStatusFrames();
+        lowerCANBusUtilization();
     }
 
     public void lowerCANBusUtilization() {
         // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
-        winchMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 50);
-        winchMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 50);
-        winchMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 255);
-        winchMotor.setStatusFramePeriod(StatusFrame.Status_6_Misc, 255);
-        winchMotor.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 255);
-        winchMotor.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 255);
-        winchMotor.setStatusFramePeriod(StatusFrame.Status_10_Targets, 255);
-        winchMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 255);
-        winchMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 255);
-        winchMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 255);
-        winchMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 255);
-        winchMotor.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 255);
+        for (int i = 0; i < originalStatusFrames.length; i++) {
+            winchMotor.setStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i], Constants.kTimeoutMs);
+        }
+        prettyPrintStatusFrames();
     }
+
+    // public void configDefault() {
+    //     for (int i = 0; i < originalStatusFrames.length; i++) {
+    //         originalStatusFrames[i] = winchMotor.getStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i]);
+    //     }
+    // }
+
+    // public void defaultStatusFrames() {
+    //     for (int i = 0; i < originalStatusFrames.length; i++) {
+    //         winchMotor.setStatusFramePeriod(Constants.frameTypes[i], originalStatusFrames[i]);
+    //     }
+    // }
 
     public void prettyPrintStatusFrames() {
         System.out.println("winchMotor");

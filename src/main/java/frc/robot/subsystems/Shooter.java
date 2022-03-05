@@ -41,6 +41,8 @@ public class Shooter extends SubsystemBase {
     private final Solenoid shooterAngleSolenoid;
     private boolean isShooterSolenoidExtended;
 
+    private int[][] originalStatusFrames = new int[3][12];
+
     public Shooter() {
         // Init new compressor object from port in Constants
         // compressorModel = new Compressor(ShooterConstants.compressorModelPort,
@@ -101,25 +103,53 @@ public class Shooter extends SubsystemBase {
         isShooterSolenoidExtended = shooterAngleSolenoid.get();
 
         getToSpeed();
+        // lowerCANBusUtilization();
+        // prettyPrintStatusFrames();
+    }
 
+    // public void lowerCANBusUtilization() {
+    //     for (WPI_TalonFX talon: new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor}) {
+    //         // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
+    //         talon.setStatusFramePeriod(StatusFrame.Status_1_General, 20);
+    //         talon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
+    //         talon.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 384);
+    //         talon.setStatusFramePeriod(StatusFrame.Status_6_Misc, 384);
+    //         talon.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 384);
+    //         talon.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 384);
+    //         talon.setStatusFramePeriod(StatusFrame.Status_10_Targets, 384);
+    //         talon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 384);
+    //         talon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 384);
+    //         talon.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 384);
+    //         talon.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 384);
+    //         talon.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 384);
+    //     }
+    // }
+
+    public void lowerCANBusUtilization() {
+        // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
+        for (WPI_TalonFX talon: new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor}) {
+            for (int i = 0; i < originalStatusFrames.length; i++) {
+                talon.setStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i]);
+            }
+        }
         prettyPrintStatusFrames();
     }
 
-    public void lowerCANBusUtilization() {
-        for (WPI_TalonFX talon: new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor}) {
-            // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
-            talon.setStatusFramePeriod(StatusFrame.Status_1_General, 50);
-            talon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 50);
-            talon.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 255);
-            talon.setStatusFramePeriod(StatusFrame.Status_6_Misc, 255);
-            talon.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 255);
-            talon.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 255);
-            talon.setStatusFramePeriod(StatusFrame.Status_10_Targets, 255);
-            talon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 255);
-            talon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 255);
-            talon.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 255);
-            talon.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 255);
-            talon.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 255);
+    public void configDefault() {
+        WPI_TalonFX[] talons = new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor};
+        for (int t = 0; t < talons.length; t++) {
+            for (int i = 0; i < originalStatusFrames.length; i++) {
+                originalStatusFrames[t][i] = talons[t].getStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i]);
+            }
+        }
+    }
+
+    public void defaultStatusFrames() {
+        WPI_TalonFX[] talons = new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor};
+        for (int t = 0; t < talons.length; t++) {
+            for (int i = 0; i < originalStatusFrames.length; i++) {
+                talons[t].setStatusFramePeriod(Constants.frameTypes[i], originalStatusFrames[t][i]);
+            }
         }
     }
 
@@ -178,6 +208,8 @@ public class Shooter extends SubsystemBase {
     public void stopShooter() {
         shooterFalconLeft.stopMotor();
         shooterFalconRight.stopMotor();
+        // shooterFalconLeft.set(0);
+        // shooterFalconRight.set(0);
     }
 
     // Get right RPM

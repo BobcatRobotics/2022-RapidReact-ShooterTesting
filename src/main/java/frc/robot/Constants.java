@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.StatusFrame;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
@@ -29,6 +31,23 @@ public final class Constants {
    * "In Java, it is recommended that the constants be used from other classes
    * by statically importing the necessary inner class."
    */
+
+  public static int[] desiredStatusFrames = {20, 20, 384, 384, 384, 384, 384, 384, 384, 384, 384, 384};
+  public static StatusFrame[] frameTypes = {
+    StatusFrame.Status_1_General,
+    StatusFrame.Status_2_Feedback0,
+    StatusFrame.Status_4_AinTempVbat,
+    StatusFrame.Status_6_Misc,
+    StatusFrame.Status_7_CommStatus,
+    StatusFrame.Status_10_MotionMagic,
+    StatusFrame.Status_10_Targets,
+    StatusFrame.Status_12_Feedback1,
+    StatusFrame.Status_13_Base_PIDF0,
+    StatusFrame.Status_14_Turn_PIDF1,
+    StatusFrame.Status_15_FirmwareApiStatus,
+    StatusFrame.Status_17_Targets1,
+  };
+  public static int kTimeoutMs = 30;
 
   //Button definitions for gamepad
   public static final int A_Button = 2;

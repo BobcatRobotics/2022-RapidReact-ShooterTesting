@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.lib.RioLogger;
 
 public class Intake extends SubsystemBase {
@@ -38,6 +39,7 @@ public class Intake extends SubsystemBase {
     private double inHalfSpeed = 0.3;
     private double outSpeed = -0.5;
 
+    private int[][] originalStatusFrames = new int[2][12];
 
     /**
      * Constructor for the Intake subsystem
@@ -62,7 +64,10 @@ public class Intake extends SubsystemBase {
         // intakeRightWheel.setNeutralMode(NeutralMode.Coast);
         intakeBar.setNeutralMode(NeutralMode.Coast);
 
-        prettyPrintStatusFrames();
+        // prettyPrintStatusFrames();
+        // configDefault();
+        // defaultStatusFrames();
+        lowerCANBusUtilization();
     }
 
     public void feedOut() {
@@ -76,19 +81,41 @@ public class Intake extends SubsystemBase {
 
     public void lowerCANBusUtilization() {
         // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_1_General, 50);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 50);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 255);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_6_Misc, 255);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 255);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 255);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_10_Targets, 255);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 255);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 255);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 255);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 255);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 255);
+        for (int i = 0; i < originalStatusFrames.length; i++) {
+            intakeLeftWheel.setStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i], Constants.kTimeoutMs);
+            intakeBar.setStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i], Constants.kTimeoutMs);
+        }
+        prettyPrintStatusFrames();
     }
+
+    public void configDefault() {
+        for (int i = 0; i < originalStatusFrames.length; i++) {
+            originalStatusFrames[0][i] = intakeLeftWheel.getStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i]);
+            originalStatusFrames[1][i] = intakeBar.getStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i]);
+        }
+    }
+
+    public void defaultStatusFrames() {
+        for (int i = 0; i < originalStatusFrames.length; i++) {
+            originalStatusFrames[0][i] = intakeLeftWheel.getStatusFramePeriod(Constants.frameTypes[i], originalStatusFrames[0][i]);
+            originalStatusFrames[1][i] = intakeBar.getStatusFramePeriod(Constants.frameTypes[i], originalStatusFrames[1][i]);
+        }
+    }
+    // public void lowerCANBusUtilization() {
+    //     // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
+    //     intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_1_General, 20);
+    //     intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
+    //     intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 384);
+    //     intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_6_Misc, 384);
+    //     intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 384);
+    //     intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 384);
+    //     intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_10_Targets, 384);
+    //     intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 384);
+    //     intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 384);
+    //     intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 384);
+    //     intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 384);
+    //     intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 384);
+    // }
 
     public void prettyPrintStatusFrames() {
         System.out.println("Intake wheel:");
@@ -127,12 +154,12 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         double pressure = phub.getPressure(0);
         SmartDashboard.putNumber("Compressor pressure", pressure);
-        if (pressure >= 120) {
+        if (pressure >= 115) {
             compressorModel.disable();
 
         } else if (pressure <= 90) {
             // compressorModel.enableDigital();
-            compressorModel.enableAnalog(90, 120);
+            compressorModel.enableAnalog(90, 115);
         }
     }
 
@@ -221,7 +248,7 @@ public class Intake extends SubsystemBase {
      * @param state True if we want to deploy, false if we want to retract
      */
     public void deploy(boolean state) {
-        intakeSolenoid.set(!state); // Deployed = intake up
+        intakeSolenoid.set(state); // Deployed = intake down
         isDeployed = state;
     }
 
