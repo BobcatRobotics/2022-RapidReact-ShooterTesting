@@ -7,11 +7,11 @@ import frc.robot.utils.Ball;
 
 public class drivetrainPIDcontroller extends SubsystemBase {
   
-  private double driveSpeed = 0.0;
-  Ball ball = RobotContainer.getClosestBall();
-  double x = ball.getCenterX();
-  double y = ball.getCenterY();
-  private double tgt_area = x;
+  // private double driveSpeed = 0.0;
+  // Ball ball = RobotContainer.getClosestBall();
+  // double x = ball.getCenterX();
+  // double y = ball.getCenterY();
+  // private double tgt_area = x;
 
   //public void start() { 
     //enable();

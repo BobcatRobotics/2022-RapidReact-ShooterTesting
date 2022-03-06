@@ -22,10 +22,10 @@ public class shootBalls extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public shootBalls(Shooter s, Intake i, double ta) {
+  public shootBalls(Shooter s, Intake i, double time_allotted) {
     shooter = s;
     intake = i;
-    time_alloted = ta;
+    time_alloted = time_allotted;
     addRequirements(shooter);
     addRequirements(intake);
   }
