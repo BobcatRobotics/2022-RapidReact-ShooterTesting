@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.drivetrain;
+import frc.robot.subsystems.Drivetrain;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,10 +22,10 @@ figure out how to implement the slow zone, so that is not present in this implem
 
 public class AlignToNearestBall extends CommandBase {
     
-    private Drivetrain dt;
+    private Drivetrain drivetrain;
 
     private JSONParser parser = new JSONParser();
-    private NetworkTableEntry camJson;
+    private String camJson;
     private NetworkTable table;
     private String color;
 
@@ -48,14 +48,14 @@ public class AlignToNearestBall extends CommandBase {
     //private final double slowZone = 20;
     //private final double slowScalingFactor = 0.5;
 
-    public AlignToNearestBall(Drivetrain drivetrain, String teamColor, double lv, double rv, double centerX) {
+    public AlignToNearestBall(Drivetrain dt, String teamColor, double lv, double rv, double centerX) {
         color = teamColor;
         leftVolts = lv;
         rightVolts = rv;
         goalX = centerX;
         driveTime = time_allotted_per_miniTurn;
 
-        dt = drivetrain;
+        drivetrain = dt;
         addRequirements(drivetrain);
     }
 
@@ -70,13 +70,20 @@ public class AlignToNearestBall extends CommandBase {
     @Override
     public void execute() {
         // get jsonData entry made from cargo_tracker.py
-        camJson = (String) table.getEntry("jsonData");
+        camJson = table.getEntry("jsonData").getString("");
         // convert to jsonArray and then to object array
         JSONArray jsonArray = (JSONArray) parser.parse(camJson);
         Object[] jobArray = jsonArray.toArray();
 
         // get largest radius object from jobArray
         largestRadii = 0.0;
+
+        // [PR] Should probably instead be:
+        // for (JSONObject job : jobArray) {
+        //     if (job.get("radius") > largestRadii && job.get("color") == color) {
+        //         largestRadiiBall = job;
+        //     }
+        // }
 
         for (Object job : jobArray) {
             job = (JSONObject) job;
@@ -89,13 +96,13 @@ public class AlignToNearestBall extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        dt.stop();
-        dt.brake();
+        drivetrain.stop();
+        drivetrain.brake();
     }
     
     @Override
     public boolean isFinished() {
-        camJson = (String) table.getEntry("jsonData");
+        camJson = table.getEntry("jsonData").getString("");
         JSONArray jsonArray = (JSONArray) parser.parse(camJson);
         Object[] jobArray = jsonArray.toArray();
         
