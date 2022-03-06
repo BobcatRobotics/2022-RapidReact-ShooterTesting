@@ -25,8 +25,8 @@ public class Shooter extends SubsystemBase {
     private final WPI_TalonFX shooterFalconRight;
     private final WPI_TalonFX feedMotor;
 
-    public double upperHubShootingSpeed = 4000.0;
-    public double lowerHubShootingSpeed = 1800.0;
+    public double upperHubShootingSpeed = ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED;
+    public double lowerHubShootingSpeed = ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED;
     private final double targetSpeed = 3000.0;
     private boolean isRunning = false;
 

@@ -83,6 +83,10 @@ public class ShootingProcess extends CommandBase {
       shooter.stopFeeding();
     }
 
+    if (gamepad.getRawButton(Constants.Right_Joystick_Pressed)) {
+      shooter.reverseFeed();
+    }
+
     // if (gamepad.getPOV() == Constants.D_Pad_Up) {
     //   shooter.setHighMode(true);
     // } else if (gamepad.getPOV() == Constants.D_Pad_Down) {

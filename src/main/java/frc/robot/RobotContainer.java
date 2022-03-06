@@ -61,6 +61,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.driveCommand;
 import frc.robot.commands.dropAndSuck;
 import frc.robot.commands.shootBalls;
+import frc.robot.commands.turnDegreeCommand;
 import frc.robot.subsystems.Climber;
 // import frc.robot.Constants.FeederConstants;
 // import frc.robot.subsystems.ColorWheel;
@@ -188,7 +189,10 @@ public class RobotContainer {
   // private double safeAutoForwardSpeed = 0.1; // TODO: Tune this (I'm guessing it's between -1 and 1)
 
   //One of the dead autos(if our auto is bricked :( ))
-  public SequentialCommandGroup deadAutoOne() {
+
+  public String[] deadAutoIDs = {"dA_2B", "dA_3B_right"};
+
+  public SequentialCommandGroup deadAuto_twoBall() {
     //Drive forward setCommandVelocity = 1 meter/s
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
     
@@ -200,64 +204,79 @@ public class RobotContainer {
     return commandGroup;
   }
 
-  // 3-ball auto: Drive back, intake & shoot, turn, drive forward, intake, turn back, shoot
-  public SequentialCommandGroup deadAutoTwo() {
+  public SequentialCommandGroup deadAuto_threeBall_right() {
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
 
     // Drive back, intake & shoot
-    Command driveBackwards = new driveCommand(drivetrain, 4, 4, 0.9);
-    Command dns = new dropAndSuck(intake);
-    Command shoot = new shootBalls(shooter, intake, 3);
+    Command dns1 = new dropAndSuck(intake);
+    Command dns2 = new dropAndSuck(intake);
+    Command driveBackwards1 = new driveCommand(drivetrain, 4, 4, 0.9);
+    // Command driveBackwards2 = new driveCommand(drivetrain, 4, 4, 0.9);
+    Command shoot1 = new shootBalls(shooter, intake, 3);
+    Command shoot2 = new shootBalls(shooter, intake, 3);
     
     // Drive forward a little bit to avoid hitting the wall when turning
     Command driveAdjust = new driveCommand(drivetrain, -2, -2, 0.3);
 
     // Turn deg
     // brute force turn
-    Command turn = new driveCommand(drivetrain, 4, -4, 0.5);
+    // Command turn = new driveCommand(drivetrain, -4, 4, 0.62);
+    Command turn = new turnDegreeCommand(drivetrain, 101.5);
 
     // drive forward & intake
-    Command driveForward =  new driveCommand(drivetrain, 4, 4, 1);
+    Command driveBackwards2 =  new driveCommand(drivetrain, 4, 4, 2);
     // add dns in commandGroup
-
-    // turn back
-    // brute force turn
-    Command turnBack = new driveCommand(drivetrain, -4, 4, 0.4);
-
-    // shoot
-    // add shoot in command group
-
-    commandGroup.addCommands(dns, driveBackwards, shoot, driveAdjust, turn, dns, driveForward, turnBack, shoot, driveBackwards);
-    return commandGroup;
-  }
-
-  public SequentialCommandGroup deadAutoThree() {
-    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
-
-    // Drive back, intake & shoot
-    Command driveBackwards = new driveCommand(drivetrain, 4, 4, 0.9);
-    Command dns = new dropAndSuck(intake);
-    Command shoot = new shootBalls(shooter, intake, 3);
     
-    // Drive forward a little bit to avoid hitting the wall when turning
-    Command driveAdjust = new driveCommand(drivetrain, -2, -2, 0.3);
-
-    // Turn deg
-    // brute force turn
-    Command turn = new driveCommand(drivetrain, 4, -4, 0.5);
-
-    // drive forward & intake
-    Command driveForward =  new driveCommand(drivetrain, 4, 4, 1);
-    // add dns in commandGroup
-
     // turn back
     // brute force turn
-    Command turnBack = new driveCommand(drivetrain, -4, 4, 0.4);
+    Command turnBack = new turnDegreeCommand(drivetrain, -56);
+    Command driveForward2 =  new driveCommand(drivetrain, -3, -3, 0.2);
 
     // shoot
     // add shoot in command group
 
-    commandGroup.addCommands(dns, driveBackwards, shoot, driveAdjust, turn, dns, driveForward, turnBack, shoot, driveBackwards);
+    commandGroup.addCommands(dns1, driveBackwards1, shoot1, driveAdjust, turn, dns2, driveBackwards2, turnBack, driveForward2, shoot2);
     return commandGroup;
   }
+
+  // public SequentialCommandGroup deadAutoTwo() {
+  //   SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+
+  //   // Drive back, intake & shoot
+  //   Command dns1 = new dropAndSuck(intake);
+  //   Command dns2 = new dropAndSuck(intake);
+  //   Command driveBackwards1 = new driveCommand(drivetrain, 4, 4, 0.9);
+  //   Command driveBackwards2 = new driveCommand(drivetrain, 4, 4, 0.9);
+  //   Command shoot1 = new shootBalls(shooter, intake, 3);
+  //   Command shoot2 = new shootBalls(shooter, intake, 3);
+    
+  //   // Drive forward a little bit to avoid hitting the wall when turning
+  //   Command driveAdjust = new driveCommand(drivetrain, -2, -2, 0.3);
+
+  //   // Turn deg
+  //   // brute force turn
+  //   Command turn = new driveCommand(drivetrain, -4, 4, 0.62);
+
+  //   // drive forward & intake
+  //   Command driveForward =  new driveCommand(drivetrain, 4, 4, 2);
+  //   // add dns in commandGroup
+
+  //   // turn back
+  //   // brute force turn
+  //   Command turnBack = new driveCommand(drivetrain, 4, -4, 0.28);
+
+  //   // shoot
+  //   // add shoot in command group
+
+  //   commandGroup.addCommands(dns1, driveBackwards1, shoot1, driveAdjust, turn, dns2, driveForward, turnBack, shoot2, driveBackwards2);
+  //   return commandGroup;
+  // }
+
+  // public SequentialCommandGroup deadAutoThree() {
+  //   SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+  //   Command turn90Command = new turnDegreeCommand(drivetrain, 90);
+  //   // 93 deg, -75 deg or signs flip
+  //   commandGroup.addCommands(turn90Command);
+  //   return commandGroup;
+  // }
 }

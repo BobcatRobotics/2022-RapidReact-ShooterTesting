@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DriveTele;
 import frc.robot.commands.ShootingProcess;
@@ -57,6 +58,8 @@ public class Robot extends TimedRobot {
   // set to true to use Parallel Command Groups
   private boolean commandGroupTest = true;
   private ParallelCommandGroup commandGroup = new ParallelCommandGroup();
+
+  private int selected_dead_auto_ID = 0;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -80,8 +83,8 @@ public class Robot extends TimedRobot {
 
     drivetrain = m_robotContainer.drivetrain;
     // compressor = m_robotContainer.compressor;
-    SmartDashboard.putNumber("Set High Speed", 4000);
-    SmartDashboard.putNumber("Set Low Speed", 1800);
+    SmartDashboard.putNumber("Set High Speed", ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED);
+    SmartDashboard.putNumber("Set Low Speed", ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED);
     tab.add("Shooter current RPM",0);
     // Add Shuffleboard toggle for switching between RS shift switch and A button
     SmartDashboard.putBoolean("Use RS shift switch?", true);
@@ -91,7 +94,17 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     SmartDashboard.putNumber("Compressor pressure", intake.pneumaticHub().getPressure(0));
-    SmartDashboard.putString("Use low can util", "no");
+    
+    
+    
+    // NEED TO TEST -----
+    SmartDashboard.putNumber("Selected Dead Auto #", selected_dead_auto_ID);
+    SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
+    // NEED TO TEST -----
+
+
+
+    // SmartDashboard.putString("Use low can util", "no");
     // commandGroup.addCommands(intakeControls,drivetele,shootingProcess);
   }
 
@@ -140,7 +153,17 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.deadAutoOne();
+    
+    
+    
+    // NEED TO TEST -----
+    if (selected_dead_auto_ID == 0) m_autonomousCommand = m_robotContainer.deadAuto_twoBall();
+    else if (selected_dead_auto_ID == 1) m_autonomousCommand = m_robotContainer.deadAuto_threeBall_right();
+    else m_autonomousCommand = m_robotContainer.deadAuto_twoBall();
+    // NEED TO TEST -----
+
+
+    
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -184,7 +207,7 @@ public class Robot extends TimedRobot {
       intakeControls.schedule();
       // climber controller
       climberCommand.schedule();
-
+      climber.turnOffClimberMode();
     // }
 
   }
@@ -239,8 +262,8 @@ public class Robot extends TimedRobot {
   }
 
   public void updateShuffleBoard() {
-    double highSpeed = SmartDashboard.getNumber("Set High Speed", 4000);
-    double lowSpeed = SmartDashboard.getNumber("Set Low Speed", 1800);
+    double highSpeed = SmartDashboard.getNumber("Set High Speed", ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED);
+    double lowSpeed = SmartDashboard.getNumber("Set Low Speed", ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED);
     // System.out.println("SET SPEED IS " + speed);
     shooter.setHighSpeed(highSpeed);
     shooter.setLowSpeed(lowSpeed);
@@ -263,6 +286,17 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("NavX Z Disp", RobotContainer.navx.getDisplacementZ());
     // SmartDashboard.putNumber("NavX angle", RobotContainer.navx.getAngle());
     SmartDashboard.putString("DriveTrain get pose", drivetrain.getPose().toString());
+
+
+
+
+    // NEED TO TEST -----
+    selected_dead_auto_ID = (int)SmartDashboard.getNumber("Selected Dead Auto #", 0);
+    SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
+    // NEED TO TEST -----
+
+
+
   }
   
   @Override

@@ -54,6 +54,7 @@ public class Climber extends SubsystemBase {
 
         // configDefault();
         // defaultStatusFrames();
+        isClimberMode = false;
         lowerCANBusUtilization();
     }
 
@@ -138,6 +139,10 @@ public class Climber extends SubsystemBase {
         else {
             winchMotor.set(isUnwinding ? -fullClimbingSpeed : fullClimbingSpeed);
         }
+    }
+
+    public void turnOffClimberMode() {
+        isClimberMode = false;
     }
 
     public void climb(Double climbSpeed) {

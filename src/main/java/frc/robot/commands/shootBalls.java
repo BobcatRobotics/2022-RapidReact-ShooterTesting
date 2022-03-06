@@ -35,6 +35,7 @@ public class shootBalls extends CommandBase {
   public void initialize() {
     shooter.stop();
     shooter.stopFeeding();
+    shooter.setHighMode(true);
     // shooter.getToSpeed();
     intake.stopIntake();
     t.reset();
@@ -66,6 +67,7 @@ public class shootBalls extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    intake.stopIntake();
     if(intake.isDeployed()){
       intake.deploy(false);
     }
