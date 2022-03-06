@@ -16,7 +16,8 @@ import edu.wpi.first.wpilibj.Timer;
 /*
 So far, AlignToNearestBall makes small, tiny 0.1 (abstract time to be changed w/ testing) second increments at a certain speed,
 turning until the center x-value of the ball with the largest radius is reasonably within the goal x-value which we would like
-it to be at. It is not being used anywhere and requires a functional cargo_tracker.py to work. - Arnav
+it to be at. It is not being used anywhere and requires a functional cargo_tracker.py to work. As I commented below, I could not
+figure out how to implement the slow zone, so that is not present in this implementation - Arnav
 */
 
 public class AlignToNearestBall extends CommandBase {
@@ -103,7 +104,7 @@ public class AlignToNearestBall extends CommandBase {
         // reset timer
         t.reset();
 
-         // align till ball in approximate center of camera frame & slow down if in slowZone
+         // align till ball in approximate center of camera frame
          if (t.hasElapsed(driveTime)) {
             drivetrain.stop();
             t.reset();
