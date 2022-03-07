@@ -62,6 +62,7 @@ import frc.robot.commands.driveCommand;
 import frc.robot.commands.dropAndSuck;
 import frc.robot.commands.shootBalls;
 import frc.robot.commands.turnDegreeCommand;
+import frc.robot.commands.waitCommand;
 import frc.robot.subsystems.Climber;
 // import frc.robot.Constants.FeederConstants;
 // import frc.robot.subsystems.ColorWheel;
@@ -192,15 +193,15 @@ public class RobotContainer {
 
   public String[] deadAutoIDs = {"dA_2B", "dA_3B_right"};
 
-  public SequentialCommandGroup deadAuto_twoBall() {
+  public SequentialCommandGroup deadAuto_twoBall(double startingWaitTime) {
     //Drive forward setCommandVelocity = 1 meter/s
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
-    
+    Command wait = new waitCommand(startingWaitTime);
     Command drive = new driveCommand(drivetrain, 4, 4, 0.9);
     Command dns = new dropAndSuck(intake);
     Command shoot = new shootBalls(shooter, intake, 5);
     Command dummy = new driveCommand(drivetrain, 4, 4, 1);
-    commandGroup.addCommands(dns,drive,shoot,dummy);
+    commandGroup.addCommands(wait,dns,drive,shoot,dummy);
     return commandGroup;
   }
 

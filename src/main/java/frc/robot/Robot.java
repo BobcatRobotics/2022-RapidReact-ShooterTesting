@@ -100,6 +100,7 @@ public class Robot extends TimedRobot {
     // NEED TO TEST -----
     SmartDashboard.putNumber("Selected Dead Auto #", selected_dead_auto_ID);
     SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
+    SmartDashboard.putNumber("Delay time: Dead auto 2-ball", 0);
     // NEED TO TEST -----
 
 
@@ -157,9 +158,11 @@ public class Robot extends TimedRobot {
     
     
     // NEED TO TEST -----
-    if (selected_dead_auto_ID == 0) m_autonomousCommand = m_robotContainer.deadAuto_twoBall();
-    else if (selected_dead_auto_ID == 1) m_autonomousCommand = m_robotContainer.deadAuto_threeBall_right();
-    else m_autonomousCommand = m_robotContainer.deadAuto_twoBall();
+    if (selected_dead_auto_ID == 1) {
+      m_autonomousCommand = m_robotContainer.deadAuto_threeBall_right();
+    } else {
+      m_autonomousCommand = m_robotContainer.deadAuto_twoBall(Math.max(0.0, Math.round(SmartDashboard.getEntry("Delay time: Dead auto 2-ball").getDouble(0.0)*2)/2.0));
+    }
     // NEED TO TEST -----
 
 
