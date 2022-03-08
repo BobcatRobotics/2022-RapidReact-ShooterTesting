@@ -49,11 +49,12 @@ public class Climber extends SubsystemBase {
 
         climberSolenoid = new Solenoid(PneumaticsModuleType.REVPH, climberSolenoidPort);
         if (climberSolenoid.get()) {
-            System.out.println("Climber pistons have been extended to start with.");
+            // System.out.println("Climber pistons have been extended to start with.");
         }
 
         // configDefault();
         // defaultStatusFrames();
+        isClimberMode = false;
         lowerCANBusUtilization();
     }
 
@@ -95,19 +96,19 @@ public class Climber extends SubsystemBase {
     // }
 
     public void prettyPrintStatusFrames() {
-        System.out.println("winchMotor");
-        System.out.println("\t Status_1_General: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_1_General) + " ms");
-        System.out.println("\t Status_2_Feedback0: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_2_Feedback0) + " ms");
-        System.out.println("\t Status_4_AinTempVbat: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_4_AinTempVbat) + " ms");
-        System.out.println("\t Status_6_Misc: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_6_Misc) + " ms");
-        System.out.println("\t Status_7_CommStatus: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_7_CommStatus) + " ms");
-        System.out.println("\t Status_10_MotionMagic: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_10_MotionMagic) + " ms");
-        System.out.println("\t Status_10_Targets: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_10_Targets) + " ms");
-        System.out.println("\t Status_12_Feedback1: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_12_Feedback1) + " ms");
-        System.out.println("\t Status_13_Base_PIDF0: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0) + " ms");
-        System.out.println("\t Status_14_Turn_PIDF1: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1) + " ms");
-        System.out.println("\t Status_15_FirmwareApiStatus: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus) + " ms");
-        System.out.println("\t Status_17_Targets1: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_17_Targets1) + " ms");
+        // System.out.println("winchMotor");
+        // System.out.println("\t Status_1_General: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_1_General) + " ms");
+        // System.out.println("\t Status_2_Feedback0: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_2_Feedback0) + " ms");
+        // System.out.println("\t Status_4_AinTempVbat: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_4_AinTempVbat) + " ms");
+        // System.out.println("\t Status_6_Misc: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_6_Misc) + " ms");
+        // System.out.println("\t Status_7_CommStatus: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_7_CommStatus) + " ms");
+        // System.out.println("\t Status_10_MotionMagic: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_10_MotionMagic) + " ms");
+        // System.out.println("\t Status_10_Targets: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_10_Targets) + " ms");
+        // System.out.println("\t Status_12_Feedback1: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_12_Feedback1) + " ms");
+        // System.out.println("\t Status_13_Base_PIDF0: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0) + " ms");
+        // System.out.println("\t Status_14_Turn_PIDF1: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1) + " ms");
+        // System.out.println("\t Status_15_FirmwareApiStatus: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus) + " ms");
+        // System.out.println("\t Status_17_Targets1: " + winchMotor.getStatusFramePeriod(StatusFrame.Status_17_Targets1) + " ms");
     }
 
     public void toggleSwitchToClimberMode() {
@@ -138,6 +139,10 @@ public class Climber extends SubsystemBase {
         else {
             winchMotor.set(isUnwinding ? -fullClimbingSpeed : fullClimbingSpeed);
         }
+    }
+
+    public void turnOffClimberMode() {
+        isClimberMode = false;
     }
 
     public void climb(Double climbSpeed) {

@@ -134,19 +134,19 @@ public class Drivetrain extends SubsystemBase {
         WPI_TalonFX[] motors = {ltMotor, lmMotor, lbMotor, rtMotor, rmMotor, rbMotor};
         String[] motorNames = {"ltMotor", "lmMotor", "lbMotor", "rtMotor", "rmMotor", "rbMotor"};
         for (int i = 0; i < motors.length; i++) {
-            System.out.println(motorNames[i]);
-            System.out.println("\t Status_1_General: " + motors[i].getStatusFramePeriod(StatusFrame.Status_1_General) + " ms");
-            System.out.println("\t Status_2_Feedback0: " + motors[i].getStatusFramePeriod(StatusFrame.Status_2_Feedback0) + " ms");
-            System.out.println("\t Status_4_AinTempVbat: " + motors[i].getStatusFramePeriod(StatusFrame.Status_4_AinTempVbat) + " ms");
-            System.out.println("\t Status_6_Misc: " + motors[i].getStatusFramePeriod(StatusFrame.Status_6_Misc) + " ms");
-            System.out.println("\t Status_7_CommStatus: " + motors[i].getStatusFramePeriod(StatusFrame.Status_7_CommStatus) + " ms");
-            System.out.println("\t Status_10_MotionMagic: " + motors[i].getStatusFramePeriod(StatusFrame.Status_10_MotionMagic) + " ms");
-            System.out.println("\t Status_10_Targets: " + motors[i].getStatusFramePeriod(StatusFrame.Status_10_Targets) + " ms");
-            System.out.println("\t Status_12_Feedback1: " + motors[i].getStatusFramePeriod(StatusFrame.Status_12_Feedback1) + " ms");
-            System.out.println("\t Status_13_Base_PIDF0: " + motors[i].getStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0) + " ms");
-            System.out.println("\t Status_14_Turn_PIDF1: " + motors[i].getStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1) + " ms");
-            System.out.println("\t Status_15_FirmwareApiStatus: " + motors[i].getStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus) + " ms");
-            System.out.println("\t Status_17_Targets1: " + motors[i].getStatusFramePeriod(StatusFrame.Status_17_Targets1) + " ms");
+            // System.out.println(motorNames[i]);
+            // System.out.println("\t Status_1_General: " + motors[i].getStatusFramePeriod(StatusFrame.Status_1_General) + " ms");
+            // System.out.println("\t Status_2_Feedback0: " + motors[i].getStatusFramePeriod(StatusFrame.Status_2_Feedback0) + " ms");
+            // System.out.println("\t Status_4_AinTempVbat: " + motors[i].getStatusFramePeriod(StatusFrame.Status_4_AinTempVbat) + " ms");
+            // System.out.println("\t Status_6_Misc: " + motors[i].getStatusFramePeriod(StatusFrame.Status_6_Misc) + " ms");
+            // System.out.println("\t Status_7_CommStatus: " + motors[i].getStatusFramePeriod(StatusFrame.Status_7_CommStatus) + " ms");
+            // System.out.println("\t Status_10_MotionMagic: " + motors[i].getStatusFramePeriod(StatusFrame.Status_10_MotionMagic) + " ms");
+            // System.out.println("\t Status_10_Targets: " + motors[i].getStatusFramePeriod(StatusFrame.Status_10_Targets) + " ms");
+            // System.out.println("\t Status_12_Feedback1: " + motors[i].getStatusFramePeriod(StatusFrame.Status_12_Feedback1) + " ms");
+            // System.out.println("\t Status_13_Base_PIDF0: " + motors[i].getStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0) + " ms");
+            // System.out.println("\t Status_14_Turn_PIDF1: " + motors[i].getStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1) + " ms");
+            // System.out.println("\t Status_15_FirmwareApiStatus: " + motors[i].getStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus) + " ms");
+            // System.out.println("\t Status_17_Targets1: " + motors[i].getStatusFramePeriod(StatusFrame.Status_17_Targets1) + " ms");
         }
     }
 

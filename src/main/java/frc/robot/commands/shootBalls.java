@@ -22,10 +22,10 @@ public class shootBalls extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public shootBalls(Shooter s, Intake i, double ta) {
+  public shootBalls(Shooter s, Intake i, double time_allotted) {
     shooter = s;
     intake = i;
-    time_alloted = ta;
+    time_alloted = time_allotted;
     addRequirements(shooter);
     addRequirements(intake);
   }
@@ -35,6 +35,7 @@ public class shootBalls extends CommandBase {
   public void initialize() {
     shooter.stop();
     shooter.stopFeeding();
+    shooter.setHighMode(true);
     // shooter.getToSpeed();
     intake.stopIntake();
     t.reset();
@@ -66,6 +67,7 @@ public class shootBalls extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    intake.stopIntake();
     if(intake.isDeployed()){
       intake.deploy(false);
     }

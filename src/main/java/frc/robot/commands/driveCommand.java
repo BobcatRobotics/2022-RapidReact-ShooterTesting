@@ -5,15 +5,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 
-public class driveStraightCommand extends CommandBase {
+public class driveCommand extends CommandBase {
     private double distance;
     private Drivetrain drivetrain;
     private Timer t = new Timer();
     private double driveTime = 0.0;
     private double speed = 0.0;
-    public driveStraightCommand(Drivetrain drive, double d) {
+    private double leftVolts, rightVolts;
+    public driveCommand(Drivetrain drive, double lv, double rv, double time_allotted) {
         drivetrain = drive;
-        driveTime = d;
+        driveTime = time_allotted;
+        leftVolts = lv;
+        rightVolts = rv;
         addRequirements(drivetrain);
     }
 
@@ -31,7 +34,7 @@ public class driveStraightCommand extends CommandBase {
         if (t.hasElapsed(driveTime)) {
             drivetrain.stop();
         } else {
-            drivetrain.tankDriveVolts(4, 4);
+            drivetrain.tankDriveVolts(leftVolts, rightVolts);
         }
     }
 

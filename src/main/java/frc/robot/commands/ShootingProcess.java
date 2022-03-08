@@ -41,14 +41,14 @@ public class ShootingProcess extends CommandBase {
     // Gamepad D-pad right -> shooter solenoid up
     if (gamepad.getPOV() == Constants.D_Pad_Right && !climber.isClimberMode()) {
       if (!shooter.isShooterSolenoidExtended()) {
-        System.out.println("D-pad right - shooter solenoid up");
+        // System.out.println("D-pad right - shooter solenoid up");
         shooter.setShooterSolenoidExtended(true);
       }
     }
     // Gamepad D-pad left -> shooter solenoid down
     else if (gamepad.getPOV() == Constants.D_Pad_Left && !climber.isClimberMode()) {
       if (shooter.isShooterSolenoidExtended()) {
-        System.out.println("D-pad left - shooter solenoid down");
+        // System.out.println("D-pad left - shooter solenoid down");
         shooter.setShooterSolenoidExtended(false);
       }
     }
@@ -76,11 +76,15 @@ public class ShootingProcess extends CommandBase {
     }
     // Gamepad left trigger -> run tower in
     if (gamepad.getRawButton(Constants.Left_Trigger_Button)) {
-      // if (shooter.atSpeed()) {
+      if (shooter.atSpeed()) {
         shooter.feed();
-      // }
+      }
     } else {
       shooter.stopFeeding();
+    }
+
+    if (gamepad.getRawButton(Constants.Right_Joystick_Pressed)) {
+      shooter.reverseFeed();
     }
 
     // if (gamepad.getPOV() == Constants.D_Pad_Up) {
@@ -94,11 +98,11 @@ public class ShootingProcess extends CommandBase {
 
     // // Shooter controls
     // if (gamepad.getRawButton(Constants.Right_Trigger_Button)) {
-    //   System.out.println("Right trigger pressed");
+    //   // System.out.println("Right trigger pressed");
     //   shooter.setRunning(true);
     //   shooter.getToSpeed();
     //   if (shooter.atSpeed()) {
-    //     System.out.println("Should be shooting now!");
+    //     // System.out.println("Should be shooting now!");
     //     shooter.feed();
     //   } 
     // } else {
@@ -111,7 +115,7 @@ public class ShootingProcess extends CommandBase {
     //     shooter.reverseFeed();
     //   } 
     // }
-    // System.out.println("shooting process execute() code is running...");
+    // // System.out.println("shooting process execute() code is running...");
   }
 
   // Called once the command ends or is interrupted.
