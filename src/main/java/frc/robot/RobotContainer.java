@@ -178,7 +178,7 @@ public class RobotContainer {
   //   String teamColor = "red";
   //   Ball closestBall = null;
   //   for (Ball ball: ball_array) {
-  //     // System.out.println(ball);
+  //     // // System.out.println(ball);
   //     if (closestBall == null) closestBall = ball;
   //     // Check if next ball is closer than current ball
   //     if (ball.getRadius() > closestBall.getRadius()) closestBall = ball;
@@ -230,8 +230,8 @@ public class RobotContainer {
     
     // turn back
     // brute force turn
-    Command turnBack = new turnDegreeCommand(drivetrain, -56);
-    Command driveForward2 =  new driveCommand(drivetrain, -3, -3, 0.2);
+    Command turnBack = new turnDegreeCommand(drivetrain, -52);
+    Command driveForward2 =  new driveCommand(drivetrain, -3, -3, 0.35);
 
     // shoot
     // add shoot in command group

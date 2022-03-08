@@ -44,27 +44,27 @@ public class intakeControls extends CommandBase {
     // Gamepad X button -> intake down
     if (gp.getRawButton(Constants.X_Button) && !climber.isClimberMode()) {
       if (intake.isDeployed()) {
-        System.out.println("X button - intake up");
+        // System.out.println("X button - intake up");
         intake.deploy(false);
       }
     }
     // Gamepad Y button -> intake up
     else if (gp.getRawButton(Constants.Y_Button) && !climber.isClimberMode()) {
       if (!intake.isDeployed()) {
-        System.out.println("Y button - intake down");
+        // System.out.println("Y button - intake down");
         intake.deploy(true);
       }
     }
 
     // Gamepad B button -> intake + vertical wheels out
     if (gp.getRawButton(Constants.B_Button)) {
-      System.out.println("B button");
+      // System.out.println("B button");
       intake.feedOut();
     } else {
 
       // Gamepad right trigger -> vertical wheels in
       if (gp.getRawButton(Constants.Right_Trigger_Button)) {
-        System.out.println("Right trigger button");
+        // System.out.println("Right trigger button");
         intake.runIntakeWheelsIn(true);
       }
       // Stop vertical wheels if nothing
@@ -76,12 +76,12 @@ public class intakeControls extends CommandBase {
       // Gamepad right bumper button -> intake bar in
       if (gp.getRawButton(Constants.Right_Bumper_Button)) {
         // WORKING
-        System.out.println("Right bumper button");
+        // System.out.println("Right bumper button");
         intake.runIntakeBarIn(true);
       }
       // Gamepad D-pad down -> intake out
       else if (gp.getPOV() == Constants.D_Pad_Down) {
-        System.out.println("D-pad down button");
+        // System.out.println("D-pad down button");
         intake.runIntakeBarOut(true);
       }
       // Stop intake bar if nothing

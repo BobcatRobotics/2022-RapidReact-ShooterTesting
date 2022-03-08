@@ -34,7 +34,7 @@ public class turnDegreeCommand extends CommandBase {
 
         double degrees = (goalHeading - heading) % 360.0;
 
-        if ((degrees <= 0.5 && degrees >= 0.0) || (degrees >= -0.5 && degrees <= 0.0)) {
+        if ((degrees <= 0.3 && degrees >= 0.0) || (degrees >= -0.3 && degrees <= 0.0)) {
             degrees = 0.0;
         }
 

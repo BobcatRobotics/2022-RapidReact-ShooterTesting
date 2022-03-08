@@ -19,7 +19,7 @@ public class RioLogger {
 			} catch (SecurityException e) {
 				String err = "RioLogger Security exception " + e;
 				DriverStation.reportError(err, false);
-				System.out.println(err);
+				// System.out.println(err);
 			}
 		}
 	}
@@ -38,20 +38,20 @@ public class RioLogger {
 		} catch (IOException e) {
 			String err = "Error writing log  " + e;
 			DriverStation.reportError(err, false);
-			System.out.println(err);
+			// System.out.println(err);
 		}
 	}
 
 	// Log diagnostic statements --> RioLoggerThread
 	public static void debugLog (String line) {
 		RioLoggerThread.log(line);
-		//System.out.println("DEBUG - " + line);
+		//// System.out.println("DEBUG - " + line);
 	}
 	
 	// Log Errors --> Driver Station, console
 	public static void errorLog (String line) {
 		DriverStation.reportError(line,false);
 		RioLogger.log(line);
-		//System.out.println("ERROR - " + line);
+		//// System.out.println("ERROR - " + line);
 	}
 }

@@ -149,12 +149,13 @@ public class Robot extends TimedRobot {
     drivetrain.coast();
     // intake.deploy(true);
     shooter.stopShooter();
+    updateShuffleBoard();
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    
+    updateShuffleBoard();
     
     
     // NEED TO TEST -----
@@ -267,7 +268,7 @@ public class Robot extends TimedRobot {
   public void updateShuffleBoard() {
     double highSpeed = SmartDashboard.getNumber("Set High Speed", ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED);
     double lowSpeed = SmartDashboard.getNumber("Set Low Speed", ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED);
-    // System.out.println("SET SPEED IS " + speed);
+    // // System.out.println("SET SPEED IS " + speed);
     shooter.setHighSpeed(highSpeed);
     shooter.setLowSpeed(lowSpeed);
     SmartDashboard.putNumber("Current RPM", shooter.getLeftRPM());
