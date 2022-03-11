@@ -173,8 +173,8 @@ public final class Constants {
     // public static final int compressorModelPort = 1;
 
     // Intake motors
-    public static final int intakeLeftWheelPort = 7;
-    // public static final int intakeRightWheelPort = 22;
+    public static final int intakeLeftWheelPort = 13;
+    public static final int intakeRightWheelPort = 7;
     public static final int intakeBarPort = 6;
 
     // Intake solenoids

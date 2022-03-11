@@ -26,6 +26,7 @@ public class Intake extends SubsystemBase {
 
     // Horizontal BAG wheels
     private WPI_VictorSPX intakeLeftWheel;
+    private WPI_VictorSPX intakeRightWheel;
 
     // Falcon intake
     private WPI_TalonFX intakeBar;
@@ -50,6 +51,9 @@ public class Intake extends SubsystemBase {
 
         // Init intake motors
         intakeLeftWheel = new WPI_VictorSPX(intakeLeftWheelPort);
+        intakeRightWheel = new WPI_VictorSPX(intakeRightWheelPort);
+        intakeLeftWheel.setInverted(true);
+        intakeRightWheel.follow(intakeLeftWheel);
         // intakeRightWheel = new WPI_TalonSRX(intakeRightWheelPort);
         // intakeRightWheel.setInverted(true); // Based on CAD drawing, the wheels should spin in opposite directions
         intakeBar = new WPI_TalonFX(intakeBarPort);
@@ -115,6 +119,18 @@ public class Intake extends SubsystemBase {
         intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 255, Constants.kTimeoutMs);
         intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 255, Constants.kTimeoutMs);
         intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 255, Constants.kTimeoutMs);
+        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_1_General, 20, Constants.kTimeoutMs);
+        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20, Constants.kTimeoutMs);
+        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 255, Constants.kTimeoutMs);
+        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_6_Misc, 255, Constants.kTimeoutMs);
+        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 255, Constants.kTimeoutMs);
+        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 255, Constants.kTimeoutMs);
+        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_10_Targets, 255, Constants.kTimeoutMs);
+        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 255, Constants.kTimeoutMs);
+        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 255, Constants.kTimeoutMs);
+        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 255, Constants.kTimeoutMs);
+        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 255, Constants.kTimeoutMs);
+        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 255, Constants.kTimeoutMs);
         intakeBar.setStatusFramePeriod(StatusFrame.Status_1_General, 255, Constants.kTimeoutMs);
         intakeBar.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 255, Constants.kTimeoutMs);
         intakeBar.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 255, Constants.kTimeoutMs);

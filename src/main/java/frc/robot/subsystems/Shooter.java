@@ -195,6 +195,7 @@ public class Shooter extends SubsystemBase {
     // Start shooter motors
     public void getToSpeed() {
         double s = highMode ? upperHubShootingSpeed : lowerHubShootingSpeed;
+        // double s = upperHubShootingSpeed;
         // shooterFalconLeft.set(-0.7);
         // shooterFalconLeft.set(ControlMode.Velocity, 4800);
         // // System.out.println("getting to speed: " + (-(speed/targetRPM*encoderEPR)));
@@ -243,6 +244,7 @@ public class Shooter extends SubsystemBase {
     // Check if motor is at speed
     public boolean atSpeed() {
         double s = highMode ? upperHubShootingSpeed : lowerHubShootingSpeed;
+        // double s = upperHubShootingSpeed;
         return ((Math.abs(getRightRPM()) >= (s - rpmThreshold)) || (getLeftRPM() >= (s - rpmThreshold)));
     }
 
