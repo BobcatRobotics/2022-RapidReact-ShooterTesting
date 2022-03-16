@@ -52,6 +52,7 @@ public class Robot extends TimedRobot {
   // private CommandBase desiredAutoCommand;
   private ShuffleboardTab tab = Shuffleboard.getTab("Things Tab");
   private double waitTime = 0;
+  private boolean autoMode = false;
 
   private boolean use_RS_Shift_Switch = true;
 
@@ -78,6 +79,7 @@ public class Robot extends TimedRobot {
     intake = m_robotContainer.intake;
     shooter = m_robotContainer.shooter;
     climber = m_robotContainer.climber;
+    climber.withdraw();
     // this.rightStick = RobotContainer.rightStick;
     // this.leftStick = RobotContainer.leftStick;
 
@@ -87,14 +89,14 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Set Low Speed", ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED);
     tab.add("Shooter current RPM",0);
     // Add Shuffleboard toggle for switching between RS shift switch and A button
-    SmartDashboard.putBoolean("Use RS shift switch?", true);
+    // SmartDashboard.putBoolean("Use RS shift switch?", true);
     // SmartDashboard.putNumber("Left shooter current", shooter.getLeftCurrent());
     // SmartDashboard.putNumber("Right shooter current", shooter.getRightCurrent());
     // SmartDashboard.putNumber("Left shooter voltage", shooter.getLeftVoltage());
     // SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     SmartDashboard.putNumber("Compressor pressure", intake.pneumaticHub().getPressure(0));
-    
+    SmartDashboard.putNumber("Shooter RPM Threshold", shooter.getRPMThreshold());
     
     
     // NEED TO TEST -----
@@ -123,18 +125,18 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    String util = SmartDashboard.getString("Use low can util", "no");
+    // String util = SmartDashboard.getString("Use low can util", "no");
 
-    if (util.equalsIgnoreCase("yes")) {
-      // drivetrain.lowerCANBusUtilization();
-      // intake.lowerCANBusUtilization();
-      // shooter.lowerCANBusUtilization();
-      // climber.lowerCANBusUtilization();
-    } else {
-      // intake.defaultStatusFrames();
-      // shooter.defaultStatusFrames();
-      // climber.defaultStatusFrames();
-    }
+    // if (util.equalsIgnoreCase("yes")) {
+    //   // drivetrain.lowerCANBusUtilization();
+    //   // intake.lowerCANBusUtilization();
+    //   // shooter.lowerCANBusUtilization();
+    //   // climber.lowerCANBusUtilization();
+    // } else {
+    //   // intake.defaultStatusFrames();
+    //   // shooter.defaultStatusFrames();
+    //   // climber.defaultStatusFrames();
+    // }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -155,6 +157,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    autoMode = true;
     updateShuffleBoard();
     
     
@@ -180,6 +183,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     
     updateShuffleBoard();
+
   }
 
   @Override
@@ -188,6 +192,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    autoMode = false;
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -255,12 +260,13 @@ public class Robot extends TimedRobot {
         shooter.setRunning(false);
         shooter.stop();
       }
-    } else {
-      // Reset shooter to lower hub shooting speed otherwise
-      shooter.setRunning(false);
-      shooter.stop();
-      // shooter.getToSpeed();
-    }
+    } 
+    // else {
+    //   // Reset shooter to lower hub shooting speed otherwise
+    //   shooter.setRunning(false);
+    //   shooter.stop();
+    //   // shooter.getToSpeed();
+    // }
 
     updateShuffleBoard();
   }
@@ -271,10 +277,18 @@ public class Robot extends TimedRobot {
     // // System.out.println("SET SPEED IS " + speed);
     shooter.setHighSpeed(highSpeed);
     shooter.setLowSpeed(lowSpeed);
-    SmartDashboard.putNumber("Current RPM", shooter.getLeftRPM());
+    SmartDashboard.putNumber("Current Left RPM", shooter.getLeftRPM());
+    SmartDashboard.putNumber("Current Right RPM", shooter.getRightRPM());
+    
 
+    if (autoMode) {
+      double rpmAuto = SmartDashboard.getNumber("Shooter RPM Threshold", 250) + 100;
+      shooter.setRPMThreshold(rpmAuto);
+    } else {
+      shooter.setRPMThreshold(SmartDashboard.getNumber("Shooter RPM Threshold", 250));
+    }
     // Update button used to toggle climber mode based on Shuffleboard input
-    use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
+    // use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
   
     // SmartDashboard.putNumber("Left shooter current", shooter.getLeftCurrent());
     // SmartDashboard.putNumber("Right shooter current", shooter.getRightCurrent());

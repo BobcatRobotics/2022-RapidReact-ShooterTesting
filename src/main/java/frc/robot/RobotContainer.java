@@ -227,15 +227,12 @@ public class RobotContainer {
     // drive forward & intake
     Command driveBackwards2 =  new driveCommand(drivetrain, 4, 4, 2);
     // add dns in commandGroup
-    
     // turn back
     // brute force turn
     Command turnBack = new turnDegreeCommand(drivetrain, -52);
     Command driveForward2 =  new driveCommand(drivetrain, -3, -3, 0.35);
-
     // shoot
     // add shoot in command group
-
     commandGroup.addCommands(dns1, driveBackwards1, shoot1, driveAdjust, turn, dns2, driveBackwards2, turnBack, driveForward2, shoot2);
     return commandGroup;
   }

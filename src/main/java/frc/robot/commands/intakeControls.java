@@ -58,36 +58,55 @@ public class intakeControls extends CommandBase {
 
     // Gamepad B button -> intake + vertical wheels out
     if (gp.getRawButton(Constants.B_Button)) {
-      // System.out.println("B button");
       intake.feedOut();
     } else {
 
-      // Gamepad right trigger -> vertical wheels in
-      if (gp.getRawButton(Constants.Right_Trigger_Button)) {
-        // System.out.println("Right trigger button");
-        intake.runIntakeWheelsIn(true);
-      }
-      // Stop vertical wheels if nothing
-      else {
-        intake.stopIntakeWheels();
-      }
-
-
-      // Gamepad right bumper button -> intake bar in
+      // Gamepad right bumper -> intake bar in, vertical wheels in
       if (gp.getRawButton(Constants.Right_Bumper_Button)) {
-        // WORKING
-        // System.out.println("Right bumper button");
         intake.runIntakeBarIn(true);
+        intake.runIntakeWheelsIn(true);
+      } else {
+        // Gamepad D-pad down -> intake out
+        if (gp.getPOV() == Constants.D_Pad_Down) {
+          intake.runIntakeBarOut(true);
+        } else { // Stop intake bar
+          intake.stopIntakeBar();
+        }
+
+        // Gamepad right trigger -> vertical wheels in
+        if (gp.getRawButton(Constants.Right_Trigger_Button)) {
+          intake.runIntakeWheelsIn(true);
+        } else { // Stop intake vertical wheels
+          intake.stopIntakeWheels();
+        }
       }
-      // Gamepad D-pad down -> intake out
-      else if (gp.getPOV() == Constants.D_Pad_Down) {
-        // System.out.println("D-pad down button");
-        intake.runIntakeBarOut(true);
-      }
-      // Stop intake bar if nothing
-      else {
-        intake.stopIntakeBar();
-      }
+
+      // // Gamepad right trigger -> vertical wheels in
+      // if (gp.getRawButton(Constants.Right_Trigger_Button)) {
+      //   // System.out.println("Right trigger button");
+      //   intake.runIntakeWheelsIn(true);
+      // }
+      // // Stop vertical wheels if nothing
+      // else {
+      //   intake.stopIntakeWheels();
+      // }
+
+
+      // // Gamepad right bumper button -> intake bar in
+      // if (gp.getRawButton(Constants.Right_Bumper_Button)) {
+      //   // WORKING
+      //   // System.out.println("Right bumper button");
+      //   intake.runIntakeBarIn(true);
+      // }
+      // // Gamepad D-pad down -> intake out
+      // else if (gp.getPOV() == Constants.D_Pad_Down) {
+      //   // System.out.println("D-pad down button");
+      //   intake.runIntakeBarOut(true);
+      // }
+      // // Stop intake bar if nothing
+      // else {
+      //   intake.stopIntakeBar();
+      // }
 
     }
 

@@ -52,21 +52,21 @@ public class ClimberCommand extends CommandBase {
         // }
 
         // X button -> climber solenoid withdraw
-        if (gp.getRawButton(Constants.X_Button) && climber.isClimberMode()) {
-            // // System.out.println("X pressed");
-            if (climber.isDeployed()) {
-                // // System.out.println("X pressed - climber solenoid withdraw");
-                climber.withdraw();
-            }
-        }
-        // Y button -> climber solenoid deploy
-        if (gp.getRawButton(Constants.Y_Button) && climber.isClimberMode()) {
-            // // System.out.println("Y pressed");
-            if (!climber.isDeployed()) {
-                // // System.out.println("Y pressed - climber solenoid deployed");
-                climber.deploy();
-            }
-        }
+        // if (gp.getRawButton(Constants.X_Button) && climber.isClimberMode()) {
+        //     // // System.out.println("X pressed");
+        //     if (climber.isDeployed()) {
+        //         // // System.out.println("X pressed - climber solenoid withdraw");
+        //         climber.withdraw();
+        //     }
+        // }
+        // // Y button -> climber solenoid deploy
+        // if (gp.getRawButton(Constants.Y_Button) && climber.isClimberMode()) {
+        //     // // System.out.println("Y pressed");
+        //     if (!climber.isDeployed()) {
+        //         // // System.out.println("Y pressed - climber solenoid deployed");
+        //         climber.deploy();
+        //     }
+        // }
     }
 
     @Override

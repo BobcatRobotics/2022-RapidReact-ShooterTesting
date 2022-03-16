@@ -32,7 +32,14 @@ public class Shooter extends SubsystemBase {
 
     private double targetRPM = 600.0;
     private double encoderEPR = 2048.0;
-    private final double rpmThreshold = 500.0;
+    // private final double rpmThreshold = 500.0;
+    private double rpmThreshold = 250.0;
+    public void setRPMThreshold(double thresh) {
+        rpmThreshold = thresh;
+    }
+    public double getRPMThreshold() {
+        return rpmThreshold;
+    }
 
     // Feeder Motor & Sensors & Other ****
     // private final TimeOfFlight ballPresentSensor;
@@ -105,7 +112,6 @@ public class Shooter extends SubsystemBase {
         shooterAngleSolenoid.set(false);
         isShooterSolenoidExtended = shooterAngleSolenoid.get();
 
-        getToSpeed();
         // lowerCANBusUtilization();
         // prettyPrintStatusFrames();
     }
@@ -127,7 +133,7 @@ public class Shooter extends SubsystemBase {
     //         talon.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 384);
     //     }
     // }
-
+    
     public void lowerCANBusUtilization() {
         // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
         for (WPI_TalonFX talon: new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor}) {
@@ -194,7 +200,16 @@ public class Shooter extends SubsystemBase {
 
     // Start shooter motors
     public void getToSpeed() {
-        double s = highMode ? upperHubShootingSpeed : lowerHubShootingSpeed;
+        double s;
+        if (highMode) {
+            s = upperHubShootingSpeed;
+        } else {
+            s = lowerHubShootingSpeed;
+        }
+
+        // shooterFalconLeft.set(ControlMode.PercentOutput,0.7);
+        // shooterFalconRight.set(ControlMode.PercentOutput,0.7);
+        // double s = highMode ? upperHubShootingSpeed : lowerHubShootingSpeed;
         // double s = upperHubShootingSpeed;
         // shooterFalconLeft.set(-0.7);
         // shooterFalconLeft.set(ControlMode.Velocity, 4800);
@@ -243,7 +258,13 @@ public class Shooter extends SubsystemBase {
 
     // Check if motor is at speed
     public boolean atSpeed() {
-        double s = highMode ? upperHubShootingSpeed : lowerHubShootingSpeed;
+        // double s = highMode ? upperHubShootingSpeed : lowerHubShootingSpeed;
+        double s;
+        if (highMode) {
+            s = upperHubShootingSpeed;
+        } else {
+            s = lowerHubShootingSpeed;
+        }
         // double s = upperHubShootingSpeed;
         return ((Math.abs(getRightRPM()) >= (s - rpmThreshold)) || (getLeftRPM() >= (s - rpmThreshold)));
     }
