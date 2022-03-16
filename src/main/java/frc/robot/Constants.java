@@ -242,7 +242,7 @@ public final class Constants {
    */
   public static final class ShooterConstants {
     // Shooter spinner motors
-    public static final int DEFAULT_LOWER_HUB_SHOOTING_SPEED = 2400;
+    public static final int DEFAULT_LOWER_HUB_SHOOTING_SPEED = 1800;
     public static final int DEFAULT_UPPER_HUB_SHOOTING_SPEED = 4000;
     public static final int shooterFalcon1Port = 8; //changed from 8 in Phoenix tuner
     public static final int shooterFalcon2Port = 9;
