@@ -5,7 +5,7 @@
 Put your name next to which tasks you would like to work on after WNEU.
 
 - Tune shooter for high goals
-- Pathweaver Auto
+- cheesey poofs Auto
 - Ball-Tracking OpenCV-based tracking (rPI webcam intake-side)
 - Limelight hub auto-align (shooter-side)
   - Pranav R, Arnav T
