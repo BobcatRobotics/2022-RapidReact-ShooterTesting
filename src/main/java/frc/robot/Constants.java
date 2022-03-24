@@ -92,6 +92,7 @@ public final class Constants {
   public static final class BallCameraConstants {
     public static final double FRAME_WIDTH = 1280;
     public static final double FRAME_HEIGHT = 720;
+    public static int cameraFOV = 15;
   }
 
   /**

@@ -113,6 +113,7 @@ public class RobotContainer {
   //Trajectory
   public static Trajectory trajectory;
 
+  private String teamColor = "red";
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -159,32 +160,46 @@ public class RobotContainer {
         .setReversed(false);
   }
 
+
+
+  public void setTeamColor(String color) {
+    this.teamColor = color;
+  }
+
+  public String getTeamColor(){
+    return this.teamColor;
+  }
+
   /**
    * 
    * @return the command to run in autonomous
    */
-  // public static Ball getClosestBall() {
-  //   py_vision_network_table = NetworkTableInstance.getDefault().getTable("pyVision");
-  //   String jsonString = py_vision_network_table.getEntry("jsonData").getString("");
-  //   GsonBuilder gsonBuilder = new GsonBuilder();
-  //   Gson gson = gsonBuilder.create();
-  //   Ball[] ball_array = gson.fromJson(jsonString, Ball[].class);
-  //   // No JSON / no ball in sight
-  //   if (ball_array == null || ball_array.length == 0) {
-  //     return null;
-  //   }
-  //   // At least one ball - figure out closest ball
-  //   // TODO: Get this value from start of game
-  //   String teamColor = "red";
-  //   Ball closestBall = null;
-  //   for (Ball ball: ball_array) {
-  //     // // System.out.println(ball);
-  //     if (closestBall == null) closestBall = ball;
-  //     // Check if next ball is closer than current ball
-  //     if (ball.getRadius() > closestBall.getRadius()) closestBall = ball;
-  //   }
-  //   return closestBall;
-  // }
+  public static Ball getClosestBall() {
+    py_vision_network_table = NetworkTableInstance.getDefault().getTable("pyVision");
+    String jsonString = py_vision_network_table.getEntry("jsonData").getString("");
+    GsonBuilder gsonBuilder = new GsonBuilder();
+    Gson gson = gsonBuilder.create();
+    Ball[] ball_array = gson.fromJson(jsonString, Ball[].class);
+    // No JSON / no ball in sight
+    if (ball_array == null || ball_array.length == 0) {
+      return null;
+    }
+    // At least one ball - figure out closest ball
+    // TODO: Get this value from start of game
+    String teamColor = getTeamColor();
+    Ball closestBall = null;
+    for (Ball ball: ball_array) {
+      // // System.out.println(ball);
+      if (ball.getColor().equals(teamColor)) {
+        if (closestBall == null ) 
+          closestBall = ball;
+        // Check if next ball is closer than current ball
+        if (ball.getRadius() > closestBall.getRadius()) 
+          closestBall = ball;
+      }
+    }
+    return closestBall;
+  }
 
   // private double safeAutoTurnSpeed = 0.1; // TODO: Tune this (I'm guessing it's between -1 and 1)
   // private double safeAutoForwardSpeed = 0.1; // TODO: Tune this (I'm guessing it's between -1 and 1)

@@ -7,6 +7,10 @@ tasks = Queue()
 returnedFramesQueue = Queue()
 threadsBeingUsed = 0
 
+fov = 15;
+
+globalFrame = None
+
 # Create color ranges for red and blue
 # Red_left
 RED_LOWER = np.array([0, 150, 15], dtype ="uint8")
@@ -22,10 +26,17 @@ class FrameContainer:
         self.frame = frame
 
 def detection_thread(*args):
-    global returnedFramesQueue, threadsBeingUsed
-    frame = args[0]
+    global returnedFramesQueue, threadsBeingUsed, globalFrame
+    frame = globalFrame
+    globalFrame = None 
+
     # Scale down frame by 0.5 to speed up computation
     frame = cv.resize(frame, (frame.shape[1]//2,frame.shape[0]//2), interpolation=cv.INTER_LINEAR)
+    width = frame.get(3)
+    height = frame.get(4)
+    sd = NetworkTables.getTable('pyVision')
+    colour = sd.getString("teamColor","red")
+
     # List to store ball info
     ball_array = []
     # Convert to HSV
@@ -36,45 +47,65 @@ def detection_thread(*args):
     red_mask = cv.bitwise_or(cv.inRange(hsv, RED_LOWER, RED_UPPER), cv.inRange(hsv, RED2_LOWER, RED2_UPPER))
     blue_mask = cv.inRange(hsv, BLUE_LOWER, BLUE_UPPER)
     # Get circles
-    red_circles = cv.HoughCircles(red_mask, cv.HOUGH_GRADIENT,
-                                  dp=1.5,
-                                  minDist=300,
-                                  param1=100,
-                                  param2=30,
-                                  minRadius=10,
-                                  maxRadius=400)
-    blue_circles = cv.HoughCircles(blue_mask, cv.HOUGH_GRADIENT,
-                                  dp=1.5,
-                                  minDist=300,
-                                  param1=100,
-                                  param2=30,
-                                  minRadius=10,
-                                  maxRadius=400)
+    red_circles = None
+    blue_circles = None
+    
+    if colour == "red":
+        red_circles = cv.HoughCircles(red_mask, cv.HOUGH_GRADIENT,
+                                    dp=1.5,
+                                    minDist=300,
+                                    param1=100,
+                                    param2=30,
+                                    minRadius=10,
+                                    maxRadius=400)
+    if colour == "blue":
+        blue_circles = cv.HoughCircles(blue_mask, cv.HOUGH_GRADIENT,
+                                    dp=1.5,
+                                    minDist=300,
+                                    param1=100,
+                                    param2=30,
+                                    minRadius=10,
+                                    maxRadius=400)
     if red_circles is not None:
         red_circles = np.uint16(np.around(red_circles))
         for circle in red_circles[0, :]:
             cv.circle(frame, (circle[0], circle[1]), circle[2], (0, 0, 255), 2)
+           
+            halfFov = fov/2;
+            halfWidth = width/2;
+            xFromCenter = circle[1] - (width/2);
+            K = numpy.tan(halfFov) / halfWidth
+            angle = numpy.arctan(xFromcenter * K)
+
             ball_array.append({
                 'id': len(ball_array),
                 'color': 'red',
-                'centerX': float(circle[1]),
+                'centerX': float(circle[1] - (width/2)),
                 'centerY': float(circle[0]),
-                'radius': float(circle[2])})
+                'radius': float(circle[2]),
+                'angle' : angle)}
     if blue_circles is not None:
         blue_circles = np.uint16(np.around(blue_circles))
         for circle in blue_circles[0, :]:
             cv.circle(frame, (circle[0], circle[1]), circle[2], (255, 0, 0), 2)
+
+            halfFov = fov/2;
+            halfWidth = width/2;
+            xFromCenter = circle[1] - (width/2);
+            K = numpy.tan(halfFov) / halfWidth
+            angle = numpy.arctan(xFromcenter * K)
+
             ball_array.append({
                 'id': len(ball_array),
                 'color': 'blue',
-                'centerX': float(circle[1]),
+                'centerX': float(circle[1] - (width/2)),
                 'centerY': float(circle[0]),
-                'radius': float(circle[2])})
+                'radius': float(circle[2]),
+                'angle' : angle)}
     # Post to network tables
     jsonData = json.dumps(ball_array)
     # print(jsonData)
     # TODO: Fix the below code
-    sd = NetworkTables.getTable('pyVision')
     sd.putString('jsonData', jsonData)
 
     # Add desired frames to queue for debug viewing
@@ -103,6 +134,7 @@ if __name__ == '__main__':
             tasks.get().start()
 
         ret, frame = cap.read()
+        globalFrame = frame
 
         while time_elapsed <= 1.0/fps:
             time_elapsed = time.time() - prev
