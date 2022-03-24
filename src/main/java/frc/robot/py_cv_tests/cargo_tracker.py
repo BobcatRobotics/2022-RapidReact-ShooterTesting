@@ -44,13 +44,13 @@ def detection_thread(*args):
     hsv = cv.cvtColor(cv.GaussianBlur(frame, (kVal, kVal), 0), cv.COLOR_BGR2HSV)
     # Find the red and blue contours
     # red_mask = cv.inRange(hsv, RED_LOWER, RED_UPPER)
-    red_mask = cv.bitwise_or(cv.inRange(hsv, RED_LOWER, RED_UPPER), cv.inRange(hsv, RED2_LOWER, RED2_UPPER))
-    blue_mask = cv.inRange(hsv, BLUE_LOWER, BLUE_UPPER)
+    
     # Get circles
     red_circles = None
     blue_circles = None
     
     if colour == "red":
+        red_mask = cv.bitwise_or(cv.inRange(hsv, RED_LOWER, RED_UPPER), cv.inRange(hsv, RED2_LOWER, RED2_UPPER))
         red_circles = cv.HoughCircles(red_mask, cv.HOUGH_GRADIENT,
                                     dp=1.5,
                                     minDist=300,
@@ -59,6 +59,7 @@ def detection_thread(*args):
                                     minRadius=10,
                                     maxRadius=400)
     if colour == "blue":
+        blue_mask = cv.inRange(hsv, BLUE_LOWER, BLUE_UPPER)
         blue_circles = cv.HoughCircles(blue_mask, cv.HOUGH_GRADIENT,
                                     dp=1.5,
                                     minDist=300,
