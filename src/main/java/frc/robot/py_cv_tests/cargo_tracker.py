@@ -74,7 +74,6 @@ def detection_thread(*args):
     jsonData = json.dumps(ball_array)
     # print(jsonData)
     # TODO: Fix the below code
-    NetworkTables.initialize(server='roborio-177-frc.local')
     sd = NetworkTables.getTable('pyVision')
     sd.putString('jsonData', jsonData)
 
