@@ -10,7 +10,7 @@ public class Ball {
         this.radius = radius;
         this.centerX = centerX;
         this.centerY = centerY;
-        this.angle = angle
+        this.angle = angle;
     }
     public String toString() {
         return String.format("ID:%s, COLOR:%s, CENTERX:%s, CENTERY:%s, RADIUS:%s", this.id, this.color, this.centerX, this.centerY, this.radius);
