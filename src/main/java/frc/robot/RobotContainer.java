@@ -69,6 +69,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 // import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.NavxGyro;
 // import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -91,6 +92,7 @@ public class RobotContainer {
   public static final Drivetrain drivetrain = new Drivetrain();
 
   
+  public static Limelight limelight = new Limelight();
   // Shooter
   public static final Shooter shooter = new Shooter();
 
