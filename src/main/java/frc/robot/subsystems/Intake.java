@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.lib.RioLogger;
 
 public class Intake extends SubsystemBase {
@@ -34,6 +35,9 @@ public class Intake extends SubsystemBase {
     // Solenoids
     private Solenoid intakeSolenoid;
     private boolean isDeployed;
+
+    // Color sensor
+    private ColorSensor colorSensor;
 
     // Target speeds - we can tune these values as needed
     private double inFullSpeed = 1.0;
@@ -62,6 +66,9 @@ public class Intake extends SubsystemBase {
         intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, intakeSolenoidPort);
         intakeSolenoid.set(false);
         isDeployed = intakeSolenoid.get();
+
+        // Color sensor
+        colorSensor = new ColorSensor();
 
         // When in neutral mode for intake motors, allow for coasting
         intakeLeftWheel.setNeutralMode(NeutralMode.Coast);
@@ -224,6 +231,17 @@ public class Intake extends SubsystemBase {
      */
     public void runIntakeBarOut(boolean fullSpeed) {
         intakeBar.set(outSpeed);
+    }
+
+    /**
+     * Runs intake out if the color of the ball doesn't match team color
+     * @param fullSpeed True if we want to run at full speed, false if we want to run at half speed
+     */
+    public void autoReject(boolean fullSpeed) {
+        if (!colorSensor.getBallColor().equals(getTeamColor())) {
+            runIntakeBarOut(fullSpeed);
+            runIntakeWheelsOut(fullSpeed);
+        }
     }
     
     /**

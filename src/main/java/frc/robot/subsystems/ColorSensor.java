@@ -1,26 +1,35 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.I2C.Port;
+import static frc.robot.Constants.ColorSensorConstants.*;
+
 import com.revrobotics.ColorSensorV3;
 
 public class ColorSensor {
     private ColorSensorV3 colorSensor;
     private LEDLights lights;
 
-    public ColorSensor(Port port) {
-        colorSensor = new ColorSensorV3(port);
-        lights = new LEDLights(/* port number */);
+    public ColorSensor() {
+        colorSensor = new ColorSensorV3(colorSensorPort);
+        lights = new LEDLights();
     }
     
-    // returns color of current ball, either "red" or "blue"
-    // returns null if no ball present
-    public String getCurrentBall() {
+    // Returns color of current ball, either "red" or "blue"
+    // Returns null if no ball present
+    public String getBallColor() {
         if (ballPresent() && colorSensor.getBlue() > colorSensor.getRed()) {
             return "blue";
         } else if (ballPresent() && colorSensor.getRed() > colorSensor.getBlue()) {
             return "red";
         }
         return null;
+    }
+
+    /**
+     * Returns the proximity from the color sensor
+     * @return int between 0 and 2047
+     */
+    public int getProximity() {
+        return colorSensor.getProximity();
     }
 
     public boolean ballPresent() {
@@ -34,10 +43,10 @@ public class ColorSensor {
 
     // Sets LED color based on ball data
     public void setLEDS() {
-        if (getCurrentBall().equals("blue")) {
+        if (getBallColor().equals("blue")) {
             // turns lights blue
             lights.setLEDPower(0.87);
-        } else if (getCurrentBall().equals("red")) {
+        } else if (getBallColor().equals("red")) {
             // turns lights red
             lights.setLEDPower(0.61);
         } else {

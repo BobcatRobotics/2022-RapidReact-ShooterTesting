@@ -8,6 +8,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.StatusFrame;
+import edu.wpi.first.wpilibj.I2C.Port;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -249,6 +250,20 @@ public final class Constants {
     public static final int shooterFalcon2Port = 9;
     public static final int feedMotorPort = 10;
     public static final int shooterAngleSolenoidPort = 1;
+  }
+
+  /**
+   * Constants for the color sensor
+   */
+  public static final class ColorSensorConstants {
+    public static final Port colorSensorPort = /** port */;
+  }
+
+  /**
+   * Constants for LED strip
+   */
+  public static final class LEDLightsConstants {
+    public static final int ledPort = /** port */;
   }
 
   // /**
