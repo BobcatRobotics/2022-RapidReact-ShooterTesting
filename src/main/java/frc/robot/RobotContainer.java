@@ -167,7 +167,7 @@ public class RobotContainer {
   }
 
   public String getTeamColor(){
-    return this.teamColor;
+    return teamColor;
   }
 
   /**

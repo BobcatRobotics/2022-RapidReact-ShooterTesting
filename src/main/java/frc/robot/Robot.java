@@ -296,7 +296,7 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("Right shooter voltage", shooter.getRightVoltage());
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     
-    m_robotContainer.setTeamColor(SmartDashboard.getString("TeamColor", 'red'));
+    m_robotContainer.setTeamColor(SmartDashboard.getString("TeamColor", "red"));
     // SmartDashboard.putNumber("Current RPM", shooter.getRightRPM());
     
     // SmartDashboard.putNumber("NavX heading cos", RobotContainer.navx.getRotation2d().getCos());
