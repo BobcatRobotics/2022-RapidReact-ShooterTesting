@@ -45,6 +45,9 @@ public class shootBalls extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (!shooter.isShooterSolenoidExtended()){
+      shooter.setShooterSolenoidExtended(true);
+    }
     if (t.hasElapsed(time_alloted)) {
       shooter.stop();
       intake.stopIntake();
@@ -53,7 +56,6 @@ public class shootBalls extends CommandBase {
   
       if (shooter.atSpeed()) {
         shooter.feed();
-        shooter.setShooterSolenoidExtended(true);
         intake.runIntakeBarIn(true);
         intake.runIntakeWheelsIn(true);
       } else {

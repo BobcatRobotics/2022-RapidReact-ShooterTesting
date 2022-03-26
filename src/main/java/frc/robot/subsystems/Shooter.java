@@ -15,28 +15,32 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.lib.RioLogger;
 
 public class Shooter extends SubsystemBase {
-    // Compressor
-    // private Compressor compressorModel;
-
     // TalonFXs for shooter motors
     private final WPI_TalonFX shooterFalconLeft;
     private final WPI_TalonFX shooterFalconRight;
+    private final WPI_TalonFX hoodFalcon;
     private final WPI_TalonFX feedMotor;
 
     public double upperHubShootingSpeed = ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED;
     public double lowerHubShootingSpeed = ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED;
+    public double hoodHigh = ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED;
+    public double hoodLow = ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED;
     private final double targetSpeed = 3000.0;
     private boolean isRunning = false;
 
     private double targetRPM = 600.0;
     private double encoderEPR = 2048.0;
-    private final double rpmThreshold = 500.0;
+    private double rpmThreshold = 250.0;
+    public void setRPMThreshold(double thresh) {
+        rpmThreshold = thresh;
+    }
+    public double getRPMThreshold() {
+        return rpmThreshold;
+    }
 
-    // Feeder Motor & Sensors & Other ****
-    // private final TimeOfFlight ballPresentSensor;
-    // private final TimeOfFlight ballLeavingSensor;
     private int ballCounter = 0;
     private final Solenoid shooterAngleSolenoid;
     private boolean isShooterSolenoidExtended;
@@ -47,24 +51,23 @@ public class Shooter extends SubsystemBase {
     public void setHighMode(boolean status) {highMode = status;}
 
     public Shooter() {
-        // Init new compressor object from port in Constants
-        // compressorModel = new Compressor(ShooterConstants.compressorModelPort,
-        // PneumaticsModuleType.REVPH);
-
         // Instantiate new talons
         shooterFalconLeft = new WPI_TalonFX(Constants.ShooterConstants.shooterFalcon1Port);
         shooterFalconRight = new WPI_TalonFX(Constants.ShooterConstants.shooterFalcon2Port);
         feedMotor = new WPI_TalonFX(Constants.ShooterConstants.feedMotorPort);
+        hoodFalcon = new WPI_TalonFX(Constants.ShooterConstants.hoodFalconPort);
 
         // Set factory default for each motor
         shooterFalconLeft.configFactoryDefault();
         shooterFalconRight.configFactoryDefault();
         feedMotor.configFactoryDefault();
+        hoodFalcon.configFactoryDefault();
 
         // In neutral, set motors to coast
         shooterFalconLeft.setNeutralMode(NeutralMode.Coast);
         shooterFalconRight.setNeutralMode(NeutralMode.Coast);
         feedMotor.setNeutralMode(NeutralMode.Brake);
+        hoodFalcon.setNeutralMode(NeutralMode.Coast);
 
         // Set both falcon motor speeds equal to each other
         // shooterFalconRight.follow(shooterFalconLeft);
@@ -84,6 +87,10 @@ public class Shooter extends SubsystemBase {
         shooterFalconRight.setSelectedSensorPosition(0, 0, 0);
         shooterFalconRight.setSensorPhase(false);
 
+        hoodFalcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
+        hoodFalcon.setSelectedSensorPosition(0, 0, 0);
+        hoodFalcon.setSensorPhase(false);
+
         // setup pid values
         shooterFalconLeft.config_kF(0, 0.047, 0);
         shooterFalconLeft.config_kP(0, 0.0015, 0);
@@ -95,39 +102,17 @@ public class Shooter extends SubsystemBase {
         shooterFalconRight.config_kI(0, 0.00002, 0);
         shooterFalconRight.config_kD(0, 0.0, 0);
         shooterFalconRight.config_IntegralZone(0, 3, 0);
+        hoodFalcon.config_kF(0, 0.047, 0);
+        hoodFalcon.config_kP(0, 0.0015, 0);
+        hoodFalcon.config_kI(0, 0.00002, 0);
+        hoodFalcon.config_kD(0, 0.0, 0);
+        hoodFalcon.config_IntegralZone(0, 3, 0);
 
-        // TODO: Need to do any sensor/voltage/solenoid stuff?
-
-        // Feeder stuff
-        // ballPresentSensor = new TimeOfFlight(FeederConstants.feederBallPresentId);
-        // ballLeavingSensor = new TimeOfFlight(FeederConstants.feederBallLeavingId);
         shooterAngleSolenoid = new Solenoid(PneumaticsModuleType.REVPH, ShooterConstants.shooterAngleSolenoidPort);
         shooterAngleSolenoid.set(false);
         isShooterSolenoidExtended = shooterAngleSolenoid.get();
-
-        getToSpeed();
-        // lowerCANBusUtilization();
-        // prettyPrintStatusFrames();
     }
-
-    // public void lowerCANBusUtilization() {
-    //     for (WPI_TalonFX talon: new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor}) {
-    //         // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
-    //         talon.setStatusFramePeriod(StatusFrame.Status_1_General, 20);
-    //         talon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
-    //         talon.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 384);
-    //         talon.setStatusFramePeriod(StatusFrame.Status_6_Misc, 384);
-    //         talon.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 384);
-    //         talon.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 384);
-    //         talon.setStatusFramePeriod(StatusFrame.Status_10_Targets, 384);
-    //         talon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 384);
-    //         talon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 384);
-    //         talon.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 384);
-    //         talon.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 384);
-    //         talon.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 384);
-    //     }
-    // }
-
+    
     public void lowerCANBusUtilization() {
         // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
         for (WPI_TalonFX talon: new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor}) {
@@ -160,19 +145,6 @@ public class Shooter extends SubsystemBase {
         WPI_TalonFX[] motors = {shooterFalconLeft, shooterFalconRight, feedMotor};
         String[] motorNames = {"shooterFalconLeft", "shooterFalconRight", "feedMotor"};
         for (int i = 0; i < motors.length; i++) {
-            // System.out.println(motorNames[i]);
-            // System.out.println("\t Status_1_General: " + motors[i].getStatusFramePeriod(StatusFrame.Status_1_General) + " ms");
-            // System.out.println("\t Status_2_Feedback0: " + motors[i].getStatusFramePeriod(StatusFrame.Status_2_Feedback0) + " ms");
-            // System.out.println("\t Status_4_AinTempVbat: " + motors[i].getStatusFramePeriod(StatusFrame.Status_4_AinTempVbat) + " ms");
-            // System.out.println("\t Status_6_Misc: " + motors[i].getStatusFramePeriod(StatusFrame.Status_6_Misc) + " ms");
-            // System.out.println("\t Status_7_CommStatus: " + motors[i].getStatusFramePeriod(StatusFrame.Status_7_CommStatus) + " ms");
-            // System.out.println("\t Status_10_MotionMagic: " + motors[i].getStatusFramePeriod(StatusFrame.Status_10_MotionMagic) + " ms");
-            // System.out.println("\t Status_10_Targets: " + motors[i].getStatusFramePeriod(StatusFrame.Status_10_Targets) + " ms");
-            // System.out.println("\t Status_12_Feedback1: " + motors[i].getStatusFramePeriod(StatusFrame.Status_12_Feedback1) + " ms");
-            // System.out.println("\t Status_13_Base_PIDF0: " + motors[i].getStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0) + " ms");
-            // System.out.println("\t Status_14_Turn_PIDF1: " + motors[i].getStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1) + " ms");
-            // System.out.println("\t Status_15_FirmwareApiStatus: " + motors[i].getStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus) + " ms");
-            // System.out.println("\t Status_17_Targets1: " + motors[i].getStatusFramePeriod(StatusFrame.Status_17_Targets1) + " ms");
         }
     }
 
@@ -194,13 +166,19 @@ public class Shooter extends SubsystemBase {
 
     // Start shooter motors
     public void getToSpeed() {
-        double s = highMode ? upperHubShootingSpeed : lowerHubShootingSpeed;
-        // double s = upperHubShootingSpeed;
-        // shooterFalconLeft.set(-0.7);
-        // shooterFalconLeft.set(ControlMode.Velocity, 4800);
-        // // System.out.println("getting to speed: " + (-(speed/targetRPM*encoderEPR)));
+        double s;
+        double hood;
+        if (highMode) {
+            s = upperHubShootingSpeed;
+            hood =hoodHigh; 
+        } else {
+            hood = hoodLow;
+            s = lowerHubShootingSpeed;
+        }
+
         shooterFalconLeft.set(ControlMode.Velocity, (-s / targetRPM * encoderEPR));
         shooterFalconRight.set(ControlMode.Velocity, (-s / targetRPM * encoderEPR));
+        hoodFalcon.set(ControlMode.Velocity, (hood / targetRPM * encoderEPR));
     }
 
     public void stop() {
@@ -212,8 +190,7 @@ public class Shooter extends SubsystemBase {
     public void stopShooter() {
         shooterFalconLeft.stopMotor();
         shooterFalconRight.stopMotor();
-        // shooterFalconLeft.set(0);
-        // shooterFalconRight.set(0);
+        hoodFalcon.stopMotor();
     }
 
     // Get right RPM
@@ -226,9 +203,23 @@ public class Shooter extends SubsystemBase {
         return shooterFalconLeft.getSelectedSensorVelocity() * targetRPM / encoderEPR;
     }
 
+// Get left RPM
+    public double getHoodRPM() {
+        return hoodFalcon.getSelectedSensorVelocity() * targetRPM / encoderEPR;
+    }
+
     // Set high speed
     public void setHighSpeed(double speed) {
         this.upperHubShootingSpeed = speed;
+    }
+    // Set high speed
+    public void setHighHoodSpeed(double speed) {
+        this.hoodHigh = speed;
+    }
+    
+    // Set high speed
+    public void setLowHoodSpeed(double speed) {
+        this.hoodLow = speed;
     }
 
     // Set low speed
@@ -243,7 +234,13 @@ public class Shooter extends SubsystemBase {
 
     // Check if motor is at speed
     public boolean atSpeed() {
-        double s = highMode ? upperHubShootingSpeed : lowerHubShootingSpeed;
+        // double s = highMode ? upperHubShootingSpeed : lowerHubShootingSpeed;
+        double s;
+        if (highMode) {
+            s = upperHubShootingSpeed;
+        } else {
+            s = lowerHubShootingSpeed;
+        }
         // double s = upperHubShootingSpeed;
         return ((Math.abs(getRightRPM()) >= (s - rpmThreshold)) || (getLeftRPM() >= (s - rpmThreshold)));
     }
@@ -301,40 +298,19 @@ public class Shooter extends SubsystemBase {
      */
     public boolean getBallReadyToFeed() {
         return false;
-        // if(ballPresentSensor == null)
-        // return false;
-        // double range = ballPresentSensor.getRange();
-        // boolean ballPresent = false;
-        // if (range <= FeederConstants.feederBallPresentThreshold) {
-        // ballPresent = true;
-        // }
-        // return ballPresent;
     }
 
     public boolean getBallLeaving() {
         return false;
-        // if (ballLeavingSensor == null) {
-        // return false;
-        // }
-        // double range = ballLeavingSensor.getRange();
-        // boolean ballLeaving = false;
-        // if (range <= FeederConstants.feederBallLeavingThreshold) {
-        // ballLeaving = true;
-        // }
-        // return ballLeaving;
     }
 
     public void toggleShooter() {
-        // boolean solenoidState = pneumaticCylinder.get();
-        // solenoidState ? shooterDown() : shooterUp();
     }
 
     public void shooterUp() {
-        // pneumaticCylinder.set(false);
     }
 
     public void shooterDown() {
-        // pneumaticCylinder.set(true);
     }
 
     public void setShooterSolenoidExtended(boolean status) {
@@ -345,22 +321,4 @@ public class Shooter extends SubsystemBase {
     public boolean isShooterSolenoidExtended() {
         return isShooterSolenoidExtended;
     }
-
-    // [PR] May not need stuff below because it is in intake - although we might
-    // have to call that particular toggleCompressor() method in Robot.java
-    // /**
-    // * Toggles compressor and returns new state
-    // */
-    // public boolean toggleCompressor() {
-    // if (compressorModel.enabled()) compressorModel.disable();
-    // else compressorModel.enableDigital();
-    // return compressorModel.enabled();
-    // }
-
-    // /**
-    // * Returns state of compressor
-    // */
-    // public boolean compressorIsEnabled() {
-    // return compressorModel.enabled();
-    // }
 }
