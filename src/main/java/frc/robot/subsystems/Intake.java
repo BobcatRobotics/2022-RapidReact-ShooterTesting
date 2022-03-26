@@ -238,7 +238,7 @@ public class Intake extends SubsystemBase {
      * @param fullSpeed True if we want to run at full speed, false if we want to run at half speed
      */
     public void autoReject(boolean fullSpeed) {
-        if (!colorSensor.getBallColor().equals(getTeamColor())) {
+        if (!colorSensor.getBallColor().equals(SmartDashboard.getString("TeamColor", "red"))) {
             runIntakeBarOut(fullSpeed);
             runIntakeWheelsOut(fullSpeed);
         }

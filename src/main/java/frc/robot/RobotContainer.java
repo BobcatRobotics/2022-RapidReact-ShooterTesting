@@ -48,6 +48,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import frc.robot.utils.*;
@@ -186,7 +188,7 @@ public class RobotContainer {
     }
     // At least one ball - figure out closest ball
     // TODO: Get this value from start of game
-    String teamColor = getTeamColor();
+    String teamColor = SmartDashboard.getString("TeamColor", "red");
     Ball closestBall = null;
     for (Ball ball: ball_array) {
       // // System.out.println(ball);
