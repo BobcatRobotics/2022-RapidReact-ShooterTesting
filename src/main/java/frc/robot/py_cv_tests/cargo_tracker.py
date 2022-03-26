@@ -76,11 +76,13 @@ def detection_thread(*args):
         for circle in red_circles[0, :]:
             cv.circle(frame, (circle[0], circle[1]), circle[2], (0, 0, 255), 2)
            
+            ballRadius = float(circle[2]);
+            halfFieldRange = ((width-ballRadius)/2);
+
             halfFov = fov/2;
             halfWidth = width/2;
             xFromCenter = circle[1] - (width/2);
-            K = np.tan(halfFov) / halfWidth
-            angle = np.arctan(xFromCenter * K)
+            angle = (fov/2)  * (xFromCenter/halfFieldRange) 
 
             ball_array.append({
                 'id': len(ball_array),
@@ -94,11 +96,13 @@ def detection_thread(*args):
         for circle in blue_circles[0, :]:
             cv.circle(frame, (circle[0], circle[1]), circle[2], (255, 0, 0), 2)
 
+            ballRadius = float(circle[2]);
+            halfFieldRange = ((width-ballRadius)/2);
+
             halfFov = fov/2;
             halfWidth = width/2;
             xFromCenter = circle[0] - (width/2);
-            K = np.tan(halfFov) / halfWidth
-            angle = np.arctan(xFromCenter * K)
+            angle = (fov/2)  * (xFromCenter/halfFieldRange) 
 
             ball_array.append({
                 'id': len(ball_array),

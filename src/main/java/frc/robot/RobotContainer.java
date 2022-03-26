@@ -160,7 +160,6 @@ public class RobotContainer {
         .setReversed(false);
   }
 
-
   public void setTeamColor(String color) {
     this.teamColor = color;
   }
@@ -185,7 +184,6 @@ public class RobotContainer {
     }
     // At least one ball - figure out closest ball
     // TODO: Get this value from start of game
-    String color = teamColor;
     Ball closestBall = null;
     for (Ball ball: ball_array) {
       // // System.out.println(ball);
@@ -241,7 +239,6 @@ public class RobotContainer {
     // drive forward & intake
     Command driveBackwards2 =  new driveCommand(drivetrain, 4, 4, 2);
     // add dns in commandGroup
-
     // turn back
     // brute force turn
     Command turnBack = new turnDegreeCommand(drivetrain, -52);

@@ -186,9 +186,9 @@ public class Intake extends SubsystemBase {
         if (pressure >= 115) {
             compressorModel.disable();
 
-        } else if (pressure <= 90) {
+        } else if (pressure <= 80) {
             // compressorModel.enableDigital();
-            compressorModel.enableAnalog(90, 115);
+            compressorModel.enableAnalog(80, 115);
         }
     }
 

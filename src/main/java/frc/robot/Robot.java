@@ -52,6 +52,7 @@ public class Robot extends TimedRobot {
   // private CommandBase desiredAutoCommand;
   private ShuffleboardTab tab = Shuffleboard.getTab("Things Tab");
   private double waitTime = 0;
+  private boolean autoMode = false;
 
   private boolean use_RS_Shift_Switch = true;
 
@@ -64,10 +65,6 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
-  // private Joystick rightStick;
-  // private Joystick leftStick;
-
-
 
   @Override
   public void robotInit() {
@@ -78,15 +75,23 @@ public class Robot extends TimedRobot {
     intake = m_robotContainer.intake;
     shooter = m_robotContainer.shooter;
     climber = m_robotContainer.climber;
+    climber.withdraw();
+    // this.rightStick = RobotContainer.rightStick;
+    // this.leftStick = RobotContainer.leftStick;
 
     drivetrain = m_robotContainer.drivetrain;
+    // compressor = m_robotContainer.compressor;
     SmartDashboard.putNumber("Set High Speed", ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED);
     SmartDashboard.putNumber("Set Low Speed", ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED);
+    SmartDashboard.putNumber("Set High Hood Speed", ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED);
+    SmartDashboard.putNumber("Set Low Hood Speed", ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED);
     tab.add("Shooter current RPM",0);
-    SmartDashboard.putBoolean("Use RS shift switch?", true);
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     SmartDashboard.putNumber("Compressor pressure", intake.pneumaticHub().getPressure(0));
+    SmartDashboard.putNumber("Shooter RPM Threshold", shooter.getRPMThreshold());
     
+    
+    // NEED TO TEST -----
     SmartDashboard.putNumber("Selected Dead Auto #", selected_dead_auto_ID);
     SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
     SmartDashboard.putNumber("Delay time: Dead auto 2-ball", 0);
@@ -126,6 +131,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    autoMode = true;
     updateShuffleBoard();
     
     
@@ -135,6 +141,11 @@ public class Robot extends TimedRobot {
     } else {
       m_autonomousCommand = m_robotContainer.deadAuto_twoBall(Math.max(0.0, Math.round(SmartDashboard.getEntry("Delay time: Dead auto 2-ball").getDouble(0.0)*2)/2.0));
     }
+    // NEED TO TEST -----
+
+
+    
+
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -146,6 +157,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     
     updateShuffleBoard();
+
   }
 
   @Override
@@ -154,6 +166,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    autoMode = false;
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -192,50 +205,66 @@ public class Robot extends TimedRobot {
       drivetrain.brake();
     }
     CommandScheduler.getInstance().run();
+  
     // Turn on climber mode
     // if (use_RS_Shift_Switch ? gamepad.getRawButton(Constants.RS_Shift_Switch) : gamepad.getRawButtonReleased(Constants.A_Button))
     if (gamepad.getRawButtonReleased(Constants.A_Button)) {
       // Intake up
       intake.deploy(false);
       // Switch to climber mode
+      
       climber.toggleSwitchToClimberMode();
       // Lift hood up
-      shooter.setShooterSolenoidExtended(false);
       // Turn off shooter if on climber mode
       if (climber.isClimberMode()) {
+        shooter.setShooterSolenoidExtended(false);
         shooter.setRunning(false);
         shooter.stop();
+      } else {
+        shooter.setShooterSolenoidExtended(true);
+        
       }
-    } else {
-      // Reset shooter to lower hub shooting speed otherwise
-      shooter.setRunning(false);
-      shooter.stop();
-      // shooter.getToSpeed();
-    }
+    } 
 
     updateShuffleBoard();
   }
 
   public void updateShuffleBoard() {
     double highSpeed = SmartDashboard.getNumber("Set High Speed", ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED);
-    double hoodHigh = SmartDashboard.getNumber("Set High Speed", ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED);
-    double highSpeed = SmartDashboard.getNumber("Set High Speed", ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED);
     double lowSpeed = SmartDashboard.getNumber("Set Low Speed", ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED);
+    double hoodhigh = SmartDashboard.getNumber("Set High Hood Speed", ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED);
+    double hoodlow = SmartDashboard.getNumber("Set Low Hood Speed", ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED);
     // // System.out.println("SET SPEED IS " + speed);
     shooter.setHighSpeed(highSpeed);
     shooter.setLowSpeed(lowSpeed);
-    SmartDashboard.putNumber("Current RPM", shooter.getLeftRPM());
+    shooter.setHighHoodSpeed(hoodhigh);
+    shooter.setLowHoodSpeed(hoodlow);
+    SmartDashboard.putNumber("Current Left RPM", shooter.getLeftRPM());
+    SmartDashboard.putNumber("Current Right RPM", shooter.getRightRPM());
+    SmartDashboard.putNumber("Hood RPM", shooter.getHoodRPM());
+    
 
+    if (autoMode) {
+      double rpmAuto = SmartDashboard.getNumber("Shooter RPM Threshold", 250) + 100;
+      shooter.setRPMThreshold(rpmAuto);
+    } else {
+      shooter.setRPMThreshold(SmartDashboard.getNumber("Shooter RPM Threshold", 250));
+    }
     // Update button used to toggle climber mode based on Shuffleboard input
-    use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
+    // use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
+  
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
+    
     SmartDashboard.putString("DriveTrain get pose", drivetrain.getPose().toString());
-// NEED TO TEST -----
+
+
+
+
+    // NEED TO TEST -----
     selected_dead_auto_ID = (int)SmartDashboard.getNumber("Selected Dead Auto #", 0);
     if (selected_dead_auto_ID != 0 && selected_dead_auto_ID != 1) selected_dead_auto_ID = 0;
     SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
-    // NEED TO TEST -----
-}
+  }
   
   @Override
   public void testInit() {

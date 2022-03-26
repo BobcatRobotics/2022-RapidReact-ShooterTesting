@@ -65,13 +65,6 @@ public final class Constants {
 
   public static final int Gamepad_Left_Joystick_Y_Axis = 1;
 
-
-  // public static final int Left_Joystick_X_Axis = 1;
-  // public static final int Left_Joystick_Y_Axis = 0;
-
-  // public static final int Right_Joystick_X_Axis= 13;
-  // public static final int Right_Joystick_Y_Axis= 14;
-
   public static final int D_Pad_Up = 0;
   public static final int D_Pad_Down = 180;
   public static final int D_Pad_Left = 270;
@@ -147,9 +140,6 @@ public final class Constants {
     public static final double feederBallPresentThreshold = 125.0;
     public static final double feederBallLeavingThreshold = 125.0; // TODO: change to correct value
 
-    // Power cell feeder motors
-    // public static final int feederMotor1Port = 11; // orig 11
-
     // Makes sure the speed does not increase over this number
     public static final double speedLimiter = -0.7;
 
@@ -165,13 +155,6 @@ public final class Constants {
    * Constants for the intake system
    */
   public static final class IntakeConstants {
-    // [PR] NOTE: I put port IDs in the 20s for easy
-    // distinction from other subsystems
-
-    // Compressor config
-    // TODO: change to the correct value
-    // public static final int compressorModelPort = 1;
-
     // Intake motors
     public static final int intakeLeftWheelPort = 13;
     public static final int intakeRightWheelPort = 7;
@@ -184,10 +167,7 @@ public final class Constants {
   /**
    * Constants for the input device ports
    */
-  
-  
   public static final int compressorModelPort = 1;
-
 
   public static final class RobotContainerConstants {
     // Sticks
@@ -196,15 +176,10 @@ public final class Constants {
     public static final int gamepadPort = 2;
 
     // Gamepad POV values in degrees
-    // public static final int povNone = -1;
     public static final int povUp = 0;
-    // public static final int povUpperRight = 45;
     public static final int povRight = 90;
-    // public static final int povLowerRight = 135;
     public static final int povDown = 180;
-    // public static final int povLowerLeft = 225;
     public static final int povLeft = 270;
-    // public static final int povUpperLeft = 315;
   }
   
   /**
@@ -242,32 +217,14 @@ public final class Constants {
    */
   public static final class ShooterConstants {
     // Shooter spinner motors
-    public static final int DEFAULT_LOWER_HUB_SHOOTING_SPEED = 2400;
+    public static final int DEFAULT_LOWER_HUB_SHOOTING_SPEED = 1800;
     public static final int DEFAULT_UPPER_HUB_SHOOTING_SPEED = 4000;
     public static final int shooterFalcon1Port = 8; //changed from 8 in Phoenix tuner
     public static final int shooterFalcon2Port = 9;
+    public static final int hoodFalconPort = 15;
     public static final int feedMotorPort = 10;
     public static final int shooterAngleSolenoidPort = 1;
   }
-
-  // /**
-  //  * Constants for the turret subsystem
-  //  */
-  // public static final class TurretConstants {
-  //   // Shooter spinner and turret moving motors
-  //   // public static final int turretMotorPort = 10;
-  //   public static final double turretMotorHardStopCurrentThreshold = 10.0;
-  //   public static final int turretSolenoidPort = 0;
-
-  // }
-
-  // /**
-  //  * Constants for the color wheel subsystem
-  //  */
-  // public static final class ColorWheelConstants {
-  //   public static final int colorWheelMotorPort = 8;
-
-  // }
 
   public static final class StopAtCollisionConstants {
       public static boolean collision = true;
