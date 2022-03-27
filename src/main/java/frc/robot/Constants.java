@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 
 /**
@@ -225,6 +227,36 @@ public final class Constants {
     public static final int hoodFalconPort = 15;
     public static final int feedMotorPort = 10;
     public static final int shooterAngleSolenoidPort = 1;
+    public static final double UPPER_HUB_KEY = 0.0;
+    public static final double LOWER_HUB_KEY = 0.5;
+    public static HashMap<Double, double[]> LIMELIGHT_SHOOTING_LOOKUP_MAP = new HashMap<Double, double[]>();
+    static { // Key: dist (m). Val: [main flywheel, hood wheel]
+      // Manual upper hub shooting
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(0.0, new double[]{4000, 4000});
+      // Manual lower hub shooting
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(0.5, new double[]{1800, 1800});
+      // Limelight-based shooting
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(1.0, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(1.5, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(2.0, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(2.5, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.0, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.5, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(4.0, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(4.5, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(5.0, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(5.5, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(6.0, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(6.5, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(7.0, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(7.5, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(8.0, new double[]{4000, 4000});
+    }
+  }
+
+  public static final class LimelightConstants {
+    public static final double kLimelightHeight = 2.64 - 0.532; // hub height - limelight mount height, meters
+    public static final double kLimelightMountAngle = 40.0 * Math.PI/180; // rad
   }
 
   public static final class StopAtCollisionConstants {

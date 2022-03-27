@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.intakeControls;
 import frc.robot.lib.RioLogger;
 
 public class Shooter extends SubsystemBase {
@@ -30,25 +31,33 @@ public class Shooter extends SubsystemBase {
     public double hoodLow = ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED;
     private final double targetSpeed = 3000.0;
     private boolean isRunning = false;
+    private double shootingModeKey = 0;
 
     private double targetRPM = 600.0;
     private double encoderEPR = 2048.0;
-    private double rpmThreshold = 250.0;
-    public void setRPMThreshold(double thresh) {
-        rpmThreshold = thresh;
+    private double mainRPMThreshold = 250.0;
+    private double hoodRPMThreshold = 250.0;
+    public void setMainRPMThreshold(double thresh) {
+        mainRPMThreshold = thresh;
     }
-    public double getRPMThreshold() {
-        return rpmThreshold;
+    public double getMainRPMThreshold() {
+        return mainRPMThreshold;
+    }
+    public void setHoodRPMThreshold(double thresh) {
+        hoodRPMThreshold = thresh;
+    }
+    public double getHoodRPMThreshold() {
+        return hoodRPMThreshold;
     }
 
     private int ballCounter = 0;
-    private final Solenoid shooterAngleSolenoid;
+    // private final Solenoid shooterAngleSolenoid;
     private boolean isShooterSolenoidExtended;
 
     private int[][] originalStatusFrames = new int[3][12];
 
-    private boolean highMode = true;
-    public void setHighMode(boolean status) {highMode = status;}
+    // private boolean highMode = true;
+    // public void setHighMode(boolean status) {highMode = status;}
 
     public Shooter() {
         // Instantiate new talons
@@ -108,9 +117,9 @@ public class Shooter extends SubsystemBase {
         hoodFalcon.config_kD(0, 0.0, 0);
         hoodFalcon.config_IntegralZone(0, 3, 0);
 
-        shooterAngleSolenoid = new Solenoid(PneumaticsModuleType.REVPH, ShooterConstants.shooterAngleSolenoidPort);
-        shooterAngleSolenoid.set(false);
-        isShooterSolenoidExtended = shooterAngleSolenoid.get();
+        // shooterAngleSolenoid = new Solenoid(PneumaticsModuleType.REVPH, ShooterConstants.shooterAngleSolenoidPort);
+        // shooterAngleSolenoid.set(false);
+        // isShooterSolenoidExtended = shooterAngleSolenoid.get();
     }
     
     public void lowerCANBusUtilization() {
@@ -166,19 +175,11 @@ public class Shooter extends SubsystemBase {
 
     // Start shooter motors
     public void getToSpeed() {
-        double s;
-        double hood;
-        if (highMode) {
-            s = upperHubShootingSpeed;
-            hood =hoodHigh; 
-        } else {
-            hood = hoodLow;
-            s = lowerHubShootingSpeed;
-        }
-
-        shooterFalconLeft.set(ControlMode.Velocity, (-s / targetRPM * encoderEPR));
-        shooterFalconRight.set(ControlMode.Velocity, (-s / targetRPM * encoderEPR));
-        hoodFalcon.set(ControlMode.Velocity, (hood / targetRPM * encoderEPR));
+        double[] speeds = convertShootingModeKeyToShootingRPM(shootingModeKey);
+        double mainRPM = speeds[0], hoodRPM = speeds[1];
+        shooterFalconLeft.set(ControlMode.Velocity, (-mainRPM / targetRPM * encoderEPR));
+        shooterFalconRight.set(ControlMode.Velocity, (-mainRPM / targetRPM * encoderEPR));
+        hoodFalcon.set(ControlMode.Velocity, (hoodRPM / targetRPM * encoderEPR));
     }
 
     public void stop() {
@@ -210,39 +211,54 @@ public class Shooter extends SubsystemBase {
 
     // Set high speed
     public void setHighSpeed(double speed) {
-        this.upperHubShootingSpeed = speed;
+        ShooterConstants.LIMELIGHT_SHOOTING_LOOKUP_MAP.get(ShooterConstants.UPPER_HUB_KEY)[0] = speed;
     }
-    // Set high speed
+    // Set high hood speed
     public void setHighHoodSpeed(double speed) {
-        this.hoodHigh = speed;
+        ShooterConstants.LIMELIGHT_SHOOTING_LOOKUP_MAP.get(ShooterConstants.UPPER_HUB_KEY)[1] = speed;
     }
     
-    // Set high speed
-    public void setLowHoodSpeed(double speed) {
-        this.hoodLow = speed;
-    }
-
     // Set low speed
     public void setLowSpeed(double speed) {
-        this.lowerHubShootingSpeed = speed;
+        ShooterConstants.LIMELIGHT_SHOOTING_LOOKUP_MAP.get(ShooterConstants.LOWER_HUB_KEY)[0] = speed;
     }
 
-    // Get speed
-    public double getSpeed() {
-        return upperHubShootingSpeed;
+    // Set low hood speed
+    public void setLowHoodSpeed(double speed) {
+        ShooterConstants.LIMELIGHT_SHOOTING_LOOKUP_MAP.get(ShooterConstants.LOWER_HUB_KEY)[1] = speed;
+    }
+    
+
+    public double[] convertShootingModeKeyToShootingRPM(double key) {
+        return ShooterConstants.LIMELIGHT_SHOOTING_LOOKUP_MAP.get(key);
+    }
+
+    public double[] getDefaultUpperHubShootingSpeeds() {
+        return ShooterConstants.LIMELIGHT_SHOOTING_LOOKUP_MAP.get(ShooterConstants.UPPER_HUB_KEY);
+    }
+    
+    public double[] getDefaultLowerHubShootingSpeeds() {
+        return ShooterConstants.LIMELIGHT_SHOOTING_LOOKUP_MAP.get(ShooterConstants.LOWER_HUB_KEY);
     }
 
     // Check if motor is at speed
     public boolean atSpeed() {
-        // double s = highMode ? upperHubShootingSpeed : lowerHubShootingSpeed;
-        double s;
-        if (highMode) {
-            s = upperHubShootingSpeed;
-        } else {
-            s = lowerHubShootingSpeed;
-        }
-        // double s = upperHubShootingSpeed;
-        return ((Math.abs(getRightRPM()) >= (s - rpmThreshold)) || (getLeftRPM() >= (s - rpmThreshold)));
+        double[] speeds = convertShootingModeKeyToShootingRPM(shootingModeKey);
+        double mainRPM = speeds[0], hoodRPM = speeds[1];
+        return (
+            ((Math.abs(getRightRPM()) >= (mainRPM - mainRPMThreshold)) || (getLeftRPM() >= (mainRPM - mainRPMThreshold)))
+            && (Math.abs(getHoodRPM()) >= (hoodRPM - hoodRPMThreshold))
+        );
+    }
+
+    // Set manual / limelight shooting operation
+    public void setShootingModeKey(double key) {
+        shootingModeKey = key;
+    }
+
+    // Get manual / limelight shooting operation
+    public double getShootingModeKey() {
+        return shootingModeKey;
     }
 
     // Check if shooter is running
@@ -314,7 +330,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setShooterSolenoidExtended(boolean status) {
-        shooterAngleSolenoid.set(status);
+        // shooterAngleSolenoid.set(status);
         isShooterSolenoidExtended = status;
     }
 

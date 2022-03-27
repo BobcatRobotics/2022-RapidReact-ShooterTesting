@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.Timer;
@@ -35,7 +36,7 @@ public class shootBalls extends CommandBase {
   public void initialize() {
     shooter.stop();
     shooter.stopFeeding();
-    shooter.setHighMode(true);
+    shooter.setShootingModeKey(ShooterConstants.UPPER_HUB_KEY);
     // shooter.getToSpeed();
     intake.stopIntake();
     t.reset();

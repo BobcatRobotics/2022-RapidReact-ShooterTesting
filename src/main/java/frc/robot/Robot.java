@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
   // commands and crap
   private intakeControls intakeControls = new intakeControls(RobotContainer.intake,  RobotContainer.gamepad, RobotContainer.shooter, RobotContainer.climber);
   private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
-  private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.gamepad, RobotContainer.climber);
+  private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
 
 
@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
     tab.add("Shooter current RPM",0);
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     SmartDashboard.putNumber("Compressor pressure", intake.pneumaticHub().getPressure(0));
-    SmartDashboard.putNumber("Shooter RPM Threshold", shooter.getRPMThreshold());
+    SmartDashboard.putNumber("Shooter RPM Threshold", shooter.getMainRPMThreshold());
     
     
     // NEED TO TEST -----
@@ -246,9 +246,9 @@ public class Robot extends TimedRobot {
 
     if (autoMode) {
       double rpmAuto = SmartDashboard.getNumber("Shooter RPM Threshold", 250) + 100;
-      shooter.setRPMThreshold(rpmAuto);
+      shooter.setMainRPMThreshold(rpmAuto);
     } else {
-      shooter.setRPMThreshold(SmartDashboard.getNumber("Shooter RPM Threshold", 250));
+      shooter.setMainRPMThreshold(SmartDashboard.getNumber("Shooter RPM Threshold", 250));
     }
     // Update button used to toggle climber mode based on Shuffleboard input
     // use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
