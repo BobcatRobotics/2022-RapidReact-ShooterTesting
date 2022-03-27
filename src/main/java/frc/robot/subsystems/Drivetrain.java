@@ -262,13 +262,13 @@ public class Drivetrain extends SubsystemBase {
             leftP *= INVERT_MOTOR;
         }
         
-        rtMotor.set(rightP);
-        rmMotor.set(rightP);
-        rbMotor.set(rightP);
+        rtMotor.set(rightP*rightP*Math.signum(rightP));
+        rmMotor.set(rightP*rightP*Math.signum(rightP));
+        rbMotor.set(rightP*rightP*Math.signum(rightP));
 
-        ltMotor.set(leftP);
-        lmMotor.set(leftP);
-        lbMotor.set(leftP);
+        ltMotor.set(leftP*leftP*Math.signum(leftP));
+        lmMotor.set(leftP*leftP*Math.signum(leftP));
+        lbMotor.set(leftP*leftP*Math.signum(leftP));
     }
 
 
