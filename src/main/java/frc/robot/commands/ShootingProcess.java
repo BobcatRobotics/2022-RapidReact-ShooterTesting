@@ -80,6 +80,8 @@ public class ShootingProcess extends CommandBase {
           if (shooter.atSpeed()) {
               shooter.feed();
           }
+      } else {
+        shooter.stopFeeding();
       }
     }
     // Gamepad left bumper button -> run shooter high speed
