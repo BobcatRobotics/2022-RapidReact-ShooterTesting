@@ -16,21 +16,20 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class CenterRobotOnHub extends CommandBase {
 
-    private final Drivetrain m_drivetrain;
-    private Joystick m_gamepad;
+    private final Drivetrain drivetrain;
+    private Joystick rightStick;
     // private NetworkTable limelightTable;
-    private Limelight m_limelight;
+    private Limelight limelight;
     private boolean ledIsOn = false;
     private PIDController pidController;
     
-    public CenterRobotOnHub() {
-        m_drivetrain = RobotContainer.drivetrain;
-        m_gamepad = RobotContainer.gamepad;
-        // limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
-        m_limelight = RobotContainer.limelight;
+    public CenterRobotOnHub(Drivetrain dt, Joystick rightJ, Limelight lm) {
+        drivetrain = dt;
+        rightStick = rightJ;
+        limelight = lm;
         ledIsOn = false;
-        if (!m_limelight.isInitialized()) {
-            m_limelight.initializeLimeLight();
+        if (!limelight.isInitialized()) {
+            limelight.initializeLimeLight();
         }
         SmartDashboard.putNumber("LimeLight drive percent", 0.0);
         RioLogger.errorLog("CenterRobotOnHub started");
@@ -39,7 +38,7 @@ public class CenterRobotOnHub extends CommandBase {
         SmartDashboard.putNumber("CROH kI", 0);
         SmartDashboard.putNumber("CROH kD", 0);
         pidController = new PIDController(1, 0, 0);
-        addRequirements(m_limelight);
+        addRequirements(limelight);
     }
 
     // Called when the command is initially scheduled.
@@ -55,19 +54,19 @@ public class CenterRobotOnHub extends CommandBase {
         pidController.setP(SmartDashboard.getNumber("CROH kP", 1));
         pidController.setI(SmartDashboard.getNumber("CROH kI", 0));
         pidController.setD(SmartDashboard.getNumber("CROH kD", 0));
-        m_limelight.updateFrame();
-        // Run command when A button is pressed
-        if (m_gamepad.getRawButton(Constants.D_Pad_Right)) {
-            m_limelight.updateFrame();
+        // limelight.updateFrame();
+        // Run command when joystick trigger is pressed
+        if (rightStick.getTrigger()) {
+            // limelight.updateFrame();
             // Limelight has not found any targets
-            if (!m_limelight.hasTargets()) {
+            if (!limelight.hasTargets()) {
                 // Stop drivetrain
-                m_drivetrain.stop();
+                drivetrain.stop();
             }
             // Limelight has found a target
             else {
                 // Get horizontal offset from crosshair to target
-                double tx = m_limelight.x();
+                double tx = limelight.x();
                 // Normalize between 0 and 1 by dividing by max degree offset: 29.8 deg
                 tx /= 29.8;
                 // Turn
@@ -86,7 +85,7 @@ public class CenterRobotOnHub extends CommandBase {
                 // Turn
                 SmartDashboard.putNumber("LimeLight drive percent", tx);
                 double d = pidController.calculate(tx, 0);
-                m_drivetrain.drive(d, d);
+                drivetrain.drive(d, d);
                 // }
             }
         } else {
@@ -96,15 +95,15 @@ public class CenterRobotOnHub extends CommandBase {
             //     ledIsOn = false;
             // }
         }
-        if (m_gamepad.getRawButtonReleased(Constants.D_Pad_Left)) {
-            if (ledIsOn) {
-                m_limelight.turnOffLED();
-                ledIsOn = false;
-            } else {
-                m_limelight.turnOnLED();
-                ledIsOn = true;
-            }
-        }
+        // if (rightJoystick.getRawButtonReleased(Constants.D_Pad_Left)) {
+        //     if (ledIsOn) {
+        //         limelight.turnOffLED();
+        //         ledIsOn = false;
+        //     } else {
+        //         limelight.turnOnLED();
+        //         ledIsOn = true;
+        //     }
+        // }
     }
 
     // Called once the command ends or is interrupted.

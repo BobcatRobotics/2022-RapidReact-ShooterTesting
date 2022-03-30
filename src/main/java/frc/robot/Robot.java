@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.CenterRobotOnHub;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DriveTele;
 import frc.robot.commands.ShootingProcess;
@@ -38,7 +39,7 @@ public class Robot extends TimedRobot {
   private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
   private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
-
+  private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.limelight);
 
   private RobotContainer m_robotContainer;
   private Command m_autonomousCommand;
@@ -190,6 +191,10 @@ public class Robot extends TimedRobot {
       intakeControls.schedule();
       // climber controller
       climberCommand.schedule();
+      // centerRobotOnHub command
+      centerRobotOnHubCommand.schedule();
+
+
       climber.turnOffClimberMode();
     // }
 
