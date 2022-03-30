@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 // import com.playingwithfusion.TimeOfFlight;
+import com.playingwithfusion.TimeOfFlight;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -23,6 +24,7 @@ public class Shooter extends SubsystemBase {
     private final WPI_TalonFX shooterFalconRight;
     private final WPI_TalonFX hoodFalcon;
     private final WPI_TalonFX feedMotor;
+    private final TimeOfFlight tofSensor;
 
     public double upperHubShootingSpeed = ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED;
     public double lowerHubShootingSpeed = ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED;
@@ -56,7 +58,9 @@ public class Shooter extends SubsystemBase {
         shooterFalconRight = new WPI_TalonFX(Constants.ShooterConstants.shooterFalcon2Port);
         feedMotor = new WPI_TalonFX(Constants.ShooterConstants.feedMotorPort);
         hoodFalcon = new WPI_TalonFX(Constants.ShooterConstants.hoodFalconPort);
+        tofSensor = new TimeOfFlight(Constants.ShooterConstants.tofPort);
 
+		tofSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 25.0);
         // Set factory default for each motor
         shooterFalconLeft.configFactoryDefault();
         shooterFalconRight.configFactoryDefault();
@@ -113,6 +117,10 @@ public class Shooter extends SubsystemBase {
         isShooterSolenoidExtended = shooterAngleSolenoid.get();
     }
     
+    public boolean tofTriggered() {
+        return tofSensor.getRange() <= 30;
+    }
+
     public void lowerCANBusUtilization() {
         // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
         for (WPI_TalonFX talon: new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor}) {

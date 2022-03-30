@@ -258,9 +258,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("DriveTrain get pose", drivetrain.getPose().toString());
 
 
-
-
-    // NEED TO TEST -----
     selected_dead_auto_ID = (int)SmartDashboard.getNumber("Selected Dead Auto #", 0);
     if (selected_dead_auto_ID != 0 && selected_dead_auto_ID != 1) selected_dead_auto_ID = 0;
     SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);

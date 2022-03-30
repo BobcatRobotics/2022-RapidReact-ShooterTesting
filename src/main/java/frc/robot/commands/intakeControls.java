@@ -39,7 +39,7 @@ public class intakeControls extends CommandBase {
   @Override
   public void execute() {
 
-    boolean feedReady = shooter.getBallReadyToFeed();
+    boolean feedReady = shooter.tofTriggered();
 
     // Gamepad X button -> intake down
     if (gp.getRawButton(Constants.X_Button) && !climber.isClimberMode()) {
@@ -63,6 +63,11 @@ public class intakeControls extends CommandBase {
 
       // Gamepad right bumper -> intake bar in, vertical wheels in
       if (gp.getRawButton(Constants.Right_Bumper_Button)) {
+        if (!feedReady) {
+          shooter.feed(false);
+        } else {
+          shooter.stopFeeding();
+        }
         intake.runIntakeBarIn(true);
         intake.runIntakeWheelsIn(true);
       } else {
