@@ -11,6 +11,8 @@ import java.util.HashMap;
 
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
@@ -255,8 +257,9 @@ public final class Constants {
   }
 
   public static final class LimelightConstants {
-    public static final double kLimelightHeight = 2.64 - 0.532; // hub height - limelight mount height, meters
-    public static final double kLimelightMountAngle = 40.0 * Math.PI/180; // rad
+    public static final double kLimelightHeight = Units.inchesToMeters(104) - Units.inchesToMeters(27.375); // hub height - limelight mount height, meters
+    // public static final double kLimelightHeight = Units.feetToMeters(6) - Units.inchesToMeters(63); // hub height - limelight mount height, meters
+    public static final double kLimelightMountAngle = 36 * (Math.PI/180); // rad
   }
 
   public static final class StopAtCollisionConstants {

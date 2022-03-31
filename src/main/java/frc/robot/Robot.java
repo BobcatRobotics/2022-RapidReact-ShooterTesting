@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.CenterRobotOnHub;
 import frc.robot.commands.ClimberCommand;
@@ -39,7 +40,7 @@ public class Robot extends TimedRobot {
   private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
   private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
-  private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.limelight);
+  private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.gamepad, RobotContainer.limelight);
 
   private RobotContainer m_robotContainer;
   private Command m_autonomousCommand;
@@ -48,6 +49,7 @@ public class Robot extends TimedRobot {
   private Shooter shooter;
   private Climber climber;
   private Drivetrain drivetrain;
+  private Limelight limelight;
   private Compressor compressor;
   private boolean shoot = false;
   // private CommandBase desiredAutoCommand;
@@ -76,6 +78,7 @@ public class Robot extends TimedRobot {
     intake = m_robotContainer.intake;
     shooter = m_robotContainer.shooter;
     climber = m_robotContainer.climber;
+    limelight = m_robotContainer.limelight;
     climber.withdraw();
     // this.rightStick = RobotContainer.rightStick;
     // this.leftStick = RobotContainer.leftStick;
@@ -89,13 +92,15 @@ public class Robot extends TimedRobot {
     tab.add("Shooter current RPM",0);
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     SmartDashboard.putNumber("Compressor pressure", intake.pneumaticHub().getPressure(0));
-    SmartDashboard.putNumber("Shooter RPM Threshold", shooter.getMainRPMThreshold());
+    SmartDashboard.putNumber("Main shooter RPM Threshold", shooter.getMainRPMThreshold());
+    SmartDashboard.putNumber("Hood shooter RPM Threshold", shooter.getHoodRPMThreshold());
     
     
     // NEED TO TEST -----
     SmartDashboard.putNumber("Selected Dead Auto #", selected_dead_auto_ID);
     SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
     SmartDashboard.putNumber("Delay time: Dead auto 2-ball", 0);
+    SmartDashboard.putNumber("Limelight dist (m)", 0);
   }
 
   /**
@@ -247,13 +252,18 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Current Left RPM", shooter.getLeftRPM());
     SmartDashboard.putNumber("Current Right RPM", shooter.getRightRPM());
     SmartDashboard.putNumber("Hood RPM", shooter.getHoodRPM());
+    SmartDashboard.putNumber("Limelight dist (m)", (LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)));
+    SmartDashboard.putNumber("LIMELIGHT WORK PLZ (y)", limelight.y());
     
+    // SmartDashboard.getNumber("Main shooter RPM Threshold", shooter.getMainRPMThreshold());
+    // SmartDashboard.getNumber("Hood shooter RPM Threshold", shooter.getHoodRPMThreshold());
 
     if (autoMode) {
-      double rpmAuto = SmartDashboard.getNumber("Shooter RPM Threshold", 250) + 100;
-      shooter.setMainRPMThreshold(rpmAuto);
+      shooter.setMainRPMThreshold(SmartDashboard.getNumber("Main shooter RPM Threshold", 250) + 100);
+      shooter.setHoodRPMThreshold(SmartDashboard.getNumber("Hood shooter RPM Threshold", 250) + 100);
     } else {
-      shooter.setMainRPMThreshold(SmartDashboard.getNumber("Shooter RPM Threshold", 250));
+      shooter.setMainRPMThreshold(SmartDashboard.getNumber("Main shooter RPM Threshold", 250));
+      shooter.setHoodRPMThreshold(SmartDashboard.getNumber("Hood shooter RPM Threshold", 250));
     }
     // Update button used to toggle climber mode based on Shuffleboard input
     // use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
@@ -261,8 +271,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     
     SmartDashboard.putString("DriveTrain get pose", drivetrain.getPose().toString());
-
-
 
 
     // NEED TO TEST -----

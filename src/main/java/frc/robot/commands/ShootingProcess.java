@@ -11,6 +11,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ShootingProcess extends CommandBase {
@@ -28,6 +29,7 @@ public class ShootingProcess extends CommandBase {
     this.gamepad = gamepad;
     this.climber = climber;
     this.limelight = limelight;
+    SmartDashboard.putNumber("Limelight dist (m)", 0);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
@@ -70,12 +72,13 @@ public class ShootingProcess extends CommandBase {
     // }
 
     // Gamepad D-pad right -> run shooter Limelight-based speed
-    if (gamepad.getRawButton(Constants.D_Pad_Right) && !climber.isClimberMode()) {
+    if (gamepad.getPOV() == Constants.D_Pad_Right && !climber.isClimberMode()) {
       if (limelight.hasTargets()) {
           shooter.setShootingModeKey(Math.round(2*(LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)))/2.0);
           // Shooter get to speed and shoot at velocity
           // System.out.printf("Will shoot at %s RPM based on %s meters away\n", speeds[0], speeds[1]);
           // Ready to shoot
+          shooter.setRunning(true);
           shooter.getToSpeed();
           if (shooter.atSpeed()) {
               shooter.feed();

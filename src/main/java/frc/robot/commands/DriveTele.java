@@ -7,7 +7,7 @@ import frc.robot.subsystems.Drivetrain;
 
 public class DriveTele extends CommandBase {
     // If the speed of a motor is less than this threshold, we'll just set it to zero
-    private final double driveThreshold = 0.07;
+    private final double driveThreshold = Math.sqrt(0.07);
 
     // Represents the position of the right and left joysticks
     // These determine the speed of the right and left motors

@@ -17,20 +17,21 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class CenterRobotOnHub extends CommandBase {
 
     private final Drivetrain drivetrain;
-    private Joystick rightStick;
+    private Joystick gamepad;
     // private NetworkTable limelightTable;
     private Limelight limelight;
     private boolean ledIsOn = false;
     private PIDController pidController;
     
-    public CenterRobotOnHub(Drivetrain dt, Joystick rightJ, Limelight lm) {
+    public CenterRobotOnHub(Drivetrain dt, Joystick gp, Limelight lm) {
         drivetrain = dt;
-        rightStick = rightJ;
+        gamepad = gp;
         limelight = lm;
         ledIsOn = false;
         if (!limelight.isInitialized()) {
             limelight.initializeLimeLight();
         }
+        SmartDashboard.putBoolean("d-pad left", gamepad.getPOV() == Constants.D_Pad_Left);
         SmartDashboard.putNumber("LimeLight drive percent", 0.0);
         RioLogger.errorLog("CenterRobotOnHub started");
         SmartDashboard.putBoolean("shouldStop", false);
@@ -56,7 +57,8 @@ public class CenterRobotOnHub extends CommandBase {
         pidController.setD(SmartDashboard.getNumber("CROH kD", 0));
         // limelight.updateFrame();
         // Run command when joystick trigger is pressed
-        if (rightStick.getTrigger()) {
+        SmartDashboard.putBoolean("d-pad left", gamepad.getPOV() == Constants.D_Pad_Left);
+        if (gamepad.getPOV() == Constants.D_Pad_Left) {
             // limelight.updateFrame();
             // Limelight has not found any targets
             if (!limelight.hasTargets()) {
@@ -68,7 +70,7 @@ public class CenterRobotOnHub extends CommandBase {
                 // Get horizontal offset from crosshair to target
                 double tx = limelight.x();
                 // Normalize between 0 and 1 by dividing by max degree offset: 29.8 deg
-                tx /= 29.8;
+                tx /= 14.9;
                 // Turn
                 if (Math.abs(tx) < 0.01) { // Threshold to stop turning
                     SmartDashboard.putBoolean("shouldStop", true);
@@ -85,7 +87,7 @@ public class CenterRobotOnHub extends CommandBase {
                 // Turn
                 SmartDashboard.putNumber("LimeLight drive percent", tx);
                 double d = pidController.calculate(tx, 0);
-                drivetrain.drive(d, d);
+                drivetrain.drive(d, -d);
                 // }
             }
         } else {

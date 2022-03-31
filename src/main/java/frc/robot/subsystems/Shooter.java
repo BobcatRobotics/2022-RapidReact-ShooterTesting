@@ -249,6 +249,7 @@ public class Shooter extends SubsystemBase {
             ((Math.abs(getRightRPM()) >= (mainRPM - mainRPMThreshold)) || (getLeftRPM() >= (mainRPM - mainRPMThreshold)))
             && (Math.abs(getHoodRPM()) >= (hoodRPM - hoodRPMThreshold))
         );
+        // return true;
     }
 
     // Set manual / limelight shooting operation
