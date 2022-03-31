@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-// import com.playingwithfusion.TimeOfFlight;
+import com.playingwithfusion.TimeOfFlight;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -24,12 +24,12 @@ public class Shooter extends SubsystemBase {
     private final WPI_TalonFX shooterFalconRight;
     private final WPI_TalonFX hoodFalcon;
     private final WPI_TalonFX feedMotor;
+    private final TimeOfFlight tofSensor;
 
     public double upperHubShootingSpeed = ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED;
     public double lowerHubShootingSpeed = ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED;
     public double hoodHigh = ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED;
     public double hoodLow = ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED;
-    private final double targetSpeed = 3000.0;
     private boolean isRunning = false;
     private double shootingModeKey = 0;
 
@@ -37,27 +37,11 @@ public class Shooter extends SubsystemBase {
     private double encoderEPR = 2048.0;
     private double mainRPMThreshold = 250.0;
     private double hoodRPMThreshold = 250.0;
-    public void setMainRPMThreshold(double thresh) {
-        mainRPMThreshold = thresh;
-    }
-    public double getMainRPMThreshold() {
-        return mainRPMThreshold;
-    }
-    public void setHoodRPMThreshold(double thresh) {
-        hoodRPMThreshold = thresh;
-    }
-    public double getHoodRPMThreshold() {
-        return hoodRPMThreshold;
-    }
 
     private int ballCounter = 0;
-    // private final Solenoid shooterAngleSolenoid;
-    private boolean isShooterSolenoidExtended;
+    // private boolean isShooterSolenoidExtended;
 
     private int[][] originalStatusFrames = new int[3][12];
-
-    // private boolean highMode = true;
-    // public void setHighMode(boolean status) {highMode = status;}
 
     public Shooter() {
         // Instantiate new talons
@@ -65,6 +49,10 @@ public class Shooter extends SubsystemBase {
         shooterFalconRight = new WPI_TalonFX(Constants.ShooterConstants.shooterFalcon2Port);
         feedMotor = new WPI_TalonFX(Constants.ShooterConstants.feedMotorPort);
         hoodFalcon = new WPI_TalonFX(Constants.ShooterConstants.hoodFalconPort);
+        
+        // Time of flight config
+        tofSensor = new TimeOfFlight(Constants.ShooterConstants.tofPort);
+        tofSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 25.0);
 
         // Set factory default for each motor
         shooterFalconLeft.configFactoryDefault();
@@ -121,40 +109,22 @@ public class Shooter extends SubsystemBase {
         // shooterAngleSolenoid.set(false);
         // isShooterSolenoidExtended = shooterAngleSolenoid.get();
     }
-    
-    public void lowerCANBusUtilization() {
-        // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
-        for (WPI_TalonFX talon: new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor}) {
-            for (int i = 0; i < originalStatusFrames.length; i++) {
-                talon.setStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i]);
-            }
-        }
-        prettyPrintStatusFrames();
+
+    public boolean tofTriggered() {
+        return tofSensor.getRange() <= 30;
     }
 
-    public void configDefault() {
-        WPI_TalonFX[] talons = new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor};
-        for (int t = 0; t < talons.length; t++) {
-            for (int i = 0; i < originalStatusFrames.length; i++) {
-                originalStatusFrames[t][i] = talons[t].getStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i]);
-            }
-        }
+    public void setMainRPMThreshold(double thresh) {
+        mainRPMThreshold = thresh;
     }
-
-    public void defaultStatusFrames() {
-        WPI_TalonFX[] talons = new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor};
-        for (int t = 0; t < talons.length; t++) {
-            for (int i = 0; i < originalStatusFrames.length; i++) {
-                talons[t].setStatusFramePeriod(Constants.frameTypes[i], originalStatusFrames[t][i]);
-            }
-        }
+    public double getMainRPMThreshold() {
+        return mainRPMThreshold;
     }
-
-    public void prettyPrintStatusFrames() {
-        WPI_TalonFX[] motors = {shooterFalconLeft, shooterFalconRight, feedMotor};
-        String[] motorNames = {"shooterFalconLeft", "shooterFalconRight", "feedMotor"};
-        for (int i = 0; i < motors.length; i++) {
-        }
+    public void setHoodRPMThreshold(double thresh) {
+        hoodRPMThreshold = thresh;
+    }
+    public double getHoodRPMThreshold() {
+        return hoodRPMThreshold;
     }
 
     public double getLeftCurrent() {
@@ -313,29 +283,65 @@ public class Shooter extends SubsystemBase {
     /**
      * Returns whether or not the TOF sensor currently sees a ball
      */
-    public boolean getBallReadyToFeed() {
-        return false;
+    // public boolean getBallReadyToFeed() {
+    //     return false;
+    // }
+
+    // public boolean getBallLeaving() {
+    //     return false;
+    // }
+
+    // public void toggleShooter() {
+    // }
+
+    // public void shooterUp() {
+    // }
+
+    // public void shooterDown() {
+    // }
+
+    // public void setShooterSolenoidExtended(boolean status) {
+    //     // shooterAngleSolenoid.set(status);
+    //     isShooterSolenoidExtended = status;
+    // }
+
+    // public boolean isShooterSolenoidExtended() {
+    //     return isShooterSolenoidExtended;
+    // }
+
+    public void lowerCANBusUtilization() {
+        // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
+        for (WPI_TalonFX talon: new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor}) {
+            for (int i = 0; i < originalStatusFrames.length; i++) {
+                talon.setStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i]);
+            }
+        }
+        prettyPrintStatusFrames();
     }
 
-    public boolean getBallLeaving() {
-        return false;
+    public void configDefault() {
+        WPI_TalonFX[] talons = new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor};
+        for (int t = 0; t < talons.length; t++) {
+            for (int i = 0; i < originalStatusFrames.length; i++) {
+                originalStatusFrames[t][i] = talons[t].getStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i]);
+            }
+        }
     }
 
-    public void toggleShooter() {
+    public void defaultStatusFrames() {
+        WPI_TalonFX[] talons = new WPI_TalonFX[]{shooterFalconLeft, shooterFalconRight, feedMotor};
+        for (int t = 0; t < talons.length; t++) {
+            for (int i = 0; i < originalStatusFrames.length; i++) {
+                talons[t].setStatusFramePeriod(Constants.frameTypes[i], originalStatusFrames[t][i]);
+            }
+        }
     }
 
-    public void shooterUp() {
+    public void prettyPrintStatusFrames() {
+        WPI_TalonFX[] motors = {shooterFalconLeft, shooterFalconRight, feedMotor};
+        String[] motorNames = {"shooterFalconLeft", "shooterFalconRight", "feedMotor"};
+        for (int i = 0; i < motors.length; i++) {
+        }
     }
 
-    public void shooterDown() {
-    }
-
-    public void setShooterSolenoidExtended(boolean status) {
-        // shooterAngleSolenoid.set(status);
-        isShooterSolenoidExtended = status;
-    }
-
-    public boolean isShooterSolenoidExtended() {
-        return isShooterSolenoidExtended;
-    }
 }

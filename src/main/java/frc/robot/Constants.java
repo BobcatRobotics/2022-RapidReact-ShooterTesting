@@ -229,6 +229,7 @@ public final class Constants {
     public static final int hoodFalconPort = 15;
     public static final int feedMotorPort = 10;
     public static final int shooterAngleSolenoidPort = 1;
+    public static final int tofPort = 42;
     public static final double UPPER_HUB_KEY = 0.0;
     public static final double LOWER_HUB_KEY = 0.5;
     public static HashMap<Double, double[]> LIMELIGHT_SHOOTING_LOOKUP_MAP = new HashMap<Double, double[]>();

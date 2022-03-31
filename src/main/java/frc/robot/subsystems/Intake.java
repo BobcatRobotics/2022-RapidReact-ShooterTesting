@@ -40,6 +40,9 @@ public class Intake extends SubsystemBase {
     private double inHalfSpeed = 0.3;
     private double outSpeed = -0.5;
 
+    private boolean intakeBarRunningIn = false;
+    private boolean intakeWheelsRunningIn = false;
+
     private int[][] originalStatusFrames = new int[2][12];
 
     /**
@@ -81,6 +84,18 @@ public class Intake extends SubsystemBase {
     public void feedIn() {
         runIntakeBarIn(true);
         runIntakeWheelsIn(true);   
+    }
+
+    public boolean isIntakeBarRunningIn() {
+        return intakeBarRunningIn;
+    }
+
+    public boolean isIntakeWheelsRunningIn() {
+        return intakeWheelsRunningIn;
+    }
+
+    public boolean isIntakeRunningIn() {
+        return isIntakeBarRunningIn() || isIntakeWheelsRunningIn();
     }
 
     // public void lowerCANBusUtilization() {
@@ -198,6 +213,7 @@ public class Intake extends SubsystemBase {
      */
     public void runIntakeWheelsIn(boolean fullSpeed) {
         intakeLeftWheel.set(fullSpeed ? inFullSpeed : inHalfSpeed);
+        intakeWheelsRunningIn = true;
         // intakeRightWheel.set(fullSpeed ? inFullSpeed : inHalfSpeed);
     }
 
@@ -207,6 +223,7 @@ public class Intake extends SubsystemBase {
      */
     public void runIntakeWheelsOut(boolean fullSpeed) {
         intakeLeftWheel.set(outSpeed);
+        intakeWheelsRunningIn = false;
         // intakeRightWheel.set(outSpeed);
     }
 
@@ -216,6 +233,7 @@ public class Intake extends SubsystemBase {
      */
     public void runIntakeBarIn(boolean fullSpeed) {
         intakeBar.set(fullSpeed ? inFullSpeed : inHalfSpeed);
+        intakeBarRunningIn = true;
     }
 
     /**
@@ -224,6 +242,7 @@ public class Intake extends SubsystemBase {
      */
     public void runIntakeBarOut(boolean fullSpeed) {
         intakeBar.set(outSpeed);
+        intakeBarRunningIn = false;
     }
     
     /**
@@ -254,6 +273,7 @@ public class Intake extends SubsystemBase {
      */
     public void stopIntakeWheels() {
         intakeLeftWheel.set(0);
+        intakeWheelsRunningIn = false;
         // // intakeRightWheel.set(0);
     }
 
@@ -262,6 +282,7 @@ public class Intake extends SubsystemBase {
      */
     public void stopIntakeBar() {
         intakeBar.set(0);
+        intakeBarRunningIn = false;
     }
 
     /**

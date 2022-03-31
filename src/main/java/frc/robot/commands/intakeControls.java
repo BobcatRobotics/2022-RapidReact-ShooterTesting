@@ -35,11 +35,19 @@ public class intakeControls extends CommandBase {
 
   }
 
+  public void feed_in_until_TOF_triggered_or_while_shoot_button_pressed() {
+    if (!shooter.tofTriggered() || gp.getRawButton(Constants.Left_Trigger_Button)) {
+      shooter.feed();
+    } else {
+      shooter.stopFeeding();
+    }
+  }
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    boolean feedReady = shooter.getBallReadyToFeed();
+    boolean feedReady = shooter.tofTriggered();
 
     // Gamepad X button -> intake down
     if (gp.getRawButton(Constants.X_Button) && !climber.isClimberMode()) {
@@ -65,6 +73,8 @@ public class intakeControls extends CommandBase {
       if (gp.getRawButton(Constants.Right_Bumper_Button)) {
         intake.runIntakeBarIn(true);
         intake.runIntakeWheelsIn(true);
+        // Also run in feed motor until TOF triggered
+        feed_in_until_TOF_triggered_or_while_shoot_button_pressed();
       } else {
         // Gamepad D-pad down -> intake out
         if (gp.getPOV() == Constants.D_Pad_Down) {
@@ -76,6 +86,8 @@ public class intakeControls extends CommandBase {
         // Gamepad right trigger -> vertical wheels in
         if (gp.getRawButton(Constants.Right_Trigger_Button)) {
           intake.runIntakeWheelsIn(true);
+          // Also run in feed motor until TOF triggered
+          feed_in_until_TOF_triggered_or_while_shoot_button_pressed();
         } else { // Stop intake vertical wheels
           intake.stopIntakeWheels();
         }

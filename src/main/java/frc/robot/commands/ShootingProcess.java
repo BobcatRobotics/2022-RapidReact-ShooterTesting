@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.Joystick;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ShootingProcess extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Shooter shooter;
+  private final Intake intake;
   private final Joystick gamepad;
   private final Climber climber;
   private final Limelight limelight;
@@ -24,8 +26,9 @@ public class ShootingProcess extends CommandBase {
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public ShootingProcess(Shooter shooter, Joystick gamepad, Climber climber, Limelight limelight) {
+  public ShootingProcess(Shooter shooter, Intake intake, Joystick gamepad, Climber climber, Limelight limelight) {
     this.shooter = shooter;
+    this.intake = intake;
     this.gamepad = gamepad;
     this.climber = climber;
     this.limelight = limelight;
@@ -83,7 +86,7 @@ public class ShootingProcess extends CommandBase {
           if (shooter.atSpeed()) {
               shooter.feed();
           }
-      } else {
+      } else if (!intake.isIntakeRunningIn()) {
         shooter.stopFeeding();
       }
     }
@@ -112,13 +115,12 @@ public class ShootingProcess extends CommandBase {
       if (shooter.atSpeed()) {
         shooter.feed();
       }
-    } else {
+    } else if (gamepad.getRawButton(Constants.Right_Joystick_Pressed)) {
+      shooter.reverseFeed();
+    } else if (!intake.isIntakeRunningIn()) {
       shooter.stopFeeding();
     }
 
-    if (gamepad.getRawButton(Constants.Right_Joystick_Pressed)) {
-      shooter.reverseFeed();
-    }
   }
 
   // Called once the command ends or is interrupted.

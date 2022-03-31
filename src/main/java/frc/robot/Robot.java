@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
   // commands and crap
   private intakeControls intakeControls = new intakeControls(RobotContainer.intake,  RobotContainer.gamepad, RobotContainer.shooter, RobotContainer.climber);
   private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
-  private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
+  private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.intake, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
   private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.gamepad, RobotContainer.limelight);
 
@@ -227,11 +227,11 @@ public class Robot extends TimedRobot {
       // Lift hood up
       // Turn off shooter if on climber mode
       if (climber.isClimberMode()) {
-        shooter.setShooterSolenoidExtended(false);
+        // shooter.setShooterSolenoidExtended(false);
         shooter.setRunning(false);
         shooter.stop();
       } else {
-        shooter.setShooterSolenoidExtended(true);
+        // shooter.setShooterSolenoidExtended(true);
         
       }
     } 
