@@ -1,25 +1,26 @@
-package frc.robot.commands;
+// package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.utils.Ball;
+// import edu.wpi.first.wpilibj2.command.CommandBase;
+// import frc.robot.subsystems.Drivetrain;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
+// import org.json.simple.JSONArray;
+// import org.json.simple.JSONObject;
+// import org.json.simple.parser.JSONParser;
 
-import edu.wpi.first.wpilibj.Timer;
+// import edu.wpi.first.networktables.NetworkTable;
+// import edu.wpi.first.networktables.NetworkTableEntry;
+// import edu.wpi.first.networktables.NetworkTableInstance;
 
-/*
-So far, AlignToNearestBall makes small, tiny 0.1 (abstract time to be changed w/ testing) second increments at a certain speed,
-turning until the center x-value of the ball with the largest radius is reasonably within the goal x-value which we would like
-it to be at. It is not being used anywhere and requires a functional cargo_tracker.py to work. As I commented below, I could not
-figure out how to implement the slow zone, so that is not present in this implementation - Arnav
-*/
+// import edu.wpi.first.wpilibj.Timer;
 
-public class alignToNearestBall extends CommandBase {
+// /*
+// So far, AlignToNearestBall makes small, tiny 0.1 (abstract time to be changed w/ testing) second increments at a certain speed,
+// turning until the center x-value of the ball with the largest radius is reasonably within the goal x-value which we would like
+// it to be at. It is not being used anywhere and requires a functional cargo_tracker.py to work. As I commented below, I could not
+// figure out how to implement the slow zone, so that is not present in this implementation - Arnav
+// */
+
+// public class AlignToNearestBall extends CommandBase {
     
     private Drivetrain drivetrain;
     private double angle = -1000;
@@ -44,10 +45,16 @@ public class alignToNearestBall extends CommandBase {
 
         if (closestBall != null) {
             angle = closestBall.getAngle();
-            double drivePower = angle / 3;
-            drivetrain.drive(drivePower,drivePower);
+            // 27 = camera fov for normalization
+            // .4 = scaling factor so it doesn't turn too fast
+            double drivePower = (angle/27)*.4;
+            drivetrain.drive(drivePower , drivePower);
         } else {
             drivetrain.drive(2.5,2.5);
+        }
+
+        if (angle <=.2) {
+            angle = 0.0;
         }
 
     }
@@ -60,7 +67,7 @@ public class alignToNearestBall extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        if(angle == 0) {
+        if(angle == 0.0) {
             return true;
         } else {
             return false;
