@@ -33,6 +33,7 @@ public class ShootingProcess extends CommandBase {
     this.climber = climber;
     this.limelight = limelight;
     SmartDashboard.putNumber("Limelight dist (m)", 0);
+    SmartDashboard.putNumber("ToF", ShooterConstants.defaultTofRange);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
@@ -59,20 +60,45 @@ public class ShootingProcess extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // SmartDashboard.putNumber("ToF", shooter.getTofRange());
+    shooter.setTofThresh(SmartDashboard.getNumber("ToF", ShooterConstants.defaultTofRange));
+    SmartDashboard.putNumber("ToF Data", shooter.getTofRange());
     // // Gamepad D-pad right -> shooter solenoid up
     // if (gamepad.getPOV() == Constants.D_Pad_Right && !climber.isClimberMode()) {
     //   if (!shooter.isShooterSolenoidExtended()) {
     //     // System.out.println("D-pad right - shooter solenoid up");
     //     shooter.setShooterSolenoidExtended(true);
-    //   }
+    //   }s
     // }
     // // Gamepad D-pad left -> shooter solenoid down
     // else if (gamepad.getPOV() == Constants.D_Pad_Left && !climber.isClimberMode()) {
     //   if (shooter.isShooterSolenoidExtended()) {
     //     // System.out.println("D-pad left - shooter solenoid down");
-    //     shooter.setShooterSolenoidExtended(false);
+    //     shooter.setShooterSolenoidExtended(false)
     //   }
     // }
+    boolean feedBoolean = false;
+    if (gamepad.getRawButton(Constants.Right_Trigger_Button) || gamepad.getRawButton(Constants.Right_Bumper_Button)) {
+      if (!shooter.tofTriggered() || shooter.atSpeed()) {
+        shooter.feed();
+        feedBoolean = true;
+      } else {
+        shooter.stopFeeding();
+      }
+    }
+
+    // Gamepad left trigger -> run tower in
+    if (gamepad.getRawButton(Constants.Left_Trigger_Button)) {
+      if (shooter.atSpeed()) {
+        shooter.feed();
+        feedBoolean = true;
+      }
+    } else if (gamepad.getRawButton(Constants.Right_Joystick_Pressed)) {
+      shooter.reverseFeed();
+      feedBoolean = true;
+    } else if (!intake.isIntakeRunningIn() && (!feedBoolean)) {
+      shooter.stopFeeding();
+    }
 
     // Gamepad D-pad right -> run shooter Limelight-based speed
     if (gamepad.getPOV() == Constants.D_Pad_Right && !climber.isClimberMode()) {
@@ -85,9 +111,8 @@ public class ShootingProcess extends CommandBase {
           shooter.getToSpeed();
           if (shooter.atSpeed()) {
               shooter.feed();
+              feedBoolean = true;
           }
-      } else if (!intake.isIntakeRunningIn()) {
-        shooter.stopFeeding();
       }
     }
     // Gamepad left bumper button -> run shooter high speed
@@ -107,18 +132,6 @@ public class ShootingProcess extends CommandBase {
     else {
       shooter.stopShooter();
       shooter.setRunning(false);
-    }
-
-
-    // Gamepad left trigger -> run tower in
-    if (gamepad.getRawButton(Constants.Left_Trigger_Button)) {
-      if (shooter.atSpeed()) {
-        shooter.feed();
-      }
-    } else if (gamepad.getRawButton(Constants.Right_Joystick_Pressed)) {
-      shooter.reverseFeed();
-    } else if (!intake.isIntakeRunningIn()) {
-      shooter.stopFeeding();
     }
 
   }

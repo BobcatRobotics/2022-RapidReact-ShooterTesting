@@ -48,7 +48,7 @@ def detection_thread(*args):
     hsv = cv.cvtColor(cv.GaussianBlur(frame, (kVal, kVal), 0), cv.COLOR_BGR2HSV)
     # Find the red and blue contours
     # red_mask = cv.inRange(hsv, RED_LOWER, RED_UPPER)
-    colour = 'blue'
+    colour = 'red'
     # Get circles
     red_circles = None
     blue_circles = None
@@ -129,7 +129,7 @@ prev = 0
 
 if __name__ == '__main__':
     # Open the camera
-    cap = cv.VideoCapture(2)
+    cap = cv.VideoCapture(1)
     warningNotDelivered = True
 
     while True:
@@ -166,9 +166,9 @@ if __name__ == '__main__':
         if not returnedFramesQueue.empty():
             # print("Got frame")
             frame, red_mask, blue_mask = returnedFramesQueue.get()
-            #cv.imshow("Frame", frame)
-            #cv.imshow("Blue mask", blue_mask)
-            #cv.imshow("Red mask", red_mask)
+            cv.imshow("Frame", frame)
+            cv.imshow("Blue mask", blue_mask)
+            cv.imshow("Red mask", red_mask)
 
         # Exit on 'q'
         if cv.waitKey(1) & 0xFF == ord('q'):

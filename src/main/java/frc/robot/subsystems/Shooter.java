@@ -110,8 +110,22 @@ public class Shooter extends SubsystemBase {
         // isShooterSolenoidExtended = shooterAngleSolenoid.get();
     }
 
+    private double tof_thresh = 30;
+
+    public double getTofThresh() {
+        return tof_thresh;
+    }
+
+    public void setTofThresh(double thresh) {
+        tof_thresh = thresh;
+    }
+
     public boolean tofTriggered() {
-        return tofSensor.getRange() <= 30;
+        return tofSensor.getRange() <= getTofThresh();
+    }
+
+    public double getTofRange() {
+        return tofSensor.getRange();
     }
 
     public void setMainRPMThreshold(double thresh) {

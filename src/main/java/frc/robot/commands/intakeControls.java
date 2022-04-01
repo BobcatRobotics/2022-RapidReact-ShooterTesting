@@ -16,14 +16,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class intakeControls extends CommandBase {
 
   private Intake intake;
-  private Shooter shooter;
   private Climber climber;
   private Joystick gp;
 
   public intakeControls(Intake in, Joystick gp, Shooter shoot, Climber climber) {
     this.intake = in;
     this.gp = gp;
-    this.shooter = shoot;
+
     this.climber = climber;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.intake);
@@ -35,19 +34,9 @@ public class intakeControls extends CommandBase {
 
   }
 
-  public void feed_in_until_TOF_triggered_or_while_shoot_button_pressed() {
-    if (!shooter.tofTriggered() || gp.getRawButton(Constants.Left_Trigger_Button)) {
-      shooter.feed();
-    } else {
-      shooter.stopFeeding();
-    }
-  }
-
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    boolean feedReady = shooter.tofTriggered();
 
     // Gamepad X button -> intake down
     if (gp.getRawButton(Constants.X_Button) && !climber.isClimberMode()) {
@@ -74,7 +63,7 @@ public class intakeControls extends CommandBase {
         intake.runIntakeBarIn(true);
         intake.runIntakeWheelsIn(true);
         // Also run in feed motor until TOF triggered
-        feed_in_until_TOF_triggered_or_while_shoot_button_pressed();
+        // feed_in_until_TOF_triggered_or_while_shoot_button_pressed();
       } else {
         // Gamepad D-pad down -> intake out
         if (gp.getPOV() == Constants.D_Pad_Down) {
@@ -87,7 +76,7 @@ public class intakeControls extends CommandBase {
         if (gp.getRawButton(Constants.Right_Trigger_Button)) {
           intake.runIntakeWheelsIn(true);
           // Also run in feed motor until TOF triggered
-          feed_in_until_TOF_triggered_or_while_shoot_button_pressed();
+          // feed_in_until_TOF_triggered_or_while_shoot_button_pressed();
         } else { // Stop intake vertical wheels
           intake.stopIntakeWheels();
         }
