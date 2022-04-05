@@ -2,6 +2,8 @@
 from queue import Queue
 import cv2 as cv, numpy as np, json, threading, time
 from networktables import NetworkTables
+from cscore import CameraServer
+
 
 cond = threading.Condition()
 notified = [False]
@@ -12,6 +14,10 @@ threadsBeingUsed = 0
 h = 720
 w = 1280
 fov = 55
+
+CameraServer.enableLogging()
+camera = CameraServer.startAutomaticCapture()
+camera.setResolution(w,h)
 
 globalFrame = None
 
@@ -139,7 +145,7 @@ if __name__ == '__main__':
     # Open the camera
     cap = cv.VideoCapture(0)
     warningNotDelivered = True
-
+    sink = cs.getVideo()
     while True:
         # print("Currently using", threadsBeingUsed, "threads")
         # Put next available task on thread
@@ -150,7 +156,9 @@ if __name__ == '__main__':
             threadsBeingUsed += 1
             tasks.get().start()
 
-        ret, frame = cap.read()
+        ret, frame = cvSink.grabFrame(frame)
+
+        # ret, frame = cap.read()
         globalFrame = frame
 
         while time_elapsed <= 1.0/fps:

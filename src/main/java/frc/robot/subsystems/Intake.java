@@ -57,8 +57,6 @@ public class Intake extends SubsystemBase {
         intakeRightWheel = new WPI_VictorSPX(intakeRightWheelPort);
         intakeLeftWheel.setInverted(true);
         intakeRightWheel.follow(intakeLeftWheel);
-        // intakeRightWheel = new WPI_TalonSRX(intakeRightWheelPort);
-        // intakeRightWheel.setInverted(true); // Based on CAD drawing, the wheels should spin in opposite directions
         intakeBar = new WPI_TalonFX(intakeBarPort);
 
         // Init solenoids
@@ -71,10 +69,6 @@ public class Intake extends SubsystemBase {
         // intakeRightWheel.setNeutralMode(NeutralMode.Coast);
         intakeBar.setNeutralMode(NeutralMode.Coast);
 
-        // prettyPrintStatusFrames();
-        // configDefault();
-        // defaultStatusFrames();
-        lowerCANBusUtilization();
     }
 
     public void feedOut() {
@@ -96,98 +90,6 @@ public class Intake extends SubsystemBase {
 
     public boolean isIntakeRunningIn() {
         return isIntakeBarRunningIn() || isIntakeWheelsRunningIn();
-    }
-
-    // public void lowerCANBusUtilization() {
-    //     // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
-    //     for (int i = 0; i < originalStatusFrames.length; i++) {
-    //         intakeLeftWheel.setStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i], Constants.kTimeoutMs);
-    //         intakeBar.setStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i], Constants.kTimeoutMs);
-    //     }
-    //     prettyPrintStatusFrames();
-    // }
-
-    public void configDefault() {
-        for (int i = 0; i < originalStatusFrames.length; i++) {
-            originalStatusFrames[0][i] = intakeLeftWheel.getStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i]);
-            originalStatusFrames[1][i] = intakeBar.getStatusFramePeriod(Constants.frameTypes[i], Constants.desiredStatusFrames[i]);
-        }
-    }
-
-    public void defaultStatusFrames() {
-        for (int i = 0; i < originalStatusFrames.length; i++) {
-            originalStatusFrames[0][i] = intakeLeftWheel.getStatusFramePeriod(Constants.frameTypes[i], originalStatusFrames[0][i]);
-            originalStatusFrames[1][i] = intakeBar.getStatusFramePeriod(Constants.frameTypes[i], originalStatusFrames[1][i]);
-        }
-    }
-    public void lowerCANBusUtilization() {
-        // [PR] BUG FIX ATTEMPT FOR >70% CAN BUS UTILIZATION - REDUCE COMMUNICATION FREQUENCIES FOR UNUSED MOTOR OUTPUT
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_1_General, 20, Constants.kTimeoutMs);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20, Constants.kTimeoutMs);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 255, Constants.kTimeoutMs);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_6_Misc, 255, Constants.kTimeoutMs);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 255, Constants.kTimeoutMs);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 255, Constants.kTimeoutMs);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_10_Targets, 255, Constants.kTimeoutMs);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 255, Constants.kTimeoutMs);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 255, Constants.kTimeoutMs);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 255, Constants.kTimeoutMs);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 255, Constants.kTimeoutMs);
-        intakeLeftWheel.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 255, Constants.kTimeoutMs);
-        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_1_General, 20, Constants.kTimeoutMs);
-        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20, Constants.kTimeoutMs);
-        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 255, Constants.kTimeoutMs);
-        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_6_Misc, 255, Constants.kTimeoutMs);
-        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 255, Constants.kTimeoutMs);
-        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 255, Constants.kTimeoutMs);
-        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_10_Targets, 255, Constants.kTimeoutMs);
-        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 255, Constants.kTimeoutMs);
-        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 255, Constants.kTimeoutMs);
-        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 255, Constants.kTimeoutMs);
-        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 255, Constants.kTimeoutMs);
-        intakeRightWheel.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 255, Constants.kTimeoutMs);
-        intakeBar.setStatusFramePeriod(StatusFrame.Status_1_General, 255, Constants.kTimeoutMs);
-        intakeBar.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 255, Constants.kTimeoutMs);
-        intakeBar.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 255, Constants.kTimeoutMs);
-        intakeBar.setStatusFramePeriod(StatusFrame.Status_6_Misc, 255, Constants.kTimeoutMs);
-        intakeBar.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 255, Constants.kTimeoutMs);
-        intakeBar.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 255, Constants.kTimeoutMs);
-        intakeBar.setStatusFramePeriod(StatusFrame.Status_10_Targets, 255, Constants.kTimeoutMs);
-        intakeBar.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 255, Constants.kTimeoutMs);
-        intakeBar.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 255, Constants.kTimeoutMs);
-        intakeBar.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 255, Constants.kTimeoutMs);
-        intakeBar.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 255, Constants.kTimeoutMs);
-        intakeBar.setStatusFramePeriod(StatusFrame.Status_17_Targets1, 255, Constants.kTimeoutMs);
-        prettyPrintStatusFrames();
-    }
-
-    public void prettyPrintStatusFrames() {
-        // System.out.println("Intake wheel:");
-        // System.out.println("\t Status_1_General: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_1_General) + " ms");
-        // System.out.println("\t Status_2_Feedback0: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_2_Feedback0) + " ms");
-        // System.out.println("\t Status_4_AinTempVbat: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_4_AinTempVbat) + " ms");
-        // System.out.println("\t Status_6_Misc: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_6_Misc) + " ms");
-        // System.out.println("\t Status_7_CommStatus: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_7_CommStatus) + " ms");
-        // System.out.println("\t Status_10_MotionMagic: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_10_MotionMagic) + " ms");
-        // System.out.println("\t Status_10_Targets: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_10_Targets) + " ms");
-        // System.out.println("\t Status_12_Feedback1: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_12_Feedback1) + " ms");
-        // System.out.println("\t Status_13_Base_PIDF0: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0) + " ms");
-        // System.out.println("\t Status_14_Turn_PIDF1: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1) + " ms");
-        // System.out.println("\t Status_15_FirmwareApiStatus: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus) + " ms");
-        // System.out.println("\t Status_17_Targets1: " + intakeLeftWheel.getStatusFramePeriod(StatusFrame.Status_17_Targets1) + " ms");
-        // System.out.println("Intake bar:");
-        // System.out.println("\t Status_1_General: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_1_General) + " ms");
-        // System.out.println("\t Status_2_Feedback0: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_2_Feedback0) + " ms");
-        // System.out.println("\t Status_4_AinTempVbat: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_4_AinTempVbat) + " ms");
-        // System.out.println("\t Status_6_Misc: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_6_Misc) + " ms");
-        // System.out.println("\t Status_7_CommStatus: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_7_CommStatus) + " ms");
-        // System.out.println("\t Status_10_MotionMagic: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_10_MotionMagic) + " ms");
-        // System.out.println("\t Status_10_Targets: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_10_Targets) + " ms");
-        // System.out.println("\t Status_12_Feedback1: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_12_Feedback1) + " ms");
-        // System.out.println("\t Status_13_Base_PIDF0: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0) + " ms");
-        // System.out.println("\t Status_14_Turn_PIDF1: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1) + " ms");
-        // System.out.println("\t Status_15_FirmwareApiStatus: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus) + " ms");
-        // System.out.println("\t Status_17_Targets1: " + intakeBar.getStatusFramePeriod(StatusFrame.Status_17_Targets1) + " ms");
     }
 
     public PneumaticHub pneumaticHub() {
@@ -214,7 +116,6 @@ public class Intake extends SubsystemBase {
     public void runIntakeWheelsIn(boolean fullSpeed) {
         intakeLeftWheel.set(fullSpeed ? inFullSpeed : inHalfSpeed);
         intakeWheelsRunningIn = true;
-        // intakeRightWheel.set(fullSpeed ? inFullSpeed : inHalfSpeed);
     }
 
     /**
@@ -224,7 +125,6 @@ public class Intake extends SubsystemBase {
     public void runIntakeWheelsOut(boolean fullSpeed) {
         intakeLeftWheel.set(outSpeed);
         intakeWheelsRunningIn = false;
-        // intakeRightWheel.set(outSpeed);
     }
 
     /**
@@ -274,7 +174,6 @@ public class Intake extends SubsystemBase {
     public void stopIntakeWheels() {
         intakeLeftWheel.set(0);
         intakeWheelsRunningIn = false;
-        // // intakeRightWheel.set(0);
     }
 
     /**
@@ -323,6 +222,5 @@ public class Intake extends SubsystemBase {
      */
     public boolean compressorIsEnabled() {
         return compressorModel.enabled();
-    }
-    
+    }   
 }

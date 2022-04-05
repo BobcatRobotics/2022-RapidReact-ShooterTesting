@@ -35,8 +35,8 @@ public class Shooter extends SubsystemBase {
 
     private double targetRPM = 600.0;
     private double encoderEPR = 2048.0;
-    private double mainRPMThreshold = 250.0;
-    private double hoodRPMThreshold = 250.0;
+    private double mainRPMThreshold = 100.0;
+    private double hoodRPMThreshold = 75.0;
 
     private int ballCounter = 0;
     // private boolean isShooterSolenoidExtended;
@@ -89,18 +89,18 @@ public class Shooter extends SubsystemBase {
         hoodFalcon.setSensorPhase(false);
 
         // setup pid values
-        shooterFalconLeft.config_kF(0, 0.047, 0);
-        shooterFalconLeft.config_kP(0, 0.0015, 0);
+        shooterFalconLeft.config_kF(0, 0.05, 0);
+        shooterFalconLeft.config_kP(0, 0.11616, 0);
         shooterFalconLeft.config_kI(0, 0.00002, 0);
         shooterFalconLeft.config_kD(0, 0.0, 0);
         shooterFalconLeft.config_IntegralZone(0, 3, 0);
-        shooterFalconRight.config_kF(0, 0.047, 0);
-        shooterFalconRight.config_kP(0, 0.0015, 0);
+        shooterFalconRight.config_kF(0, 0.05, 0);
+        shooterFalconRight.config_kP(0, 0.11616, 0);
         shooterFalconRight.config_kI(0, 0.00002, 0);
         shooterFalconRight.config_kD(0, 0.0, 0);
         shooterFalconRight.config_IntegralZone(0, 3, 0);
-        hoodFalcon.config_kF(0, 0.047, 0);
-        hoodFalcon.config_kP(0, 0.0015, 0);
+        hoodFalcon.config_kF(0, 0.05, 0);
+        hoodFalcon.config_kP(0, 0.16421, 0);
         hoodFalcon.config_kI(0, 0.00002, 0);
         hoodFalcon.config_kD(0, 0.0, 0);
         hoodFalcon.config_IntegralZone(0, 3, 0);

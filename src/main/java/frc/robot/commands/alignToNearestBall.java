@@ -1,76 +1,88 @@
-// // package frc.robot.commands;
+package frc.robot.commands;
 
-// // import edu.wpi.first.wpilibj2.command.CommandBase;
-// // import frc.robot.subsystems.Drivetrain;
+import javax.sound.midi.ControllerEventListener;
 
-// // import org.json.simple.JSONArray;
-// // import org.json.simple.JSONObject;
-// // import org.json.simple.parser.JSONParser;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.utils.Ball;
 
-// // import edu.wpi.first.networktables.NetworkTable;
-// // import edu.wpi.first.networktables.NetworkTableEntry;
-// // import edu.wpi.first.networktables.NetworkTableInstance;
+public class alignToNearestBall extends CommandBase {
 
-// // import edu.wpi.first.wpilibj.Timer;
+    private final Drivetrain m_drivetrain;
+    private double angle = -1000;
+    private double goal = -1000;
+    private Ball ball = null;
+    private int retries = 0;
+    private PIDController controller;
+    private double p = 1;
+    private double i = .2;
+    private boolean done = false;
+    public alignToNearestBall(Drivetrain drivetrain) {
+        m_drivetrain = drivetrain;
+    }
 
-// // /*
-// // So far, AlignToNearestBall makes small, tiny 0.1 (abstract time to be changed w/ testing) second increments at a certain speed,
-// // turning until the center x-value of the ball with the largest radius is reasonably within the goal x-value which we would like
-// // it to be at. It is not being used anywhere and requires a functional cargo_tracker.py to work. As I commented below, I could not
-// // figure out how to implement the slow zone, so that is not present in this implementation - Arnav
-// // */
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        ball = RobotContainer.getClosestBall();
+        controller = new PIDController(p,i,0);
+    }
 
-// // public class AlignToNearestBall extends CommandBase {
-    
-//     private Drivetrain drivetrain;
-//     private double angle = -1000;
-//     private RobotContainer m_rContainer;
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
 
-//     // UPDATE: 10:43 pm currently and I can't get slow zone to work, so I'm going to leave it incomplete for now - Arnav
-//     //private final double slowZone = 20;
-//     //private final double slowScalingFactor = 0.5;
+        if(ball != null && angle != -1000){
+            Double heading = Rotation2d.fromDegrees(m_drivetrain.getHeading()).getDegrees();
+            // camera fov
+            double degreeToTurn = (goal - heading) ;
 
-//     public alignToNearestBall(Drivetrain dt, RobotContainer r) {
-//         drivetrain = dt;
-//         m_rContainer = r;
-//     }
+            double turnPower = degreeToTurn / 27;
+            if (degreeToTurn < .1) {
+                degreeToTurn = 0.0;
+                done = true;
+            }
+            
+            turnPower = controller.calculate(turnPower,0);
+            // double power = 12 * (degreeToTurn / angle) *.4;
+            // System.out.println("degreeToTurn " + degreeToTurn+ "    heading " + heading );
 
-//     @Override
-//     public void initialize() {
-//     }
+            // if( Math.abs(power) < 2.5) {
+            //     power = Math.signum(power) * 2.5;
+            // }
 
-//     @Override
-//     public void execute() {
-//         Ball closestBall = m_rContainer.getClosestBall();
+            m_drivetrain.drive(-turnPower,turnPower);
+            return;
+        } 
+        ball = RobotContainer.getClosestBall();
+        if (ball != null) {
+            System.out.println("got a ball");
+            if(angle == -1000) {
+            
+                Double heading = Rotation2d.fromDegrees(m_drivetrain.getHeading()).getDegrees();
 
-//         if (closestBall != null) {
-//             angle = closestBall.getAngle();
-//             // 27 = camera fov for normalization
-//             // .4 = scaling factor so it doesn't turn too fast
-//             double drivePower = (angle/27)*.4;
-//             drivetrain.drive(drivePower , drivePower);
-//         } else {
-//             drivetrain.drive(2.5,2.5);
-//         }
+                angle = ball.getAngle();
+                goal = heading + angle;
+            }
+        }  
+        // m_drivetrain.tankDriveVolts(2.5,-2.5);   
+    }
 
-//         if (angle <=.2) {
-//             angle = 0.0;
-//         }
-
-//     }
-
-//     @Override
-//     public void end(boolean interrupted) {
-//         drivetrain.stop();
-//         drivetrain.brake();
-//     }
-    
-//     @Override
-//     public boolean isFinished() {
-//         if(angle == 0.0) {
-//             return true;
-//         } else {
-//             return false;
-//         }
-//     }
-// }
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        if (done == true) {
+            if (retries == 5) {
+                System.out.println("aight imma head out");
+                m_drivetrain.stop();
+                return true;
+            }
+            ball = null;
+            retries++;
+        }
+        return false;
+    }
+}

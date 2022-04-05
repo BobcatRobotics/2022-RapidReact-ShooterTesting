@@ -37,18 +37,15 @@ public class intakeControls extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
     // Gamepad X button -> intake down
     if (gp.getRawButton(Constants.X_Button) && !climber.isClimberMode()) {
       if (intake.isDeployed()) {
-        // System.out.println("X button - intake up");
         intake.deploy(false);
       }
     }
     // Gamepad Y button -> intake up
     else if (gp.getRawButton(Constants.Y_Button) && !climber.isClimberMode()) {
       if (!intake.isDeployed()) {
-        // System.out.println("Y button - intake down");
         intake.deploy(true);
       }
     }
@@ -57,11 +54,10 @@ public class intakeControls extends CommandBase {
     if (gp.getRawButton(Constants.B_Button)) {
       intake.feedOut();
     } else {
-
       // Gamepad right bumper -> intake bar in, vertical wheels in
       if (gp.getRawButton(Constants.Right_Bumper_Button)) {
-        intake.runIntakeBarIn(true);
-        intake.runIntakeWheelsIn(true);
+          intake.runIntakeBarIn(true);
+          intake.runIntakeWheelsIn(true);
         // Also run in feed motor until TOF triggered
         // feed_in_until_TOF_triggered_or_while_shoot_button_pressed();
       } else {
@@ -81,64 +77,7 @@ public class intakeControls extends CommandBase {
           intake.stopIntakeWheels();
         }
       }
-
-      // // Gamepad right trigger -> vertical wheels in
-      // if (gp.getRawButton(Constants.Right_Trigger_Button)) {
-      //   // System.out.println("Right trigger button");
-      //   intake.runIntakeWheelsIn(true);
-      // }
-      // // Stop vertical wheels if nothing
-      // else {
-      //   intake.stopIntakeWheels();
-      // }
-
-
-      // // Gamepad right bumper button -> intake bar in
-      // if (gp.getRawButton(Constants.Right_Bumper_Button)) {
-      //   // WORKING
-      //   // System.out.println("Right bumper button");
-      //   intake.runIntakeBarIn(true);
-      // }
-      // // Gamepad D-pad down -> intake out
-      // else if (gp.getPOV() == Constants.D_Pad_Down) {
-      //   // System.out.println("D-pad down button");
-      //   intake.runIntakeBarOut(true);
-      // }
-      // // Stop intake bar if nothing
-      // else {
-      //   intake.stopIntakeBar();
-      // }
-
     }
-
-    // if (gp.getRawButton(Constants.Left_Bumper_Button)) { 
-    //   intake.feedOut();
-    // } else if (gp.getRawButton(Constants.Right_Bumper_Button)) {
-    //   if (feedReady){
-    //     intake.feedIn();
-    //   } else {
-    //     intake.runIntakeBarIn(true);
-    //   }
-    // } else {
-    //   intake.stopIntake();
-    // }
-
-    // //toggle the solenoid 
-    // if (gp.getRawButton(Constants.X_Button)) {
-    //   intake.toggleDeploy();
-    // }
-
-    // //extra feed conntrols
-    // if (gp.getRawButton(Constants.B_Button)) {
-    //   intake.runIntakeWheelsIn(true);
-    //   intake.runIntakeBarIn(true);
-    // } else if(gp.getRawButton(Constants.A_Button)) {
-    //   intake.runIntakeWheelsOut(true);
-    //   intake.runIntakeBarOut(true);
-    // } else {
-    //   intake.stopIntake();
-    // }
-
   }
 
   // Called once the command ends or is interrupted.

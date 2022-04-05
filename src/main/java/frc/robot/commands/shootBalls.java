@@ -4,8 +4,11 @@
 
 package frc.robot.commands;
 
+import frc.robot.RobotContainer;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -17,16 +20,19 @@ public class shootBalls extends CommandBase {
   private final Intake intake;
   Timer t = new Timer();
   double time_alloted;
-
+  private Limelight limelight;
+  private boolean dumbShoot;;
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public shootBalls(Shooter s, Intake i, double time_allotted) {
+  public shootBalls(Shooter s, Intake i, double time_allotted, Boolean dumbShoot) {
     shooter = s;
     intake = i;
     time_alloted = time_allotted;
+    this.dumbShoot = dumbShoot;
+    limelight = RobotContainer.limelight;
     addRequirements(shooter);
     addRequirements(intake);
   }
@@ -36,7 +42,12 @@ public class shootBalls extends CommandBase {
   public void initialize() {
     shooter.stop();
     shooter.stopFeeding();
-    shooter.setShootingModeKey(ShooterConstants.UPPER_HUB_KEY);
+    if (dumbShoot){
+      shooter.setShootingModeKey(3.0);
+    } else {
+      shooter.setShootingModeKey(ShooterConstants.UPPER_HUB_KEY);
+
+    }
     // shooter.getToSpeed();
     intake.stopIntake();
     t.reset();
@@ -49,6 +60,14 @@ public class shootBalls extends CommandBase {
     // if (!shooter.isShooterSolenoidExtended()){
     //   shooter.setShooterSolenoidExtended(true);
     // }
+    if (limelight.hasTargets()) {
+      shooter.setShootingModeKey(Math.round(2*(LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)))/2.0);
+      // Shooter get to speed and shoot at velocity
+      // System.out.printf("Will shoot at %s RPM based on %s meters away\n", speeds[0], speeds[1]);
+      // Ready to shoot
+    } else {
+      shooter.setShootingModeKey(3.5);
+    }
     if (t.hasElapsed(time_alloted)) {
       shooter.stop();
       intake.stopIntake();

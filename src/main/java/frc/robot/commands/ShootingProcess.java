@@ -102,11 +102,14 @@ public class ShootingProcess extends CommandBase {
 
     // Gamepad D-pad right -> run shooter Limelight-based speed
     if (gamepad.getPOV() == Constants.D_Pad_Right && !climber.isClimberMode()) {
+      limelight.turnOnLED();
       if (limelight.hasTargets()) {
           shooter.setShootingModeKey(Math.round(2*(LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)))/2.0);
           // Shooter get to speed and shoot at velocity
           // System.out.printf("Will shoot at %s RPM based on %s meters away\n", speeds[0], speeds[1]);
           // Ready to shoot
+          
+        SmartDashboard.putNumber("Key", shooter.getShootingModeKey());
           shooter.setRunning(true);
           shooter.getToSpeed();
           if (shooter.atSpeed()) {
@@ -117,6 +120,7 @@ public class ShootingProcess extends CommandBase {
     }
     // Gamepad left bumper button -> run shooter high speed
     else if (gamepad.getRawButton(Constants.Left_Bumper_Button)) {
+      limelight.turnOnLED();
       // shooter.setHighMode(true);
       shooter.setShootingModeKey(ShooterConstants.UPPER_HUB_KEY);
       shooter.setRunning(true);
@@ -124,12 +128,14 @@ public class ShootingProcess extends CommandBase {
     }
     // Gamepad D pad up -> run shooter low speed
     else if (gamepad.getPOV() == Constants.D_Pad_Up) {
+      limelight.turnOnLED();
       shooter.setShootingModeKey(ShooterConstants.LOWER_HUB_KEY);
       shooter.setRunning(true);
       shooter.getToSpeed();
     }
     // Stop shooter
     else {
+      limelight.turnOffLED();
       shooter.stopShooter();
       shooter.setRunning(false);
     }

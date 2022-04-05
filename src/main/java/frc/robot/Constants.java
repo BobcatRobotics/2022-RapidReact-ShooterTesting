@@ -150,7 +150,6 @@ public final class Constants {
 
     public static final double speedLimiterSlow = -0.6;
 
-    public static final int feederBallPresentSensor = 17;
 
     // compressor config
     public static final int feederCompressorModule = 1; // TODO: change to correct value
@@ -223,34 +222,34 @@ public final class Constants {
   public static final class ShooterConstants {
     // Shooter spinner motors
     public static final int DEFAULT_LOWER_HUB_SHOOTING_SPEED = 1800;
-    public static final int DEFAULT_UPPER_HUB_SHOOTING_SPEED = 4000;
+    public static final int DEFAULT_UPPER_HUB_SHOOTING_SPEED = 2400;
     public static final int shooterFalcon1Port = 8; //changed from 8 in Phoenix tuner
     public static final int shooterFalcon2Port = 9;
     public static final int hoodFalconPort = 15;
     public static final int feedMotorPort = 10;
     public static final int shooterAngleSolenoidPort = 1;
     public static final int tofPort = 17;
-    public static final int defaultTofRange = 80;
+    public static final int defaultTofRange = 150;
     public static final double UPPER_HUB_KEY = 0.0;
     public static final double LOWER_HUB_KEY = 0.5;
     public static HashMap<Double, double[]> LIMELIGHT_SHOOTING_LOOKUP_MAP = new HashMap<Double, double[]>();
     static { // Key: dist (m). Val: [main flywheel, hood wheel]
       // Manual upper hub shooting
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(0.0, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(0.0, new double[]{2400, 2400});
       // Manual lower hub shooting
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(0.5, new double[]{1800, 1800});
       // Limelight-based shooting
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(1.0, new double[]{4000, 4000});
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(1.5, new double[]{4000, 4000});
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(2.0, new double[]{4000, 4000});
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(2.5, new double[]{4000, 4000});
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.0, new double[]{4000, 4000});
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.5, new double[]{4000, 4000});
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(4.0, new double[]{4000, 4000});
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(4.5, new double[]{4000, 4000});
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(5.0, new double[]{4000, 4000});
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(5.5, new double[]{4000, 4000});
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(6.0, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(1.0, new double[]{1800, 1800});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(1.5, new double[]{1800, 1800});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(2.0, new double[]{1800, 1800});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(2.5, new double[]{2400, 2400});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.0, new double[]{2400, 2400});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.5, new double[]{2500, 2500});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(4.0, new double[]{2600, 2600});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(4.5, new double[]{2600, 2800});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(5.0, new double[]{2600, 2800});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(5.5, new double[]{3000, 3200});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(6.0, new double[]{3400, 3600});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(6.5, new double[]{4000, 4000});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(7.0, new double[]{4000, 4000});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(7.5, new double[]{4000, 4000});

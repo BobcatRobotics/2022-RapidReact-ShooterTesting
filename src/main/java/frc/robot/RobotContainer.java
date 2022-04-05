@@ -58,6 +58,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BallCameraConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.CenterRobotOnHub;
+import frc.robot.commands.alignToNearestBall;
 import frc.robot.commands.driveCommand;
 import frc.robot.commands.dropAndSuck;
 import frc.robot.commands.shootBalls;
@@ -115,7 +117,7 @@ public class RobotContainer {
   //Trajectory
   public static Trajectory trajectory;
 
-  private String teamColor = "red";
+  private static String teamColor = "red";
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -174,7 +176,7 @@ public class RobotContainer {
    * 
    * @return the command to run in autonomous
    */
-  public Ball getClosestBall() {
+  public static Ball getClosestBall() {
     py_vision_network_table = NetworkTableInstance.getDefault().getTable("pyVision");
     String jsonString = py_vision_network_table.getEntry("jsonData").getString("");
     GsonBuilder gsonBuilder = new GsonBuilder();
@@ -205,7 +207,7 @@ public class RobotContainer {
 
   //One of the dead autos(if our auto is bricked :( ))
 
-  public String[] deadAutoIDs = {"dA_2B", "dA_3B_right"};
+  public String[] deadAutoIDs = {"dA_2B", "dA_3B_right", "target"};
 
   public SequentialCommandGroup deadAuto_twoBall(double startingWaitTime) {
     //Drive forward setCommandVelocity = 1 meter/s
@@ -213,7 +215,7 @@ public class RobotContainer {
     Command wait = new waitCommand(startingWaitTime);
     Command drive = new driveCommand(drivetrain, 4, 4, 0.9);
     Command dns = new dropAndSuck(intake);
-    Command shoot = new shootBalls(shooter, intake, 5);
+    Command shoot = new shootBalls(shooter, intake, 5, true);
     Command dummy = new driveCommand(drivetrain, 4, 4, 1);
     commandGroup.addCommands(wait,dns,drive,shoot,dummy);
     return commandGroup;
@@ -227,8 +229,8 @@ public class RobotContainer {
     Command dns2 = new dropAndSuck(intake);
     Command driveBackwards1 = new driveCommand(drivetrain, 4, 4, 0.9);
     // Command driveBackwards2 = new driveCommand(drivetrain, 4, 4, 0.9);
-    Command shoot1 = new shootBalls(shooter, intake, 3);
-    Command shoot2 = new shootBalls(shooter, intake, 3);
+    Command shoot1 = new shootBalls(shooter, intake, 3,true);
+    Command shoot2 = new shootBalls(shooter, intake, 3,false);
     
     // Drive forward a little bit to avoid hitting the wall when turning
     Command driveAdjust = new driveCommand(drivetrain, -2, -2, 0.3);
@@ -237,6 +239,7 @@ public class RobotContainer {
     // brute force turn
     // Command turn = new driveCommand(drivetrain, -4, 4, 0.62);
     Command turn = new turnDegreeCommand(drivetrain, 101.5);
+    // Command c = new alignToNearestBall(drivetrain);
 
     // drive forward & intake
     Command driveBackwards2 =  new driveCommand(drivetrain, 4, 4, 2);
@@ -244,14 +247,25 @@ public class RobotContainer {
     // turn back
     // brute force turn
     Command turnBack = new turnDegreeCommand(drivetrain, -52);
-    Command driveForward2 =  new driveCommand(drivetrain, -3, -3, 0.35);
+    // Command driveForward2 =  new driveCommand(drivetrain, -3, -3, 0.35);
     
+    Command centerBot = new CenterRobotOnHub(drivetrain, gamepad, limelight);
     // shoot
     // add shoot in command group
     
-    commandGroup.addCommands(dns1, driveBackwards1, shoot1, driveAdjust, turn, dns2, driveBackwards2, turnBack, driveForward2, shoot2);
+    commandGroup.addCommands(dns1, driveBackwards1, shoot1, driveAdjust, turn, dns2, driveBackwards2, turnBack, centerBot, shoot2);
     return commandGroup;
   }
+
+  public SequentialCommandGroup centerBallOnTargetAuto () {
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+
+    Command c = new alignToNearestBall(drivetrain);
+
+    commandGroup.addCommands(c);
+    return commandGroup;
+
+  } 
 
   // public SequentialCommandGroup deadAutoTwo() {
   //   SequentialCommandGroup commandGroup = new SequentialCommandGroup();
