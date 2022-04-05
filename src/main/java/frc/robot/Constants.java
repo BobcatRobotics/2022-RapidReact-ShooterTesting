@@ -82,6 +82,8 @@ public final class Constants {
   public static final String DONT_PUSH = "DONT_PUSH";
 
   public static final int RS_Shift_Switch = 3;
+
+  public static final int LED_port = 2;
   
   /**
    * Constants for ball camera
@@ -240,19 +242,33 @@ public final class Constants {
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(0.5, new double[]{1800, 1800});
       // Limelight-based shooting
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(1.0, new double[]{1800, 1800});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(1.25, new double[]{1800, 1800});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(1.5, new double[]{1800, 1800});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(1.75, new double[]{1800, 1800});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(2.0, new double[]{1800, 1800});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(2.25, new double[]{2100, 2100});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(2.5, new double[]{2400, 2400});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(2.75, new double[]{2400, 2400});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.0, new double[]{2400, 2400});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.25, new double[]{2450, 2450});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.5, new double[]{2500, 2500});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.75, new double[]{2550, 2550});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(4.0, new double[]{2600, 2600});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(4.25, new double[]{2600, 2700});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(4.5, new double[]{2600, 2800});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(4.75, new double[]{2600, 2800});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(5.0, new double[]{2600, 2800});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(5.25, new double[]{2800, 3000});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(5.5, new double[]{3000, 3200});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(5.75, new double[]{3200, 3400});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(6.0, new double[]{3400, 3600});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(6.25, new double[]{3700, 3800});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(6.5, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(6.75, new double[]{4000, 4000});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(7.0, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(7.25, new double[]{4000, 4000});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(7.5, new double[]{4000, 4000});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(7.75, new double[]{4000, 4000});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(8.0, new double[]{4000, 4000});
     }
   }

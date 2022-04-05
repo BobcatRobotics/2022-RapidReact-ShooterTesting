@@ -25,6 +25,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.CenterRobotOnHub;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DriveTele;
+import frc.robot.commands.LEDControl;
 import frc.robot.commands.ShootingProcess;
 import frc.robot.commands.intakeControls;
 import frc.robot.subsystems.*;
@@ -43,6 +44,7 @@ public class Robot extends TimedRobot {
   private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.intake, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
   private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.gamepad, RobotContainer.limelight);
+  private LEDControl ledControl = new LEDControl(RobotContainer.ledLights, RobotContainer.shooter, RobotContainer.climber);
 
   private RobotContainer m_robotContainer;
   private Command m_autonomousCommand;
@@ -207,7 +209,8 @@ public class Robot extends TimedRobot {
       climberCommand.schedule();
       // centerRobotOnHub command
       centerRobotOnHubCommand.schedule(false);
-
+      // leds
+      ledControl.schedule();
 
       climber.turnOffClimberMode();
     // }

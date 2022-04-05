@@ -71,6 +71,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 // import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LEDLights;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.NavxGyro;
 // import frc.robot.subsystems.Limelight;
@@ -107,8 +108,11 @@ public class RobotContainer {
   // //Climber
   public static final Climber climber = new Climber();
 
-  //Gyro
+  // Gyro
   public static final NavxGyro navx = new NavxGyro(SPI.Port.kMXP);
+
+  // LEDs
+  public static final LEDLights ledLights = new LEDLights(Constants.LED_port);
   
   //Color Wheel
   // public static final ColorWheel colorwheel = new ColorWheel();

@@ -31,7 +31,7 @@ public class LimelightShootDist extends CommandBase {
         if (rightStick.getTrigger()) {
             limelight.turnOnLED();
             if (limelight.hasTargets()) {
-                shootingDist = Math.round(2*(kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + kLimelightMountAngle)))/2.0;
+                shootingDist = Math.round(4*(kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + kLimelightMountAngle)))/4.0;
                 double[] speeds = distToRPM(shootingDist);
                 // Shooter get to speed and shoot at velocity
                 System.out.printf("Will shoot at %s RPM based on %s meters away\n", speeds[0], speeds[1]);

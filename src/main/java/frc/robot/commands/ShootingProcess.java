@@ -104,7 +104,7 @@ public class ShootingProcess extends CommandBase {
     if (gamepad.getPOV() == Constants.D_Pad_Right && !climber.isClimberMode()) {
       limelight.turnOnLED();
       if (limelight.hasTargets()) {
-          shooter.setShootingModeKey(Math.round(2*(LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)))/2.0);
+          shooter.setShootingModeKey(Math.round(4*(LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)))/4.0);
           // Shooter get to speed and shoot at velocity
           // System.out.printf("Will shoot at %s RPM based on %s meters away\n", speeds[0], speeds[1]);
           // Ready to shoot
