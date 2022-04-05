@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -73,6 +75,9 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    CameraServer.startAutomaticCapture();
+
+    //  lower fps
     m_robotContainer = new RobotContainer();
     gamepad = m_robotContainer.gamepad;
     intake = m_robotContainer.intake;
@@ -94,13 +99,15 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Compressor pressure", intake.pneumaticHub().getPressure(0));
     SmartDashboard.putNumber("Main shooter RPM Threshold", shooter.getMainRPMThreshold());
     SmartDashboard.putNumber("Hood shooter RPM Threshold", shooter.getHoodRPMThreshold());
+    SmartDashboard.putString("Team Color", "red");
     
     
-    // NEED TO TEST -----
     SmartDashboard.putNumber("Selected Dead Auto #", selected_dead_auto_ID);
     SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
     SmartDashboard.putNumber("Delay time: Dead auto 2-ball", 0);
     SmartDashboard.putNumber("Limelight dist (m)", 0);
+
+    SmartDashboard.putNumber("Gyro heading", 0);
   }
 
   /**
@@ -144,8 +151,10 @@ public class Robot extends TimedRobot {
     // NEED TO TEST -----
     if (selected_dead_auto_ID == 1) {
       m_autonomousCommand = m_robotContainer.deadAuto_threeBall_right();
-    } else {
+    } else if ( selected_dead_auto_ID==0) {
       m_autonomousCommand = m_robotContainer.deadAuto_twoBall(Math.max(0.0, Math.round(SmartDashboard.getEntry("Delay time: Dead auto 2-ball").getDouble(0.0)*2)/2.0));
+    } else {
+      m_autonomousCommand = m_robotContainer.centerBallOnTargetAuto();
     }
     // NEED TO TEST -----
 
@@ -197,7 +206,7 @@ public class Robot extends TimedRobot {
       // climber controller
       climberCommand.schedule();
       // centerRobotOnHub command
-      centerRobotOnHubCommand.schedule();
+      centerRobotOnHubCommand.schedule(false);
 
 
       climber.turnOffClimberMode();
@@ -250,32 +259,34 @@ public class Robot extends TimedRobot {
     shooter.setHighHoodSpeed(hoodhigh);
     shooter.setLowHoodSpeed(hoodlow);
     SmartDashboard.putNumber("Current Left RPM", shooter.getLeftRPM());
-    SmartDashboard.putNumber("Current Right RPM", shooter.getRightRPM());
+    SmartDashboard.putBoolean("AutoMode", autoMode);
+    // SmartDashboard.putNumber("Current Right RPM", shooter.getRightRPM());
     SmartDashboard.putNumber("Hood RPM", shooter.getHoodRPM());
     SmartDashboard.putNumber("Limelight dist (m)", (LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)));
-    SmartDashboard.putNumber("LIMELIGHT WORK PLZ (y)", limelight.y());
-    
-    // SmartDashboard.getNumber("Main shooter RPM Threshold", shooter.getMainRPMThreshold());
-    // SmartDashboard.getNumber("Hood shooter RPM Threshold", shooter.getHoodRPMThreshold());
+    // SmartDashboard.putNumber("LIMELIGHT WORK PLZ (y)", limelight.y());
 
     if (autoMode) {
-      shooter.setMainRPMThreshold(SmartDashboard.getNumber("Main shooter RPM Threshold", 250) + 100);
-      shooter.setHoodRPMThreshold(SmartDashboard.getNumber("Hood shooter RPM Threshold", 250) + 100);
+      shooter.setMainRPMThreshold(SmartDashboard.getNumber("Main shooter RPM Threshold", 50));
+      shooter.setHoodRPMThreshold(SmartDashboard.getNumber("Hood shooter RPM Threshold", 50));
     } else {
-      shooter.setMainRPMThreshold(SmartDashboard.getNumber("Main shooter RPM Threshold", 250));
-      shooter.setHoodRPMThreshold(SmartDashboard.getNumber("Hood shooter RPM Threshold", 250));
+      shooter.setMainRPMThreshold(SmartDashboard.getNumber("Main shooter RPM Threshold", 50));
+      shooter.setHoodRPMThreshold(SmartDashboard.getNumber("Hood shooter RPM Threshold", 50));
     }
     // Update button used to toggle climber mode based on Shuffleboard input
     // use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
   
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     
-    SmartDashboard.putString("DriveTrain get pose", drivetrain.getPose().toString());
-
+    // SmartDashboard.putString("DriveTrain get pose", drivetrain.getPose().toString());
+    // SmartDashboard.putNumber("Gyro heading", drivetrain.getHeading());
+    
+    // NetworkTable py_vision_network_table = NetworkTableInstance.getDefault().getTable("pyVision");
+    // String jsonString = py_vision_network_table.getEntry("jsonData").getString("");
+    // SmartDashboard.putString("PyvisString", jsonString);
 
     // NEED TO TEST -----
     selected_dead_auto_ID = (int)SmartDashboard.getNumber("Selected Dead Auto #", 0);
-    if (selected_dead_auto_ID != 0 && selected_dead_auto_ID != 1) selected_dead_auto_ID = 0;
+    if (selected_dead_auto_ID != 0 && selected_dead_auto_ID != 1 && selected_dead_auto_ID != 2) selected_dead_auto_ID = 0;
     SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
   }
   
