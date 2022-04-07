@@ -83,7 +83,7 @@ public final class Constants {
 
   public static final int RS_Shift_Switch = 3;
 
-  public static final int LED_port = 2;
+  public static final int LED_port = 0;
   
   /**
    * Constants for ball camera

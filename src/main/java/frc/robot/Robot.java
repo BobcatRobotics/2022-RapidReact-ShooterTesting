@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
 
     //  lower fps
     m_robotContainer = new RobotContainer();
@@ -110,6 +110,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Limelight dist (m)", 0);
 
     SmartDashboard.putNumber("Gyro heading", 0);
+    SmartDashboard.putString("JsonString", "STARTING");
   }
 
   /**
@@ -263,6 +264,11 @@ public class Robot extends TimedRobot {
     shooter.setLowHoodSpeed(hoodlow);
     SmartDashboard.putNumber("Current Left RPM", shooter.getLeftRPM());
     SmartDashboard.putBoolean("AutoMode", autoMode);
+    
+
+    NetworkTable py_vision_network_table = NetworkTableInstance.getDefault().getTable("pyVision");
+    String jsonString = py_vision_network_table.getEntry("jsonData").getString("NO_DATA");
+    SmartDashboard.putString("JsonString", jsonString);
     // SmartDashboard.putNumber("Current Right RPM", shooter.getRightRPM());
     SmartDashboard.putNumber("Hood RPM", shooter.getHoodRPM());
     SmartDashboard.putNumber("Limelight dist (m)", (LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)));

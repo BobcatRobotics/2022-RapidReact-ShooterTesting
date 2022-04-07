@@ -186,7 +186,7 @@ public class RobotContainer {
     GsonBuilder gsonBuilder = new GsonBuilder();
     Gson gson = gsonBuilder.create();
     Ball[] ball_array = gson.fromJson(jsonString, Ball[].class);
-    // No JSON / no ball in sight
+    // No JSON / no ball in sights
     if (ball_array == null || ball_array.length == 0) {
       return null;
     }
@@ -195,7 +195,7 @@ public class RobotContainer {
     Ball closestBall = null;
     for (Ball ball: ball_array) {
       // // System.out.println(ball);
-      if (ball.getColor().equals(teamColor)) {
+      if (ball.getColor().equals("blue")) {
         if (closestBall == null ) 
           closestBall = ball;
         // Check if next ball is closer than current ball

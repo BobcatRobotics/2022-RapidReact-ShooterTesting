@@ -92,7 +92,7 @@ public class CenterRobotOnHub extends CommandBase {
                 if (Math.abs(d) < .05) {
                     d = .125 * Math.signum(d);
                 }
-                drivetrain.drive(d, -d);
+                drivetrain.drive(d, -d, true);
                 // }
             }
         } else {

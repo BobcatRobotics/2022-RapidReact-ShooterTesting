@@ -245,7 +245,7 @@ public class Drivetrain extends SubsystemBase {
      * Drive with default values from the joysticks
      */
     public void drive() {
-        drive(rightPower, leftPower);
+        drive(rightPower, leftPower, false);
     }
     
     /**
@@ -253,7 +253,7 @@ public class Drivetrain extends SubsystemBase {
      * @param rightP Right motor power
      * @param leftP Left motor power
      */
-    public void drive(double rightP, double leftP) {
+    public void drive(double rightP, double leftP, boolean shouldSquare) {
         if (invertRight) {
             rightP *= INVERT_MOTOR;
         }
@@ -262,13 +262,17 @@ public class Drivetrain extends SubsystemBase {
             leftP *= INVERT_MOTOR;
         }
         
-        rtMotor.set(rightP*rightP*Math.signum(rightP));
-        rmMotor.set(rightP*rightP*Math.signum(rightP));
-        rbMotor.set(rightP*rightP*Math.signum(rightP));
+        if (shouldSquare) {
+            rightP *= rightP * Math.signum(rightP);
+            leftP *= leftP * Math.signum(leftP);
+        }
+        rtMotor.set(rightP);
+        rmMotor.set(rightP);
+        rbMotor.set(rightP);
 
-        ltMotor.set(leftP*leftP*Math.signum(leftP));
-        lmMotor.set(leftP*leftP*Math.signum(leftP));
-        lbMotor.set(leftP*leftP*Math.signum(leftP));
+        ltMotor.set(leftP);
+        lmMotor.set(leftP);
+        lbMotor.set(leftP);
     }
 
 

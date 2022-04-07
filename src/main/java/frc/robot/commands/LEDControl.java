@@ -27,18 +27,17 @@ public class LEDControl extends CommandBase {
 
     @Override
     public void initialize() {
+    }
+
+    @Override
+    public void execute() {
         if (climber.isClimberMode()) {
             ledLights.setLEDPower(0.57);
         } else if (shooter.tofTriggered()) {
             ledLights.setLEDPower(-0.01);
         } else {
-            ledLights.setLEDPower(-0.57);
+            ledLights.setLEDPower(0.59);
         }
-    }
-
-    @Override
-    public void execute() {
-
     }
 
 }

@@ -45,7 +45,7 @@ public class DriveTele extends CommandBase {
             left = 0.0;
         }
 
-        drivetrain.drive(right, left);
+        drivetrain.drive(right, left, true);
         } else {
             drivetrain.stop();
         }
