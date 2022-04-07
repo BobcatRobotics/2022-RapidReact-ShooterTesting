@@ -65,6 +65,12 @@ import frc.robot.commands.dropAndSuck;
 import frc.robot.commands.shootBalls;
 import frc.robot.commands.turnDegreeCommand;
 import frc.robot.commands.waitCommand;
+import frc.robot.commands.five_ball_auto_commands.FV_AlignToNearestBall;
+import frc.robot.commands.five_ball_auto_commands.FV_DriveTime;
+import frc.robot.commands.five_ball_auto_commands.FV_IntakeDownAndSuck;
+import frc.robot.commands.five_ball_auto_commands.FV_LimelightHubAlign;
+import frc.robot.commands.five_ball_auto_commands.FV_LimelightShoot;
+import frc.robot.commands.five_ball_auto_commands.FV_PID_Turn;
 import frc.robot.subsystems.Climber;
 // import frc.robot.Constants.FeederConstants;
 // import frc.robot.subsystems.ColorWheel;
@@ -211,7 +217,7 @@ public class RobotContainer {
 
   //One of the dead autos(if our auto is bricked :( ))
 
-  public String[] deadAutoIDs = {"dA_2B", "dA_3B_right", "target"};
+  public String[] deadAutoIDs = {"dA_2B", "dA_3B_right", "target", "dA_5B"};
 
   public SequentialCommandGroup deadAuto_twoBall(double startingWaitTime) {
     //Drive forward setCommandVelocity = 1 meter/s
@@ -269,7 +275,43 @@ public class RobotContainer {
     commandGroup.addCommands(c);
     return commandGroup;
 
-  } 
+  }
+
+  public SequentialCommandGroup deadAuto_fiveBall() {
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+
+    // Ball 1-2
+    Command intakeDownAndSuckFirstBall = new FV_IntakeDownAndSuck(intake);
+    Command driveToFirstBall = new FV_DriveTime(drivetrain, 4, 4, 0.9);
+    Command shootFirstBall = new FV_LimelightShoot(limelight, shooter, intake, 3, false);
+    Command driveForwardAfterShootingFirstBall = new FV_DriveTime(drivetrain, -2, -2, 0.3);
+
+    // Ball 3
+    Command turnToThirdBall = new FV_PID_Turn(drivetrain, 101.5);
+    Command drivePartiallyToThirdBall = new FV_DriveTime(drivetrain, 4, 4, 1);
+    Command alignToThirdBall = new FV_AlignToNearestBall(drivetrain);
+    Command intakeDownAndSuckThirdBall = new FV_IntakeDownAndSuck(intake);
+    Command driveRestToThirdBall = new FV_DriveTime(drivetrain, 4, 4, 1);
+    Command turnPartiallyToHubForThirdBall = new FV_PID_Turn(drivetrain, -52);
+    Command alignToHubToShootThirdBall = new FV_LimelightHubAlign(drivetrain, limelight);
+    Command limelightShootThirdBall = new FV_LimelightShoot(limelight, shooter, intake, 2, true);
+
+    // Last balls
+    Command turnToLastBalls = new FV_PID_Turn(drivetrain, 25);
+    Command drivePartiallyToLastBalls = new FV_DriveTime(drivetrain, 4, 4, 2);
+    Command alignToLastBalls = new FV_AlignToNearestBall(drivetrain);
+    Command intakeDownAndSuckLastBalls = new FV_IntakeDownAndSuck(intake);
+    Command finishDrivingToLastBalls = new FV_DriveTime(drivetrain, 2, 2, 2);
+    Command driveToHubToShootLastBalls = new FV_DriveTime(drivetrain, -5, -5, 2.5);
+    Command turnPartiallyToHubForLastBalls = new FV_PID_Turn(drivetrain, -25);
+    Command alignToHubToShootLastBalls = new FV_LimelightHubAlign(drivetrain, limelight);
+    Command shootLastBalls = new FV_LimelightShoot(limelight, shooter, intake, 2, true);
+
+    // Add everything to the command group
+    commandGroup.addCommands(intakeDownAndSuckFirstBall, driveToFirstBall, shootFirstBall, driveForwardAfterShootingFirstBall, turnToThirdBall, drivePartiallyToThirdBall, alignToThirdBall, intakeDownAndSuckThirdBall, driveRestToThirdBall, turnPartiallyToHubForThirdBall, alignToHubToShootThirdBall, limelightShootThirdBall, turnToLastBalls, drivePartiallyToLastBalls, alignToLastBalls, intakeDownAndSuckLastBalls, finishDrivingToLastBalls, driveToHubToShootLastBalls, turnPartiallyToHubForLastBalls, alignToHubToShootLastBalls, shootLastBalls);
+
+    return commandGroup;
+  }
 
   // public SequentialCommandGroup deadAutoTwo() {
   //   SequentialCommandGroup commandGroup = new SequentialCommandGroup();
