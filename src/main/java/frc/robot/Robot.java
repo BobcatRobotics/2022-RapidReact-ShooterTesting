@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
     shooter = m_robotContainer.shooter;
     climber = m_robotContainer.climber;
     limelight = m_robotContainer.limelight;
-    climber.withdraw();
+    // climber.withdraw();
     // this.rightStick = RobotContainer.rightStick;
     // this.leftStick = RobotContainer.leftStick;
 
