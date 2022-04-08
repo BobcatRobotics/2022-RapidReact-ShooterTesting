@@ -217,7 +217,7 @@ public class RobotContainer {
 
   //One of the dead autos(if our auto is bricked :( ))
 
-  public String[] deadAutoIDs = {"dA_2B", "dA_3B_right", "target", "dA_5B"};
+  public String[] deadAutoIDs = {"dA_2B", "dA_3B_right", "target", "dA_5B", "dA_4B"};
 
   public SequentialCommandGroup deadAuto_twoBall(double startingWaitTime) {
     //Drive forward setCommandVelocity = 1 meter/s
@@ -313,6 +313,30 @@ public class RobotContainer {
     // Add everything to the command group
     commandGroup.addCommands(intakeDownAndSuckFirstBall, driveToFirstBall, shootFirstBall, driveForwardAfterShootingFirstBall, turnToThirdBall, drivePartiallyToThirdBall, alignToThirdBall, alignToThirdBall2, intakeDownAndSuckThirdBall, driveRestToThirdBall, turnPartiallyToHubForThirdBall, alignToHubToShootThirdBall, limelightShootThirdBall, turnToLastBalls, drivePartiallyToLastBalls, alignToLastBalls, alignToLastBalls2, intakeDownAndSuckLastBalls, finishDrivingToLastBalls, driveToHubToShootLastBalls, turnPartiallyToHubForLastBalls, alignToHubToShootLastBalls, shootLastBalls);
 
+    return commandGroup;
+  }
+
+  public SequentialCommandGroup deadAuto_FourBall() {
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+
+    // Ball 1-2
+    Command intakeDownAndSuckFirstBall = new FV_IntakeDownAndSuck(intake);
+    Command driveToFirstBall = new FV_DriveTime(drivetrain, 5, 5, 0.8);
+    Command limelightAlignFirstBall = new FV_LimelightHubAlign(drivetrain, limelight);
+    Command shootFirstBall = new FV_LimelightShoot(limelight, shooter, intake, 3, true);
+    
+    // Ball 3-4
+    Command driveToLastBalls = new FV_DriveTime(drivetrain, 4, 5, 0.8);
+    Command alignToLastBalls = new FV_AlignToNearestBall(drivetrain);
+    Command alignToLastBalls2 = new FV_AlignToNearestBall(drivetrain);
+    Command intakeDownAndSuckLastBalls = new FV_IntakeDownAndSuck(intake);
+    Command driveToPickUpLastBalls = new FV_DriveTime(drivetrain, 2, 2, 1);
+    Command driveToHubToShootLastBalls = new FV_DriveTime(drivetrain, -4.5, -5, 0.8);
+    Command alignToHubToShootLastBalls = new FV_LimelightHubAlign(drivetrain, limelight);
+    Command shootLastBalls = new FV_LimelightShoot(limelight, shooter, intake, 3, true);
+
+    // Add all commands
+    commandGroup.addCommands(intakeDownAndSuckFirstBall, driveToFirstBall, limelightAlignFirstBall, shootFirstBall, driveToLastBalls, alignToLastBalls, alignToLastBalls2, intakeDownAndSuckLastBalls, driveToPickUpLastBalls, driveToHubToShootLastBalls, alignToHubToShootLastBalls, shootLastBalls);
     return commandGroup;
   }
 
