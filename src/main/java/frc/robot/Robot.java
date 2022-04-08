@@ -160,6 +160,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand = m_robotContainer.deadAuto_fiveBall();
     } else if (selected_dead_auto_ID == 4) {
       m_autonomousCommand = m_robotContainer.deadAuto_FourBall();
+    } else if (selected_dead_auto_ID == 5) {
+      m_autonomousCommand = m_robotContainer.deadAuto_fiveBall_2();
     } else {
       m_autonomousCommand = m_robotContainer.centerBallOnTargetAuto();
     }
