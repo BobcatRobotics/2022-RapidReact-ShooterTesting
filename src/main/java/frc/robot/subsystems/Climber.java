@@ -86,7 +86,7 @@ public class Climber extends SubsystemBase {
     public void resetSoftLimitIfNeeded() {
         if (bothSwitchesTripped() && !didResetSoftLimit) {
             // Figure out native units in Phoenix Tuner
-            winchMotor.configForwardSoftLimitThreshold(1200, 0);
+            winchMotor.configForwardSoftLimitThreshold(391000, 0);
             winchMotor.configForwardSoftLimitEnable(true, 0);
             didResetSoftLimit = true;
         }

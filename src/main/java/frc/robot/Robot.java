@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -283,7 +284,7 @@ public class Robot extends TimedRobot {
     // use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
   
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
-    
+    SmartDashboard.putNumber("Gyro heading", Rotation2d.fromDegrees(drivetrain.getHeading()).getDegrees());
     // SmartDashboard.putString("DriveTrain get pose", drivetrain.getPose().toString());
     // SmartDashboard.putNumber("Gyro heading", drivetrain.getHeading());
     

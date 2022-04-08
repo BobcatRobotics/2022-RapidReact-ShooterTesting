@@ -14,7 +14,7 @@ globalFrame = None
 
 # Create color ranges for red and blue
 # Red_left
-RED_LOWER = np.array([0, 150, 15], dtype ="uint8")
+RED_LOWER = np.array([0, 180, 20], dtype ="uint8")
 RED_UPPER = np.array([9, 255, 255], dtype ="uint8")
 RED2_LOWER = np.array([165, 150, 15], dtype ="uint8")
 RED2_UPPER = np.array([180, 255, 255], dtype ="uint8")
@@ -34,7 +34,7 @@ def detection_thread(*args):
 
     # Scale down frame by 0.5 to speed up computation
     #print("Width :" ,frame.shape[1], " Height: ", frame.shape[0])
-    frame = cv.resize(frame, (frame.shape[1]//2,frame.shape[0]//2), interpolation=cv.INTER_LINEAR)
+    # frame = cv.resize(frame, (frame.shape[1]//2,frame.shape[0]//2), interpolation=cv.INTER_LINEAR)
     #print("Width2 :" ,frame.shape[1], " Height2: ", frame.shape[0])
     width = frame.shape[1]
     height = frame.shape[0]
@@ -48,7 +48,7 @@ def detection_thread(*args):
     hsv = cv.cvtColor(cv.GaussianBlur(frame, (kVal, kVal), 0), cv.COLOR_BGR2HSV)
     # Find the red and blue contours
     # red_mask = cv.inRange(hsv, RED_LOWER, RED_UPPER)
-    colour = 'red'
+    colour = 'blue'
     # Get circles
     red_circles = None
     blue_circles = None
@@ -129,7 +129,7 @@ prev = 0
 
 if __name__ == '__main__':
     # Open the camera
-    cap = cv.VideoCapture(1)
+    cap = cv.VideoCapture(0)
     warningNotDelivered = True
 
     while True:

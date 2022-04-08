@@ -5,14 +5,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
-public class FV_PID_Turn extends CommandBase {
+public class FV_PIDTurn extends CommandBase {
     private double distance, turnDegree = 0.0, heading=0.0, goalHeading=0.0, speed=0.0;
     private Drivetrain drivetrain;
     private boolean headingInit = false;
     private double Degrees = 180;
     private PIDController pidController;
 
-    public FV_PID_Turn(Drivetrain dt, double _turnDegree) {
+    public FV_PIDTurn(Drivetrain dt, double _turnDegree) {
         drivetrain = dt;
         turnDegree = _turnDegree;
         drivetrain.coast();

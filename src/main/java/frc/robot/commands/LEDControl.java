@@ -22,6 +22,7 @@ public class LEDControl extends CommandBase {
         ledLights = led;
         shooter = sh;
         climber = cb;
+        SmartDashboard.putNumber("LED color", 0.59);
         addRequirements(ledLights);
     }
 
@@ -36,7 +37,7 @@ public class LEDControl extends CommandBase {
         } else if (shooter.tofTriggered()) {
             ledLights.setLEDPower(-0.01);
         } else {
-            ledLights.setLEDPower(0.59);
+            ledLights.setLEDPower(SmartDashboard.getNumber("LED color", 0.59));
         }
     }
 

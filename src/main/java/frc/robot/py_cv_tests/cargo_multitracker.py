@@ -40,7 +40,7 @@ print("Connected to NetworkTables!")
 
 # Create color ranges for red and blue
 # Red_left
-RED_LOWER = np.array([0, 150, 15], dtype ="uint8")
+RED_LOWER = np.array([0, 180, 20], dtype ="uint8")
 RED_UPPER = np.array([9, 255, 255], dtype ="uint8")
 RED2_LOWER = np.array([165, 150, 15], dtype ="uint8")
 RED2_UPPER = np.array([180, 255, 255], dtype ="uint8")

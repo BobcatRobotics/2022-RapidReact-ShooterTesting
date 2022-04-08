@@ -70,7 +70,7 @@ import frc.robot.commands.five_ball_auto_commands.FV_DriveTime;
 import frc.robot.commands.five_ball_auto_commands.FV_IntakeDownAndSuck;
 import frc.robot.commands.five_ball_auto_commands.FV_LimelightHubAlign;
 import frc.robot.commands.five_ball_auto_commands.FV_LimelightShoot;
-import frc.robot.commands.five_ball_auto_commands.FV_PID_Turn;
+import frc.robot.commands.five_ball_auto_commands.FV_PIDTurn;
 import frc.robot.subsystems.Climber;
 // import frc.robot.Constants.FeederConstants;
 // import frc.robot.subsystems.ColorWheel;
@@ -271,8 +271,9 @@ public class RobotContainer {
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
 
     Command c = new alignToNearestBall(drivetrain);
+    Command d = new alignToNearestBall(drivetrain);
 
-    commandGroup.addCommands(c);
+    commandGroup.addCommands(c,d);
     return commandGroup;
 
   }
@@ -287,28 +288,30 @@ public class RobotContainer {
     Command driveForwardAfterShootingFirstBall = new FV_DriveTime(drivetrain, -2, -2, 0.3);
 
     // Ball 3
-    Command turnToThirdBall = new FV_PID_Turn(drivetrain, 101.5);
+    Command turnToThirdBall = new FV_PIDTurn(drivetrain, 101.5);
     Command drivePartiallyToThirdBall = new FV_DriveTime(drivetrain, 4, 4, 1);
     Command alignToThirdBall = new FV_AlignToNearestBall(drivetrain);
+    Command alignToThirdBall2 = new FV_AlignToNearestBall(drivetrain);
     Command intakeDownAndSuckThirdBall = new FV_IntakeDownAndSuck(intake);
-    Command driveRestToThirdBall = new FV_DriveTime(drivetrain, 4, 4, 1);
-    Command turnPartiallyToHubForThirdBall = new FV_PID_Turn(drivetrain, -52);
+    Command driveRestToThirdBall = new FV_DriveTime(drivetrain, 5, 5, 0.75);
+    Command turnPartiallyToHubForThirdBall = new FV_PIDTurn(drivetrain, -52);
     Command alignToHubToShootThirdBall = new FV_LimelightHubAlign(drivetrain, limelight);
     Command limelightShootThirdBall = new FV_LimelightShoot(limelight, shooter, intake, 2, true);
 
     // Last balls
-    Command turnToLastBalls = new FV_PID_Turn(drivetrain, 25);
-    Command drivePartiallyToLastBalls = new FV_DriveTime(drivetrain, 4, 4, 2);
+    Command turnToLastBalls = new FV_PIDTurn(drivetrain, 25);
+    Command drivePartiallyToLastBalls = new FV_DriveTime(drivetrain, 5, 5, 1.5);
     Command alignToLastBalls = new FV_AlignToNearestBall(drivetrain);
+    Command alignToLastBalls2 = new FV_AlignToNearestBall(drivetrain);
     Command intakeDownAndSuckLastBalls = new FV_IntakeDownAndSuck(intake);
     Command finishDrivingToLastBalls = new FV_DriveTime(drivetrain, 2, 2, 2);
-    Command driveToHubToShootLastBalls = new FV_DriveTime(drivetrain, -5, -5, 2.5);
-    Command turnPartiallyToHubForLastBalls = new FV_PID_Turn(drivetrain, -25);
+    Command driveToHubToShootLastBalls = new FV_DriveTime(drivetrain, -5, -5, 2);
+    Command turnPartiallyToHubForLastBalls = new FV_PIDTurn(drivetrain, -25);
     Command alignToHubToShootLastBalls = new FV_LimelightHubAlign(drivetrain, limelight);
     Command shootLastBalls = new FV_LimelightShoot(limelight, shooter, intake, 2, true);
 
     // Add everything to the command group
-    commandGroup.addCommands(intakeDownAndSuckFirstBall, driveToFirstBall, shootFirstBall, driveForwardAfterShootingFirstBall, turnToThirdBall, drivePartiallyToThirdBall, alignToThirdBall, intakeDownAndSuckThirdBall, driveRestToThirdBall, turnPartiallyToHubForThirdBall, alignToHubToShootThirdBall, limelightShootThirdBall, turnToLastBalls, drivePartiallyToLastBalls, alignToLastBalls, intakeDownAndSuckLastBalls, finishDrivingToLastBalls, driveToHubToShootLastBalls, turnPartiallyToHubForLastBalls, alignToHubToShootLastBalls, shootLastBalls);
+    commandGroup.addCommands(intakeDownAndSuckFirstBall, driveToFirstBall, shootFirstBall, driveForwardAfterShootingFirstBall, turnToThirdBall, drivePartiallyToThirdBall, alignToThirdBall, alignToThirdBall2, intakeDownAndSuckThirdBall, driveRestToThirdBall, turnPartiallyToHubForThirdBall, alignToHubToShootThirdBall, limelightShootThirdBall, turnToLastBalls, drivePartiallyToLastBalls, alignToLastBalls, alignToLastBalls2, intakeDownAndSuckLastBalls, finishDrivingToLastBalls, driveToHubToShootLastBalls, turnPartiallyToHubForLastBalls, alignToHubToShootLastBalls, shootLastBalls);
 
     return commandGroup;
   }
