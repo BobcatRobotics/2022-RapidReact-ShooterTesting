@@ -135,7 +135,9 @@ public class ShootingProcess extends CommandBase {
     }
     // Stop shooter
     else {
-      limelight.turnOffLED();
+      if (gamepad.getPOV() != Constants.D_Pad_Left) {
+        limelight.turnOffLED();
+      }
       shooter.stopShooter();
       shooter.setRunning(false);
     }

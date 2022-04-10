@@ -16,7 +16,7 @@ globalFrame = None
 # Red_left
 RED_LOWER = np.array([0, 180, 20], dtype ="uint8")
 RED_UPPER = np.array([9, 255, 255], dtype ="uint8")
-RED2_LOWER = np.array([165, 150, 15], dtype ="uint8")
+RED2_LOWER = np.array([170, 150, 15], dtype ="uint8")
 RED2_UPPER = np.array([180, 255, 255], dtype ="uint8")
 # Blue
 BLUE_LOWER = np.array([100, 100, 40], dtype = "uint8")
@@ -44,11 +44,11 @@ def detection_thread(*args):
     # List to store ball info
     ball_array = []
     # Convert to HSV
-    kVal = 43
+    kVal = 47
     hsv = cv.cvtColor(cv.GaussianBlur(frame, (kVal, kVal), 0), cv.COLOR_BGR2HSV)
     # Find the red and blue contours
     # red_mask = cv.inRange(hsv, RED_LOWER, RED_UPPER)
-    colour = 'blue'
+    colour = 'red'
     # Get circles
     red_circles = None
     blue_circles = None
@@ -129,7 +129,7 @@ prev = 0
 
 if __name__ == '__main__':
     # Open the camera
-    cap = cv.VideoCapture(0)
+    cap = cv.VideoCapture(1)
     warningNotDelivered = True
 
     while True:

@@ -35,8 +35,8 @@ public class Shooter extends SubsystemBase {
 
     private double targetRPM = 600.0;
     private double encoderEPR = 2048.0;
-    private double mainRPMThreshold = 100.0;
-    private double hoodRPMThreshold = 75.0;
+    private double mainRPMThreshold = 50.0;
+    private double hoodRPMThreshold = 50.0;
 
     private int ballCounter = 0;
     // private boolean isShooterSolenoidExtended;

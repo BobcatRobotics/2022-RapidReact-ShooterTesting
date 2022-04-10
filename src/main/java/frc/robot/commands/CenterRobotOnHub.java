@@ -96,6 +96,9 @@ public class CenterRobotOnHub extends CommandBase {
                 // }
             }
         } else {
+            if (gamepad.getPOV() != Constants.D_Pad_Right) {
+                limelight.turnOffLED();
+            }
             // Turn off limelight light
             // if (ledIsOn) {
             //     m_limelight.turnOffLED();
@@ -126,7 +129,7 @@ public class CenterRobotOnHub extends CommandBase {
             double tx = limelight.x();
             // Normalize between 0 and 1 by dividing by max degree offset: 29.8 deg
             tx /= 7.25;
-            if (tx <.1)
+            if (Math.abs(tx) <.1)
                 return true;
         }
         return false;

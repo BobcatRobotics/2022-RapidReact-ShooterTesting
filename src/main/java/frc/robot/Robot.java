@@ -93,6 +93,7 @@ public class Robot extends TimedRobot {
     // this.leftStick = RobotContainer.leftStick;
 
     drivetrain = m_robotContainer.drivetrain;
+    limelight.turnOffLED();
 
     // Port forwarding
     PortForwarder.add(5800, "limelight.local", 5800);
@@ -160,6 +161,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autoMode = true;
+    limelight.turnOnLED();
     updateShuffleBoard();
     
 
@@ -289,15 +291,16 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("LIMELIGHT WORK PLZ (y)", limelight.y());
 
     if (autoMode) {
-      shooter.setMainRPMThreshold(SmartDashboard.getNumber("Main shooter RPM Threshold", 50));
-      shooter.setHoodRPMThreshold(SmartDashboard.getNumber("Hood shooter RPM Threshold", 50));
+      shooter.setMainRPMThreshold(SmartDashboard.getNumber("Main shooter RPM Threshold", 50+100));
+      shooter.setHoodRPMThreshold(SmartDashboard.getNumber("Hood shooter RPM Threshold", 50+100));
     } else {
       shooter.setMainRPMThreshold(SmartDashboard.getNumber("Main shooter RPM Threshold", 50));
       shooter.setHoodRPMThreshold(SmartDashboard.getNumber("Hood shooter RPM Threshold", 50));
     }
     // Update button used to toggle climber mode based on Shuffleboard input
     // use_RS_Shift_Switch = SmartDashboard.getBoolean("Use RS shift switch?", true);
-  
+    String colour = SmartDashboard.getString("Team Color","red");
+    m_robotContainer.setTeamColor(colour);
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     SmartDashboard.putNumber("Gyro heading", Rotation2d.fromDegrees(drivetrain.getHeading()).getDegrees());
     // SmartDashboard.putString("DriveTrain get pose", drivetrain.getPose().toString());
@@ -309,7 +312,7 @@ public class Robot extends TimedRobot {
 
     // NEED TO TEST -----
     selected_dead_auto_ID = (int)SmartDashboard.getNumber("Selected Dead Auto #", 0);
-    if (selected_dead_auto_ID != 0 && selected_dead_auto_ID != 1 && selected_dead_auto_ID != 2) selected_dead_auto_ID = 0;
+    if (selected_dead_auto_ID != 0 && selected_dead_auto_ID != 1 && selected_dead_auto_ID != 2 && selected_dead_auto_ID != 3 && selected_dead_auto_ID != 4) selected_dead_auto_ID = 0;
     SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
   }
   

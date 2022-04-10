@@ -118,7 +118,7 @@ public class FV_AlignToNearestBall extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        boolean isDone = timeout.hasElapsed(0.85);
+        boolean isDone = timeout.hasElapsed(0.75);
         if (isDone) System.out.println("DONE DONE DONE YA YEET");
         return isDone;
         // if (done == true) {

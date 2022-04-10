@@ -43,7 +43,7 @@ public class shootBalls extends CommandBase {
     shooter.stop();
     shooter.stopFeeding();
     if (dumbShoot){
-      shooter.setShootingModeKey(3.0);
+      shooter.setShootingModeKey(3.25);
     } else {
       shooter.setShootingModeKey(ShooterConstants.UPPER_HUB_KEY);
 
@@ -66,7 +66,7 @@ public class shootBalls extends CommandBase {
       // System.out.printf("Will shoot at %s RPM based on %s meters away\n", speeds[0], speeds[1]);
       // Ready to shoot
     } else {
-      shooter.setShootingModeKey(3.5);
+      shooter.setShootingModeKey(3.25);
     }
     if (t.hasElapsed(time_alloted)) {
       shooter.stop();

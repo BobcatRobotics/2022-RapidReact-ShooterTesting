@@ -51,6 +51,7 @@ public class turnDegreeCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        System.out.println("IT'S DONE FELLAS LETS GOOOOOOOO");
         drivetrain.stop();
         drivetrain.brake();
     }

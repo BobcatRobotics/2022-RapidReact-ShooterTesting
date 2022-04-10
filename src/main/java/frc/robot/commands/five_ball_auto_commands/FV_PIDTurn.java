@@ -2,6 +2,7 @@ package frc.robot.commands.five_ball_auto_commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
@@ -11,12 +12,14 @@ public class FV_PIDTurn extends CommandBase {
     private boolean headingInit = false;
     private double Degrees = 180;
     private PIDController pidController;
+    private Timer timeout;
 
     public FV_PIDTurn(Drivetrain dt, double _turnDegree) {
         drivetrain = dt;
         turnDegree = _turnDegree;
         drivetrain.coast();
         pidController = new PIDController(0.75, 0.2, 0);
+        timeout = new Timer();
         addRequirements(drivetrain);
     }
 
@@ -26,6 +29,12 @@ public class FV_PIDTurn extends CommandBase {
     //     goalHeading = heading + turnDegree;
     //     headingInit = true;
     // }
+
+    @Override
+    public void initialize() {
+        timeout.reset();
+        timeout.start();
+    }
 
     @Override
     public void execute() {
@@ -64,6 +73,6 @@ public class FV_PIDTurn extends CommandBase {
     @Override
     public boolean isFinished() {
         // return t.hasElapsed(driveTime);
-        return Degrees == 0.0;
+        return Degrees == 0.0 || timeout.hasElapsed(1);
     }
 }

@@ -22,7 +22,7 @@ public class LEDControl extends CommandBase {
         ledLights = led;
         shooter = sh;
         climber = cb;
-        SmartDashboard.putNumber("LED color", 0.59);
+        // SmartDashboard.putNumber("LED color", 0.99);
         addRequirements(ledLights);
     }
 
@@ -32,13 +32,15 @@ public class LEDControl extends CommandBase {
 
     @Override
     public void execute() {
-        if (climber.isClimberMode()) {
-            ledLights.setLEDPower(0.57);
-        } else if (shooter.tofTriggered()) {
-            ledLights.setLEDPower(-0.01);
-        } else {
-            ledLights.setLEDPower(SmartDashboard.getNumber("LED color", 0.59));
-        }
+        // SmartDashboard.putNumber("LED", ledLights.getLEDPower());
+        // if (climber.isClimberMode()) {
+        //     ledLights.setLEDPower(0.57);
+        // } else if (shooter.tofTriggered()) {
+        //     ledLights.setLEDPower(-0.01);
+        // } else {
+        //     ledLights.setLEDPower(0.99);
+        // }
+        ledLights.setLEDPower(0.59);
     }
 
 }

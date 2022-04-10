@@ -74,7 +74,7 @@ public class FV_LimelightHubAlign extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (timeoutTimer.hasElapsed(3)) return true;
+        if (timeoutTimer.hasElapsed(2)) return true;
         double tx = limelight.x();
         tx /= kScaleDown/2;
         return tx < 0.08;
