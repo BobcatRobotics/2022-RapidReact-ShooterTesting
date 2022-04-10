@@ -3,6 +3,7 @@ package frc.robot.commands.five_ball_auto_commands;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.lib.RioLogger;
@@ -51,17 +52,19 @@ public class FV_LimelightShoot extends CommandBase {
             if (useLimelight) {
                 shootingDist = Math.round(4*(LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)))/4.0;
             } else {
-                shootingDist = 3.25;
+                shootingDist = Constants.ShooterConstants.UPPER_HUB_KEY;
             }
-            double[] speeds = distToRPM(shootingDist);
+            // double[] speeds = distToRPM(shootingDist);
             // Shooter get to speed and shoot at velocity
-            System.out.printf("FV: Will shoot at %s RPM based on %s meters away\n", speeds[0], speeds[1]);
+            shooter.setShootingModeKey(shootingDist);
+            // System.out.printf("FV: Will shoot at %s RPM based on %s meters away\n", speeds[0], speeds[1]);
             // Ready to shoot
             shooter.getToSpeed();
             if (shooter.atSpeed()) {
                 intake.feedIn();;
                 shooter.feed();
             } else {
+                shooter.stopFeeding();
                 intake.stopIntake();
             }
         }

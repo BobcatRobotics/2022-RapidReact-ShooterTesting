@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -61,12 +62,12 @@ public class shootBalls extends CommandBase {
     //   shooter.setShooterSolenoidExtended(true);
     // }
     if (limelight.hasTargets()) {
-      shooter.setShootingModeKey(Math.round(2*(LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)))/2.0);
+      shooter.setShootingModeKey(Math.round(4*(LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)))/4.0);
       // Shooter get to speed and shoot at velocity
       // System.out.printf("Will shoot at %s RPM based on %s meters away\n", speeds[0], speeds[1]);
       // Ready to shoot
     } else {
-      shooter.setShootingModeKey(3.25);
+      shooter.setShootingModeKey(Constants.ShooterConstants.UPPER_HUB_KEY);
     }
     if (t.hasElapsed(time_alloted)) {
       shooter.stop();

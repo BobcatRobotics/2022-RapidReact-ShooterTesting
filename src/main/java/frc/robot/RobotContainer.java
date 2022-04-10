@@ -256,7 +256,8 @@ public class RobotContainer {
     // Command c = new alignToNearestBall(drivetrain);
 
     // drive forward & intake
-    Command driveBackwards2 =  new driveCommand(drivetrain, 6, 6, 1.25);
+    Command driveBackABitBeforeAligningToThirdBall = new driveCommand(drivetrain, 3, 3, 0.7);
+    Command driveBackwards2 =  new driveCommand(drivetrain, 6, 6, 1.15);
     // add dns in commandGroup
     // turn back
     // brute force turn
@@ -271,7 +272,7 @@ public class RobotContainer {
     // shoot
     // add shoot in command group
     
-    commandGroup.addCommands(dns1, waitABit, driveBackwards1, shoot1, driveAdjust, turn, alignToBall, dns2, driveBackwards2, turnBack, waitABitMore, centerBot, shoot2);
+    commandGroup.addCommands(dns1, waitABit, driveBackwards1, shoot1, driveAdjust, turn, driveBackABitBeforeAligningToThirdBall, alignToBall, dns2, driveBackwards2, turnBack, waitABitMore, centerBot, shoot2);
     return commandGroup;
   }
 
