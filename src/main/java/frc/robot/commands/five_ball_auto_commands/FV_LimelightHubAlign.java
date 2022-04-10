@@ -56,7 +56,7 @@ public class FV_LimelightHubAlign extends CommandBase {
             if (tx > 1) tx = 1;
             else if (tx < -1) tx = -1;
             // Turn
-            SmartDashboard.putNumber("LimeLight drive percent", tx);
+            // SmartDashboard.putNumber("LimeLight drive percent", tx);
             double d = pidController.calculate(tx, 0);
             if (Math.abs(d) < .05) {
                 d = .125 * Math.signum(d);
@@ -68,7 +68,7 @@ public class FV_LimelightHubAlign extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        System.out.println("WHOA WHOA");
+        // System.out.println("WHOA WHOA");
     }
 
     // Returns true when the command should end.

@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
   private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.intake, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
   private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.gamepad, RobotContainer.limelight);
-  private LEDControl ledControl = new LEDControl(RobotContainer.ledLights, RobotContainer.shooter, RobotContainer.climber);
+  // private LEDControl ledControl = new LEDControl(RobotContainer.ledLights, RobotContainer.shooter, RobotContainer.climber);
 
   private RobotContainer m_robotContainer;
   private Command m_autonomousCommand;
@@ -122,8 +122,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Delay time: Dead auto 2-ball", 0);
     SmartDashboard.putNumber("Limelight dist (m)", 0);
 
-    SmartDashboard.putNumber("Gyro heading", 0);
-    SmartDashboard.putString("JsonString", "STARTING");
+    // SmartDashboard.putNumber("Gyro heading", 0);
+    // SmartDashboard.putString("JsonString", "STARTING");
   }
 
   /**
@@ -227,7 +227,7 @@ public class Robot extends TimedRobot {
       // centerRobotOnHub command
       centerRobotOnHubCommand.schedule(false);
       // leds
-      ledControl.schedule();
+      // ledControl.schedule();
 
       climber.turnOffClimberMode();
     // }
@@ -279,12 +279,12 @@ public class Robot extends TimedRobot {
     shooter.setHighHoodSpeed(hoodhigh);
     shooter.setLowHoodSpeed(hoodlow);
     SmartDashboard.putNumber("Current Left RPM", shooter.getLeftRPM());
-    SmartDashboard.putBoolean("AutoMode", autoMode);
+    // SmartDashboard.putBoolean("AutoMode", autoMode);
     
 
     NetworkTable py_vision_network_table = NetworkTableInstance.getDefault().getTable("pyVision");
     String jsonString = py_vision_network_table.getEntry("jsonData").getString("NO_DATA");
-    SmartDashboard.putString("JsonString", jsonString);
+    // SmartDashboard.putString("JsonString", jsonString);
     // SmartDashboard.putNumber("Current Right RPM", shooter.getRightRPM());
     SmartDashboard.putNumber("Hood RPM", shooter.getHoodRPM());
     SmartDashboard.putNumber("Limelight dist (m)", (LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)));
@@ -302,7 +302,7 @@ public class Robot extends TimedRobot {
     String colour = SmartDashboard.getString("Team Color","red");
     m_robotContainer.setTeamColor(colour);
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
-    SmartDashboard.putNumber("Gyro heading", Rotation2d.fromDegrees(drivetrain.getHeading()).getDegrees());
+    // SmartDashboard.putNumber("Gyro heading", Rotation2d.fromDegrees(drivetrain.getHeading()).getDegrees());
     // SmartDashboard.putString("DriveTrain get pose", drivetrain.getPose().toString());
     // SmartDashboard.putNumber("Gyro heading", drivetrain.getHeading());
     
@@ -312,7 +312,7 @@ public class Robot extends TimedRobot {
 
     // NEED TO TEST -----
     selected_dead_auto_ID = (int)SmartDashboard.getNumber("Selected Dead Auto #", 0);
-    if (selected_dead_auto_ID != 0 && selected_dead_auto_ID != 1 && selected_dead_auto_ID != 2 && selected_dead_auto_ID != 3 && selected_dead_auto_ID != 4) selected_dead_auto_ID = 0;
+    if (!(0 <= selected_dead_auto_ID && selected_dead_auto_ID <= 1)) selected_dead_auto_ID = 0;
     SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
   }
   

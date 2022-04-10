@@ -217,7 +217,8 @@ public class RobotContainer {
 
   //One of the dead autos(if our auto is bricked :( ))
 
-  public String[] deadAutoIDs = {"dA_2B", "dA_3B_right", "target", "dA_5B", "dA_4B", "dA_5B_2"};
+  // public String[] deadAutoIDs = {"dA_2B", "dA_3B_right", "target", "dA_5B", "dA_4B", "dA_5B_2"};
+  public String[] deadAutoIDs = {"dA_2B", "dA_3B_right"};
 
   public SequentialCommandGroup deadAuto_twoBall(double startingWaitTime) {
     //Drive forward setCommandVelocity = 1 meter/s
@@ -243,8 +244,8 @@ public class RobotContainer {
     // Command driveBackwards2 = new driveCommand(drivetrain, 4, 4, 0.9);
     // Command shoot1 = new shootBalls(shooter, intake, 3,true);
     // Command shoot2 = new shootBalls(shooter, intake, 3,false);
-    Command shoot1 = new FV_LimelightShoot(limelight, shooter, intake, 3, false);
-    Command shoot2 = new FV_LimelightShoot(limelight, shooter, intake, 3, false);
+    Command shoot1 = new FV_LimelightShoot(limelight, shooter, intake, 4, false, 1);
+    Command shoot2 = new FV_LimelightShoot(limelight, shooter, intake, 4, false, 0.5);
     
     // Drive forward a little bit to avoid hitting the wall when turning
     Command driveAdjust = new driveCommand(drivetrain, -2, -2, 0.3);
@@ -252,19 +253,21 @@ public class RobotContainer {
     // Turn deg
     // brute force turn
     // Command turn = new driveCommand(drivetrain, -4, 4, 0.62);
-    Command turn = new turnDegreeCommand(drivetrain, 101.5);
+    // Command turn = new turnDegreeCommand(drivetrain, 101.5);
+    Command turn = new FV_PIDTurn(drivetrain, 111);
     // Command c = new alignToNearestBall(drivetrain);
 
     // drive forward & intake
-    Command driveBackABitBeforeAligningToThirdBall = new driveCommand(drivetrain, 3, 3, 0.7);
-    Command driveBackwards2 =  new driveCommand(drivetrain, 6, 6, 1.15);
+    Command driveBackABitBeforeAligningToThirdBall = new driveCommand(drivetrain, 5, 5, 1.65);
+    // Command driveBackwards2 =  new driveCommand(drivetrain, 6, 6, 1.15);
     // add dns in commandGroup
     // turn back
     // brute force turn
-    Command turnBack = new turnDegreeCommand(drivetrain, -52);
+    // Command turnBack = new turnDegreeCommand(drivetrain, -52);
+    Command turnBack = new FV_PIDTurn(drivetrain, -52);
 
-    Command alignToBall = new alignToNearestBall(drivetrain);
-    Command alignToBall2 = new alignToNearestBall(drivetrain);
+    // Command alignToBall = new alignToNearestBall(drivetrain);
+    // Command alignToBall2 = new alignToNearestBall(drivetrain);
     // Command driveForward2 =  new driveCommand(drivetrain, -3, -3, 0.35);
     
     Command waitABitMore = new waitCommand(0.25);
@@ -272,7 +275,7 @@ public class RobotContainer {
     // shoot
     // add shoot in command group
     
-    commandGroup.addCommands(dns1, waitABit, driveBackwards1, shoot1, driveAdjust, turn, driveBackABitBeforeAligningToThirdBall, alignToBall, dns2, driveBackwards2, turnBack, waitABitMore, centerBot, shoot2);
+    commandGroup.addCommands(dns1, waitABit, driveBackwards1, shoot1, driveAdjust, turn, dns2, driveBackABitBeforeAligningToThirdBall, turnBack, waitABitMore, centerBot, shoot2);
     return commandGroup;
   }
 
@@ -294,7 +297,7 @@ public class RobotContainer {
     Command intakeDownAndSuckFirstBall = new FV_IntakeDownAndSuck(intake);
     Command waitABit = new waitCommand(0.25);
     Command driveToFirstBall = new FV_DriveTime(drivetrain, 4, 4, 0.95);
-    Command shootFirstBall = new FV_LimelightShoot(limelight, shooter, intake, 3, false);
+    Command shootFirstBall = new FV_LimelightShoot(limelight, shooter, intake, 3, false, 0.5);
     Command driveForwardAfterShootingFirstBall = new FV_DriveTime(drivetrain, -2, -2, 0.3);
 
     // Ball 3
@@ -319,7 +322,7 @@ public class RobotContainer {
     Command driveToHubToShootLastBalls = new FV_DriveTime(drivetrain, -5, -5, 2);
     Command turnPartiallyToHubForLastBalls = new FV_PIDTurn(drivetrain, -25);
     Command alignToHubToShootLastBalls = new CenterRobotOnHub(drivetrain, gamepad, limelight);
-    Command shootLastBalls = new FV_LimelightShoot(limelight, shooter, intake, 2, true);
+    Command shootLastBalls = new FV_LimelightShoot(limelight, shooter, intake, 2, true, 0.5);
 
     // Add everything to the command group
     commandGroup.addCommands(intakeDownAndSuckFirstBall, waitABit, driveToFirstBall, shootFirstBall, driveForwardAfterShootingFirstBall, turnToThirdBall, alignToThirdBall, intakeDownAndSuckThirdBall, driveRestToThirdBall, turnPartiallyToHubForThirdBall, alignToHubToShootThirdBall, limelightShootThirdBall, turnToLastBalls, drivePartiallyToLastBalls, alignToLastBalls, intakeDownAndSuckLastBalls, finishDrivingToLastBalls, driveToHubToShootLastBalls, turnPartiallyToHubForLastBalls, alignToHubToShootLastBalls, shootLastBalls);
@@ -334,7 +337,7 @@ public class RobotContainer {
     Command intakeDownAndSuckFirstBall = new FV_IntakeDownAndSuck(intake);
     Command driveToFirstBall = new FV_DriveTime(drivetrain, 5, 5, 0.8);
     Command limelightAlignFirstBall = new FV_LimelightHubAlign(drivetrain, limelight);
-    Command shootFirstBall = new FV_LimelightShoot(limelight, shooter, intake, 3, true);
+    Command shootFirstBall = new FV_LimelightShoot(limelight, shooter, intake, 3, true, 0.5);
     
     // Ball 3-4
     Command driveToLastBalls = new FV_DriveTime(drivetrain, 4, 5, 0.8);
@@ -344,7 +347,7 @@ public class RobotContainer {
     Command driveToPickUpLastBalls = new FV_DriveTime(drivetrain, 2, 2, 1);
     Command driveToHubToShootLastBalls = new FV_DriveTime(drivetrain, -4.5, -5, 0.8);
     Command alignToHubToShootLastBalls = new FV_LimelightHubAlign(drivetrain, limelight);
-    Command shootLastBalls = new FV_LimelightShoot(limelight, shooter, intake, 3, true);
+    Command shootLastBalls = new FV_LimelightShoot(limelight, shooter, intake, 3, true, 0.5);
 
     // Add all commands
     commandGroup.addCommands(intakeDownAndSuckFirstBall, driveToFirstBall, limelightAlignFirstBall, shootFirstBall, driveToLastBalls, alignToLastBalls, alignToLastBalls2, intakeDownAndSuckLastBalls, driveToPickUpLastBalls, driveToHubToShootLastBalls, alignToHubToShootLastBalls, shootLastBalls);
@@ -358,7 +361,7 @@ public class RobotContainer {
     Command intakeDownAndSuckFirstBall = new FV_IntakeDownAndSuck(intake);
     Command driveToFirstBall = new FV_DriveTime(drivetrain, 5, 5, 0.8);
     Command limelightAlignFirstBall = new FV_LimelightHubAlign(drivetrain, limelight);
-    Command shootFirstBall = new FV_LimelightShoot(limelight, shooter, intake, 3, false);
+    Command shootFirstBall = new FV_LimelightShoot(limelight, shooter, intake, 3, false, 0.5);
 
     // Ball 3
     Command driveSteerForwardBeforeThirdBall = new FV_DriveTime(drivetrain, -3, -0.5, 0.5);
@@ -368,7 +371,7 @@ public class RobotContainer {
     Command driveToThirdBall = new FV_DriveTime(drivetrain, 5, 5, 2);
     Command turnPartiallyToHubToShootThirdBall = new FV_PIDTurn(drivetrain, -50);
     Command alignToHubToShootThirdBall = new FV_LimelightHubAlign(drivetrain, limelight);
-    Command shootThirdBall = new FV_LimelightShoot(limelight, shooter, intake, 2, true);
+    Command shootThirdBall = new FV_LimelightShoot(limelight, shooter, intake, 2, true, 0.5);
 
     // Ball 4-5
     Command driveSteerToLastBalls = new FV_DriveTime(drivetrain, -4.5, -5, 2);
@@ -378,7 +381,7 @@ public class RobotContainer {
     Command driveToLastBalls = new FV_DriveTime(drivetrain, 2.5, 2.5, 2);
     Command driveSteerToHubToShootLastBalls = new FV_DriveTime(drivetrain, 5, 5.6, 2);
     Command alignToHubToShootLastBalls = new FV_LimelightHubAlign(drivetrain, limelight);
-    Command shootLastBalls = new FV_LimelightShoot(limelight, shooter, intake, 2, true);
+    Command shootLastBalls = new FV_LimelightShoot(limelight, shooter, intake, 2, true, 0.5);
 
     // Add all commands
     commandGroup.addCommands(intakeDownAndSuckFirstBall, driveToFirstBall, limelightAlignFirstBall, shootFirstBall, driveSteerForwardBeforeThirdBall, alignToThirdBall, alignToThirdBall2, intakeDownAndSuckThirdBall, driveToThirdBall, turnPartiallyToHubToShootThirdBall, alignToHubToShootThirdBall, shootThirdBall, driveSteerToLastBalls, alignToLastBalls, alignToLastBalls2, intakeDownAndSuckLastBalls, driveToLastBalls, driveSteerToHubToShootLastBalls, alignToHubToShootLastBalls, shootLastBalls);

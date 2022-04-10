@@ -148,7 +148,7 @@ public final class Constants {
     public static final double feederBallLeavingThreshold = 125.0; // TODO: change to correct value
 
     // Makes sure the speed does not increase over this number
-    public static final double speedLimiter = -0.425;
+    public static final double speedLimiter = -0.7;
 
     public static final double speedLimiterSlow = -0.3;
 
@@ -239,7 +239,7 @@ public final class Constants {
 
       // --- Manual upper hub shooting
       
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(0.0, new double[]{2530, 2470});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(0.0, new double[]{2480, 2340});
       
       // --- Manual lower hub shooting
       

@@ -71,7 +71,7 @@ public class LimelightShootDist extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            RioLogger.errorLog("LIMELIGHT_SHOOT_VAR_DIST: Interrupted");
+            // RioLogger.errorLog("LIMELIGHT_SHOOT_VAR_DIST: Interrupted");
         }
     }
 

@@ -35,8 +35,8 @@ public class Shooter extends SubsystemBase {
 
     private double targetRPM = 600.0;
     private double encoderEPR = 2048.0;
-    private double mainRPMThreshold = 50.0;
-    private double hoodRPMThreshold = 50.0;
+    private double mainRPMThreshold = 100.0;
+    private double hoodRPMThreshold = 100.0;
 
     private int ballCounter = 0;
     // private boolean isShooterSolenoidExtended;
@@ -101,6 +101,7 @@ public class Shooter extends SubsystemBase {
         shooterFalconRight.config_IntegralZone(0, 3, 0);
         hoodFalcon.config_kF(0, 0.05, 0);
         hoodFalcon.config_kP(0, 0.16421, 0);
+        // hoodFalcon.config_kP(0, 0.164, 0);
         hoodFalcon.config_kI(0, 0.00002, 0);
         hoodFalcon.config_kD(0, 0.0, 0);
         hoodFalcon.config_IntegralZone(0, 3, 0);

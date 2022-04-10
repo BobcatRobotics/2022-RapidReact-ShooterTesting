@@ -21,8 +21,10 @@ public class FV_LimelightShoot extends CommandBase {
     private double timeoutSec;
     private Timer tofTimer;
     private boolean useLimelight;
+    private Timer initTimer;
+    private double initWaitPeriod;
     
-    public FV_LimelightShoot(Limelight _limelight, Shooter _shooter, Intake _intake, double _timeoutSec, boolean _useLimelight) {
+    public FV_LimelightShoot(Limelight _limelight, Shooter _shooter, Intake _intake, double _timeoutSec, boolean _useLimelight, double _initWait) {
         limelight = _limelight;
         shooter = _shooter;
         intake = _intake;
@@ -30,6 +32,8 @@ public class FV_LimelightShoot extends CommandBase {
         useLimelight = _useLimelight;
         timeoutTimer = new Timer();
         tofTimer = new Timer();
+        initTimer = new Timer();
+        initWaitPeriod = _initWait;
     }
 
     @Override
@@ -38,6 +42,8 @@ public class FV_LimelightShoot extends CommandBase {
         timeoutTimer.start();
         tofTimer.reset();
         tofTimer.start();
+        initTimer.reset();
+        initTimer.start();
     }
 
     @Override
@@ -60,7 +66,7 @@ public class FV_LimelightShoot extends CommandBase {
             // System.out.printf("FV: Will shoot at %s RPM based on %s meters away\n", speeds[0], speeds[1]);
             // Ready to shoot
             shooter.getToSpeed();
-            if (shooter.atSpeed()) {
+            if (shooter.atSpeed() && initTimer.hasElapsed(initWaitPeriod)) {
                 intake.feedIn();;
                 shooter.feed();
             } else {
@@ -87,7 +93,7 @@ public class FV_LimelightShoot extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if (timeoutTimer.hasElapsed(timeoutSec) || tofTimer.hasElapsed(2)) {
+        if (timeoutTimer.hasElapsed(timeoutSec) || tofTimer.hasElapsed(3)) {
             return true;
         }
         return false;

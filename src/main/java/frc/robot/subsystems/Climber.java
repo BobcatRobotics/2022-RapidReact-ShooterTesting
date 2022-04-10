@@ -58,11 +58,11 @@ public class Climber extends SubsystemBase {
         // defaultStatusFrames();
         isClimberMode = false;
 
-        SmartDashboard.putBoolean("CLIMB: Enable soft limits", false);
+        // SmartDashboard.putBoolean("CLIMB: Enable soft limits", false);
 
-        if (SmartDashboard.getBoolean("CLIMB: Enable soft limits", false)) {
-            resetSoftLimitIfNeeded();
-        }
+        // if (SmartDashboard.getBoolean("CLIMB: Enable soft limits", false)) {
+        //     resetSoftLimitIfNeeded();
+        // }
 
         lowerCANBusUtilization();
     }
@@ -147,9 +147,9 @@ public class Climber extends SubsystemBase {
         // to go down, stop the winch motor
         if (switchTripped() && climbSpeed > 0) {
             winchMotor.stopMotor();
-            if (SmartDashboard.getBoolean("CLIMB: Enable soft limits", false)) {
-                resetSoftLimitIfNeeded();
-            }
+            // if (SmartDashboard.getBoolean("CLIMB: Enable soft limits", false)) {
+            //     resetSoftLimitIfNeeded();
+            // }
         }
         // Otherwise, if neither limit switch is being pressed or
         // the climber is being commanded to go up, go full speed
