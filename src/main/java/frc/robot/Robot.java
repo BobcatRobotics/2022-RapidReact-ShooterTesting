@@ -105,10 +105,11 @@ public class Robot extends TimedRobot {
     PortForwarder.add(8888, "wpilibpi.local", 80);
 
     // compressor = m_robotContainer.compressor;
-    SmartDashboard.putNumber("Set High Speed", ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED);
-    SmartDashboard.putNumber("Set Low Speed", ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED);
-    SmartDashboard.putNumber("Set High Hood Speed", ShooterConstants.DEFAULT_UPPER_HUB_SHOOTING_SPEED);
-    SmartDashboard.putNumber("Set Low Hood Speed", ShooterConstants.DEFAULT_LOWER_HUB_SHOOTING_SPEED);
+    SmartDashboard.putBoolean("did deploy", true);
+    SmartDashboard.putNumber("Set High Speed", ShooterConstants.LIMELIGHT_SHOOTING_LOOKUP_MAP.get(0.0)[0]);
+    SmartDashboard.putNumber("Set Low Speed", ShooterConstants.LIMELIGHT_SHOOTING_LOOKUP_MAP.get(0.5)[0]);
+    SmartDashboard.putNumber("Set High Hood Speed", ShooterConstants.LIMELIGHT_SHOOTING_LOOKUP_MAP.get(0.0)[1]);
+    SmartDashboard.putNumber("Set Low Hood Speed", ShooterConstants.LIMELIGHT_SHOOTING_LOOKUP_MAP.get(0.5)[1]);
     tab.add("Shooter current RPM",0);
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
     SmartDashboard.putNumber("Compressor pressure", intake.pneumaticHub().getPressure(0));
