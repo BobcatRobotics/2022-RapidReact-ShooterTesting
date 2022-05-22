@@ -54,7 +54,7 @@ public class FV_LimelightShoot extends CommandBase {
             tofTimer.reset();
             tofTimer.start();
         }
-        if (limelight.hasTargets()) {
+        if (limelight.hasTargets() || !useLimelight) {
             if (useLimelight) {
                 shootingDist = Math.round(4*(LimelightConstants.kLimelightHeight / Math.tan(limelight.y()*Math.PI/180 + LimelightConstants.kLimelightMountAngle)))/4.0;
             } else {

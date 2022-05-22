@@ -88,8 +88,8 @@ public class CenterRobotOnHub extends CommandBase {
                 // if (tx > 0) tx += 0.12;
                 // else tx -= 0.12;
                 // Make sure not over 1 or below -1
-                if (tx > 1) tx = 1;
-                else if (tx < -1) tx = -1;
+                if (tx > 0.5) tx = 0.5;
+                else if (tx < -0.5) tx = -0.5;
                 // Turn
                 // SmartDashboard.putNumber("LimeLight drive percent", tx);
                 double d = pidController.calculate(tx, 0);

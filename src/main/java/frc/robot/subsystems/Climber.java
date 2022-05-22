@@ -30,6 +30,7 @@ public class Climber extends SubsystemBase {
     private boolean isClimberMode = false;
     private boolean didResetSoftLimit = false;
 
+    private double zeroReference = 0;
     private double climbMotorSpeedLimiter = 1.0;
 
     private double fullClimbingSpeed = 0.5;
@@ -58,11 +59,11 @@ public class Climber extends SubsystemBase {
         // defaultStatusFrames();
         isClimberMode = false;
 
-        // SmartDashboard.putBoolean("CLIMB: Enable soft limits", false);
+        SmartDashboard.putBoolean("CLIMB: Enable soft limits", true);
 
-        // if (SmartDashboard.getBoolean("CLIMB: Enable soft limits", false)) {
-        //     resetSoftLimitIfNeeded();
-        // }
+        if (SmartDashboard.getBoolean("CLIMB: Enable soft limits", true)) {
+            resetSoftLimitIfNeeded();
+        }
 
         lowerCANBusUtilization();
     }
@@ -84,10 +85,12 @@ public class Climber extends SubsystemBase {
     }
 
     public void resetSoftLimitIfNeeded() {
-        if (bothSwitchesTripped() && !didResetSoftLimit) {
+        if (switchTripped() || !didResetSoftLimit) {
+            zeroReference = winchMotor.getSelectedSensorPosition();
             // Figure out native units in Phoenix Tuner
-            winchMotor.configForwardSoftLimitThreshold(391000, 0);
-            winchMotor.configForwardSoftLimitEnable(true, 0);
+            winchMotor.configReverseSoftLimitThreshold(-255000+zeroReference, 0);
+            // winchMotor.configReverseSoftLimitThreshold(-100000, 0);
+            winchMotor.configReverseSoftLimitEnable(true, 0);
             didResetSoftLimit = true;
         }
     }
@@ -147,15 +150,14 @@ public class Climber extends SubsystemBase {
         // to go down, stop the winch motor
         if (switchTripped() && climbSpeed > 0) {
             winchMotor.stopMotor();
-            // if (SmartDashboard.getBoolean("CLIMB: Enable soft limits", false)) {
-            //     resetSoftLimitIfNeeded();
-            // }
+            if (SmartDashboard.getBoolean("CLIMB: Enable soft limits", false)) {
+                resetSoftLimitIfNeeded();
+            }
         }
         // Otherwise, if neither limit switch is being pressed or
         // the climber is being commanded to go up, go full speed
         else {
             winchMotor.set(climbSpeed);
-            didResetSoftLimit = false;
         }
 
         // winchMotor.set(climbSpeed * climbMotorSpeedLimiter);

@@ -100,7 +100,8 @@ public class Shooter extends SubsystemBase {
         shooterFalconRight.config_kD(0, 0.0, 0);
         shooterFalconRight.config_IntegralZone(0, 3, 0);
         hoodFalcon.config_kF(0, 0.05, 0);
-        hoodFalcon.config_kP(0, 0.16421, 0);
+        // hoodFalcon.config_kP(0, 0.16421, 0);
+        hoodFalcon.config_kP(0, 0.105, 0);
         // hoodFalcon.config_kP(0, 0.164, 0);
         hoodFalcon.config_kI(0, 0.00002, 0);
         hoodFalcon.config_kD(0, 0.0, 0);
