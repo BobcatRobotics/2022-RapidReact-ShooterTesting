@@ -37,7 +37,7 @@ public class DriveDistance extends CommandBase {
         if (displacement - distance <=.1) {
             drivetrain.stop();
         } else {
-            drivetrain.tankDriveVolts(speed, speed);
+            drivetrain.setVolts(speed, speed);
         }
     }
 

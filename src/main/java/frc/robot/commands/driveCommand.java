@@ -34,7 +34,7 @@ public class driveCommand extends CommandBase {
         if (t.hasElapsed(driveTime)) {
             drivetrain.stop();
         } else {
-            drivetrain.tankDriveVolts(leftVolts, rightVolts);
+            drivetrain.setVolts(leftVolts, rightVolts);
         }
     }
 

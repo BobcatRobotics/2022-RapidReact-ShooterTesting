@@ -41,9 +41,9 @@ public class turnDegreeCommand extends CommandBase {
         Degrees = degrees;
 
         if (Math.signum(degrees) == 1.0) {
-            drivetrain.tankDriveVolts(-2,2);
+            drivetrain.setVolts(-2,2);
         } else if (Math.signum(degrees) == -1.0) {
-            drivetrain.tankDriveVolts(2,-2);
+            drivetrain.setVolts(2,-2);
         } else {
             drivetrain.stop();
         }

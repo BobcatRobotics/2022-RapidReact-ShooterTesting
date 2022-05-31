@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -110,8 +111,6 @@ public final class Constants {
     * Constants for the drive train
     */
   public static final class DrivetrainConstants {
-
-    public static final double INVERT_MOTOR = -1.0;
     // Drive Train motors
     public static final int LTMotorPort = 0;
     public static final int LMMotorPort = 1;
@@ -120,19 +119,42 @@ public final class Constants {
     public static final int RMMotorPort = 4; 
     public static final int RLMotorPort = 5;
 
-    // Need to edit all the numbers under this for 2020
-    public static final int[] leftEncoderPorts = new int[] { 0, 1 };
-    public static final int[] rightEncoderPorts = new int[] { 3, 4 };
-    public static final boolean leftEncoderReversed = false;
-    public static final boolean rightEncoderReversed = false;
-
-    public static final int encoderCPR = 128;
-    public static final double wheelDiameterMeters = 0.1;
-    public static final double encoderDistancePerPulse =
-        // Assumes the encoders are directly mounted on the wheel shafts
-        (wheelDiameterMeters * Math.PI) / (double) encoderCPR;
+    public static final double wheelDiameterMeters = 0.1016;
+    public static final double wheelCircumferenceMeters = wheelDiameterMeters * Math.PI;
+    public static final double kSensorUnitsPerRotation = 2048;
+    public static final double gearRatio = 6.89;
 
     public static final boolean GYRO_REVERSED = true;
+  }
+
+    /**
+   * Constants for path finding and trajectories
+   */
+  public static final class AutoConstants {
+    // Ramsete controller constants
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
+
+    // Feedforward constants
+    public static final double ksVolts = 0.59844; // OLD: 1.43
+    public static final double kvVoltSecondsPerMeter = 0.9975; // OLD: 5.15
+    public static final double kaVoltSecondsSquaredPerMeter = 0.062682; // OLD: 0.384
+
+    // Robot trackwidth
+    public static final double kTrackwidthMeters = Units.inchesToMeters(23);
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
+
+    // Feedback constant
+    public static final double kPDriveVel = 0.0000073157; // OLD: -12.5
+
+    // Constraints
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 2.5;
+
+    // On-the-go route finding waypoint variables
+    public static final int pointx = 0;
+    public static final int pointy = 0;
+    public static final int rotation = 0;
   }
 
   /**
@@ -186,36 +208,6 @@ public final class Constants {
     public static final int povRight = 90;
     public static final int povDown = 180;
     public static final int povLeft = 270;
-  }
-  
-  /**
-   * Constants for path finding and trajectories
-   */
-  public static final class RouteFinderConstants {
-    // Reasonable baseline values for a RAMSETE follower in units of meters and
-    // seconds
-    public static final double kRamseteB = 2;
-    public static final double kRamseteZeta = 0.7;
-    // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
-    // These characterization values MUST be determined either experimentally or
-    // theoretically for *your* robot's drive.
-    // The Robot Characterization Toolsuite provides a convenient tool for obtaining
-    // these values for your robot.
-    public static final double ksVolts = 1.43;
-    public static final double kvVoltSecondsPerMeter = 5.15;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.384;
-    public static final double kTrackwidthMeters = 0.77;
-
-    // Example value only - as above, this must be tuned for your drive!
-    public static final double kPDriveVel = -12.5;
-
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-
-    // On-the-go route finding waypoint variables
-    public static final int pointx = 0;
-    public static final int pointy = 0;
-    public static final int rotation = 0;
   }
   
   /**

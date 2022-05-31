@@ -23,14 +23,16 @@ public class CenterRobotOnHub extends CommandBase {
     private Limelight limelight;
     private boolean ledIsOn = false;
     private PIDController pidController;
-    private Timer timeout;
+    private Timer timeoutTimer;
+    private double timeout;
     
-    public CenterRobotOnHub(Drivetrain dt, Joystick gp, Limelight lm) {
+    public CenterRobotOnHub(Drivetrain dt, Joystick gp, Limelight lm, double timeout) {
         drivetrain = dt;
         gamepad = gp;
         limelight = lm;
         ledIsOn = false;
-        timeout = new Timer();
+        this.timeout = timeout;
+        timeoutTimer = new Timer();
         if (!limelight.isInitialized()) {
             limelight.initializeLimeLight();
         }
@@ -48,8 +50,8 @@ public class CenterRobotOnHub extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        timeout.reset();
-        timeout.start();
+        timeoutTimer.reset();
+        timeoutTimer.start();
         // RioLogger.errorLog("CenterRobotOnHub started");
     }
 
@@ -136,7 +138,7 @@ public class CenterRobotOnHub extends CommandBase {
             // tx /= 7.25;
             // if (Math.abs(tx) <.1)
             //     return true;
-            return timeout.hasElapsed(2);
+            return timeoutTimer.hasElapsed(timeout);
         }
         return false;
         // return limelightTable.getEntry("tv") && Math.abs(limelightTable.getEntry("tx").getDouble(defaultValue));

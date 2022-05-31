@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.LimelightConstants;
@@ -30,6 +31,7 @@ import frc.robot.commands.DriveTele;
 import frc.robot.commands.LEDControl;
 import frc.robot.commands.ShootingProcess;
 import frc.robot.commands.intakeControls;
+import frc.robot.commands.waitCommand;
 import frc.robot.subsystems.*;
 import frc.robot.utils.*;
 
@@ -45,7 +47,7 @@ public class Robot extends TimedRobot {
   private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
   private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.intake, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
-  private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.gamepad, RobotContainer.limelight);
+  private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.gamepad, RobotContainer.limelight, 0);
   // private LEDControl ledControl = new LEDControl(RobotContainer.ledLights, RobotContainer.shooter, RobotContainer.climber);
 
   private RobotContainer m_robotContainer;
@@ -63,13 +65,16 @@ public class Robot extends TimedRobot {
   private double waitTime = 0;
   private boolean autoMode = false;
 
+  // Auto chooser
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+
   private boolean use_RS_Shift_Switch = true;
 
   // set to true to use Parallel Command Groups
   private boolean commandGroupTest = true;
   private ParallelCommandGroup commandGroup = new ParallelCommandGroup();
 
-  private int selected_dead_auto_ID = 0;
+  // private int selected_dead_auto_ID = 0;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -118,28 +123,32 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("Team Color", "red");
     
     
-    SmartDashboard.putNumber("Selected Dead Auto #", selected_dead_auto_ID);
-    SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
-    SmartDashboard.putNumber("Delay time: Dead auto 2-ball", 0);
+    // SmartDashboard.putNumber("Selected Dead Auto #", selected_dead_auto_ID);
+    // SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
+    SmartDashboard.putNumber("Auto delay", 0);
     SmartDashboard.putNumber("Limelight dist (m)", 0);
+
+
+    autoChooser.setDefaultOption("DA 2Ball", m_robotContainer.deadAuto_twoBall());
+    autoChooser.addOption("DA 3Ball", m_robotContainer.deadAuto_threeBall_right());
+    autoChooser.addOption("NFZ 5Ball", m_robotContainer.getSmooth5Ball());
+    SmartDashboard.putData(autoChooser);
 
     // SmartDashboard.putNumber("Gyro heading", 0);
     // SmartDashboard.putString("JsonString", "STARTING");
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
-   */
+  public Command getAutonomousCommand() {
+    double startDelay = Math.round(SmartDashboard.getNumber("Auto delay", 0.0)*2)/2.0;
+    if (startDelay == 0) {
+      return autoChooser.getSelected();
+    } else {
+      return new SequentialCommandGroup(new waitCommand(startDelay), autoChooser.getSelected());
+    }
+  }
+
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
 
@@ -166,20 +175,21 @@ public class Robot extends TimedRobot {
     updateShuffleBoard();
     
 
-    if (selected_dead_auto_ID == 1) {
-      m_autonomousCommand = m_robotContainer.deadAuto_threeBall_right();
-    } else if (selected_dead_auto_ID ==0 ) {
-      m_autonomousCommand = m_robotContainer.deadAuto_twoBall(Math.max(0.0, Math.round(SmartDashboard.getEntry("Delay time: Dead auto 2-ball").getDouble(0.0)*2)/2.0));
-    } else if (selected_dead_auto_ID == 3) {
-      m_autonomousCommand = m_robotContainer.deadAuto_fiveBall();
-    } else if (selected_dead_auto_ID == 4) {
-      m_autonomousCommand = m_robotContainer.deadAuto_FourBall();
-    } else if (selected_dead_auto_ID == 5) {
-      m_autonomousCommand = m_robotContainer.deadAuto_fiveBall_2();
-    } else {
-      m_autonomousCommand = m_robotContainer.centerBallOnTargetAuto();
-    }
+    // if (selected_dead_auto_ID == 1) {
+    //   m_autonomousCommand = m_robotContainer.deadAuto_threeBall_right();
+    // } else if (selected_dead_auto_ID ==0 ) {
+    //   m_autonomousCommand = m_robotContainer.deadAuto_twoBall(Math.max(0.0, Math.round(SmartDashboard.getEntry("Delay time: Dead auto 2-ball").getDouble(0.0)*2)/2.0));
+    // } else if (selected_dead_auto_ID == 3) {
+    //   m_autonomousCommand = m_robotContainer.deadAuto_fiveBall();
+    // } else if (selected_dead_auto_ID == 4) {
+    //   m_autonomousCommand = m_robotContainer.deadAuto_FourBall();
+    // } else if (selected_dead_auto_ID == 5) {
+    //   m_autonomousCommand = m_robotContainer.deadAuto_fiveBall_2();
+    // } else {
+    //   m_autonomousCommand = m_robotContainer.centerBallOnTargetAuto();
+    // }
     
+      m_autonomousCommand = getAutonomousCommand();
 
     // schedule the autonomous command
     if (m_autonomousCommand != null) {
@@ -312,9 +322,9 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putString("PyvisString", jsonString);
 
     // NEED TO TEST -----
-    selected_dead_auto_ID = (int)SmartDashboard.getNumber("Selected Dead Auto #", 0);
-    if (!(0 <= selected_dead_auto_ID && selected_dead_auto_ID <= 1)) selected_dead_auto_ID = 0;
-    SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
+    // selected_dead_auto_ID = (int)SmartDashboard.getNumber("Selected Dead Auto #", 0);
+    // if (!(0 <= selected_dead_auto_ID && selected_dead_auto_ID <= 1)) selected_dead_auto_ID = 0;
+    // SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
   }
   
   @Override

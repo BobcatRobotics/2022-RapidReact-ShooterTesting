@@ -12,14 +12,16 @@ public class FV_PIDTurn extends CommandBase {
     private boolean headingInit = false;
     private double Degrees = 180;
     private PIDController pidController;
-    private Timer timeout;
+    private Timer timeoutTimer;
+    private double timeout;
 
-    public FV_PIDTurn(Drivetrain dt, double _turnDegree) {
+    public FV_PIDTurn(Drivetrain dt, double _turnDegree, double timeout) {
         drivetrain = dt;
         turnDegree = _turnDegree;
         drivetrain.coast();
         pidController = new PIDController(0.75, 0.2, 0);
-        timeout = new Timer();
+        timeoutTimer = new Timer();
+        this.timeout = timeout;
         addRequirements(drivetrain);
     }
 
@@ -32,8 +34,8 @@ public class FV_PIDTurn extends CommandBase {
 
     @Override
     public void initialize() {
-        timeout.reset();
-        timeout.start();
+        timeoutTimer.reset();
+        timeoutTimer.start();
     }
 
     @Override
@@ -73,6 +75,6 @@ public class FV_PIDTurn extends CommandBase {
     @Override
     public boolean isFinished() {
         // return t.hasElapsed(driveTime);
-        return Degrees == 0.0 || timeout.hasElapsed(1);
+        return Degrees == 0.0 || timeoutTimer.hasElapsed(timeout);
     }
 }
