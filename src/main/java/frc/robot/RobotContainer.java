@@ -33,6 +33,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -159,7 +160,7 @@ public class RobotContainer {
   }
 
   public static Command getRamseteAutoCommand(Trajectory traj) {
-    return new RamseteCommand(
+    RamseteCommand cmd = new RamseteCommand(
       traj,
       drivetrain::getPose,
       new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
@@ -173,36 +174,120 @@ public class RobotContainer {
       new PIDController(AutoConstants.kPDriveVel, 0, 0),
       drivetrain::setVolts,
       drivetrain
-    ).andThen(() -> drivetrain.stop());
+    );
+
+    drivetrain.resetOdometry(traj.getInitialPose());
+
+    return cmd.andThen(() -> drivetrain.stop());
   }
 
   public SequentialCommandGroup getSmooth5Ball() {
-    return new SequentialCommandGroup(
-      new dropAndSuck(intake), // Drop intake and suck
-      new ResetOdometry(drivetrain, 0.5), // Reset odometry and wait 0.5 sec
-      // new waitCommand(0.5), // Wait 0.5 sec
-      new ParallelCommandGroup(
-        getRamseteAutoCommand(Auto5BallTrajectories.moveToBall1()), // Drive to ball 1
-        new FV_LimelightShoot(limelight, shooter, intake, 3, true, 0) // Shoot balls 0+1
-      ),
-      getRamseteAutoCommand(Auto5BallTrajectories.moveForwardFromBall1()), // Move forward
-      new dropAndSuck(intake), // Drop intake and suck
-      getRamseteAutoCommand(Auto5BallTrajectories.moveToBall2()), // Drive to ball 2
-      new FV_PIDTurn(drivetrain, -52, 0.75), // Rough turn to hub
-      new ParallelCommandGroup(
-        new CenterRobotOnHub(drivetrain, gamepad, limelight, 0.5), // Center on hub
-        new FV_LimelightShoot(limelight, shooter, intake, 1, true, 0.5) // Shoot ball 2
-      ),
-      new dropAndSuck(intake), // Drop intake and suck
-      getRamseteAutoCommand(Auto5BallTrajectories.moveToBall3()), // Drive to ball 3
-      new waitCommand(1), // Wait for HP to feed ball 4
-      getRamseteAutoCommand(Auto5BallTrajectories.moveToShootBall3()),
-      new ParallelCommandGroup(
-        new CenterRobotOnHub(drivetrain, gamepad, limelight, 0.5), // Center on hub
-        new FV_LimelightShoot(limelight, shooter, intake, 3, true, 0.5) // Shoot ball 2
-      )
-    );
+    // return new SequentialCommandGroup(
+    //   new dropAndSuck(intake), // Drop intake and suck
+    //   new ResetOdometry(drivetrain, 0.5), // Reset odometry and wait 0.5 sec
+    //   // new waitCommand(0.5), // Wait 0.5 sec
+    //   new ParallelCommandGroup(
+    //     getRamseteAutoCommand(Auto5BallTrajectories.moveToBall1()), // Drive to ball 1
+    //     new FV_LimelightShoot(limelight, shooter, intake, 3, true, 0) // Shoot balls 0+1
+    //   ),
+    //   getRamseteAutoCommand(Auto5BallTrajectories.moveForwardFromBall1()), // Move forward
+    //   new dropAndSuck(intake), // Drop intake and suck
+    //   getRamseteAutoCommand(Auto5BallTrajectories.moveToBall2()), // Drive to ball 2
+    //   new FV_PIDTurn(drivetrain, -52, 0.75), // Rough turn to hub
+    //   new ParallelCommandGroup(
+    //     new CenterRobotOnHub(drivetrain, gamepad, limelight, 0.5), // Center on hub
+    //     new FV_LimelightShoot(limelight, shooter, intake, 1, true, 0.5) // Shoot ball 2
+    //   ),
+    //   new dropAndSuck(intake), // Drop intake and suck
+    //   getRamseteAutoCommand(Auto5BallTrajectories.moveToBall3()), // Drive to ball 3
+    //   new waitCommand(1), // Wait for HP to feed ball 4
+    //   getRamseteAutoCommand(Auto5BallTrajectories.moveToShootBall3()),
+    //   new ParallelCommandGroup(
+    //     new CenterRobotOnHub(drivetrain, gamepad, limelight, 0.5), // Center on hub
+    //     new FV_LimelightShoot(limelight, shooter, intake, 3, true, 0.5) // Shoot ball 2
+    //   )
+    // );
+    return new SequentialCommandGroup(getRamseteAutoCommand(Auto5BallTrajectories.moveToBall1()));
   }
+
+
+  public Trajectory getStraightTrajectory(TrajectoryConfig config) {
+    return TrajectoryGenerator.generateTrajectory(
+      // Start at the origin facing the +X direction
+      new Pose2d(0, 0, new Rotation2d(0)),
+      // Pass through line
+      List.of(new Translation2d(Units.feetToMeters(2), 0)),
+      // End 1 meters straight ahead of where we started, facing forward
+      new Pose2d(Units.feetToMeters(4), 0, new Rotation2d(0)),
+      // Pass config
+      config);
+  }
+
+  public Command getRamseteAutoCommand() {
+
+    // m_drivetrain.resetEncoders();
+
+    // Create a voltage constraint to ensure we don't accelerate too fast
+    var autoVoltageConstraint =
+        new DifferentialDriveVoltageConstraint(
+            new SimpleMotorFeedforward(
+              AutoConstants.ksVolts,
+                AutoConstants.kvVoltSecondsPerMeter,
+                AutoConstants.kaVoltSecondsSquaredPerMeter),
+                AutoConstants.kDriveKinematics,
+            10); // max voltage is 3 just to make sure testing yields slow motion along path
+
+    // Create config for trajectory
+    TrajectoryConfig config =
+        new TrajectoryConfig(
+          AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(AutoConstants.kDriveKinematics)
+            // Apply the voltage constraint
+            .addConstraint(autoVoltageConstraint);
+
+    // An example trajectory to follow.  All units in meters.
+    Trajectory straightLineTrajectory = getStraightTrajectory(config);
+
+    // WORKED WORKED WORKED
+    // RamseteCommand ramseteCommand =
+    // new RamseteCommand(
+    //     straightLineTrajectory,
+    //     m_drivetrain::getPose,
+    //     new RamseteController(RouteFinderConstants.kRamseteB, RouteFinderConstants.kRamseteZeta),
+    //     RouteFinderConstants.kDriveKinematics,
+    //     m_drivetrain::setVelocityMetersPerSecond,
+    //     m_drivetrain);
+    // ^WORKED WORKED WORKED
+
+    RamseteCommand ramseteCommand =
+      new RamseteCommand(
+        straightLineTrajectory,
+        drivetrain::getPose,
+        new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+        new SimpleMotorFeedforward(
+          AutoConstants.ksVolts,
+          AutoConstants.kvVoltSecondsPerMeter,
+          AutoConstants.kaVoltSecondsSquaredPerMeter),
+          AutoConstants.kDriveKinematics,
+          drivetrain::getWheelSpeeds,
+        new PIDController(AutoConstants.kPDriveVel, 0, 0),
+        new PIDController(AutoConstants.kPDriveVel, 0, 0),
+        drivetrain::setVolts,
+        drivetrain
+      );
+
+      // RamseteCommand rmc2 =
+      //   new RamseteCommand(trajectory, pose, controller, feedforward, kinematics, wheelSpeeds, leftController, rightController, outputVolts, requirements);
+
+    // Reset odometry to the starting pose of the trajectory.
+    drivetrain.resetOdometry(straightLineTrajectory.getInitialPose());
+    
+    // Run path following command, then stop at the end.
+    return ramseteCommand.andThen(() -> drivetrain.stop());
+  }
+
 
   public void setTeamColor(String color) {
     teamColor = color;

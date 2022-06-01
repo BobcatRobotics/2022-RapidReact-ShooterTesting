@@ -145,7 +145,8 @@ public final class Constants {
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
 
     // Feedback constant
-    public static final double kPDriveVel = 0.0000073157; // OLD: -12.5
+    // public static final double kPDriveVel = 0.0000073157; // OLD: -12.5
+    public static final double kPDriveVel = 0.00073157; // OLD: -12.5
 
     // Constraints
     public static final double kMaxSpeedMetersPerSecond = 3;

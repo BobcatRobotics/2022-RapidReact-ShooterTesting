@@ -170,6 +170,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    drivetrain.resetOdometry();
+    drivetrain.zeroHeading();
     autoMode = true;
     limelight.turnOnLED();
     updateShuffleBoard();
@@ -313,6 +315,9 @@ public class Robot extends TimedRobot {
     String colour = SmartDashboard.getString("Team Color","red");
     m_robotContainer.setTeamColor(colour);
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
+    SmartDashboard.putNumber("Pose x", drivetrain.getPose().getX());
+    SmartDashboard.putNumber("Pose y", drivetrain.getPose().getY());
+    SmartDashboard.putNumber("Pose theta", drivetrain.getPose().getRotation().getDegrees());
     // SmartDashboard.putNumber("Gyro heading", Rotation2d.fromDegrees(drivetrain.getHeading()).getDegrees());
     // SmartDashboard.putString("DriveTrain get pose", drivetrain.getPose().toString());
     // SmartDashboard.putNumber("Gyro heading", drivetrain.getHeading());

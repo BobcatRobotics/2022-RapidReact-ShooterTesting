@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.SPI;
@@ -31,12 +32,18 @@ public class Drivetrain extends SubsystemBase {
     private final DifferentialDriveOdometry odometry; // Odometry class for tracking robot pose
 
     public Drivetrain() {
-        configureMotor(ltMotor, DrivetrainConstants.LTMotorPort, true);
-        configureMotor(lmMotor, DrivetrainConstants.LMMotorPort, true);
-        configureMotor(lbMotor, DrivetrainConstants.LLMotorPort, true);
-        configureMotor(rtMotor, DrivetrainConstants.RTMotorPort, false);
-        configureMotor(rmMotor, DrivetrainConstants.RMMotorPort, false);
-        configureMotor(rbMotor, DrivetrainConstants.RLMotorPort, false);
+        ltMotor = new TalonFX(DrivetrainConstants.LTMotorPort);
+        lmMotor = new TalonFX(DrivetrainConstants.LMMotorPort);
+        lbMotor = new TalonFX(DrivetrainConstants.LLMotorPort);
+        rtMotor = new TalonFX(DrivetrainConstants.RTMotorPort);
+        rmMotor = new TalonFX(DrivetrainConstants.RMMotorPort);
+        rbMotor = new TalonFX(DrivetrainConstants.RLMotorPort);
+        configureMotor(ltMotor, true);
+        configureMotor(lmMotor, true);
+        configureMotor(lbMotor, true);
+        configureMotor(rtMotor, false);
+        configureMotor(rmMotor, false);
+        configureMotor(rbMotor, false);
 
         odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
         resetEncoders();
@@ -54,13 +61,12 @@ public class Drivetrain extends SubsystemBase {
         );
     }
 
-    public void configureMotor(TalonFX motor, int port, boolean setInverted) {
-        motor = new TalonFX(port);
+    public void configureMotor(TalonFX motor, boolean setInverted) {
         motor.configFactoryDefault();
         // motor.config_kF(0, 0.1);
         motor.setNeutralMode(NeutralMode.Brake);
         motor.setInverted(setInverted);
-        // motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
+        motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
     }
 
     public void lowerCANBusUtilization() {
@@ -211,12 +217,15 @@ public class Drivetrain extends SubsystemBase {
      * Resets the drive encoders to currently read a position of 0
      */
     public void resetEncoders() {
+        System.out.println("Tried reset 1");
         ltMotor.setSelectedSensorPosition(0.0);
+        System.out.println("Tried reset 2");
         lmMotor.setSelectedSensorPosition(0.0);
         lbMotor.setSelectedSensorPosition(0.0);
         rtMotor.setSelectedSensorPosition(0.0);
         rmMotor.setSelectedSensorPosition(0.0);
         rbMotor.setSelectedSensorPosition(0.0);
+        System.out.println("Tried reset 6");
     }
 
     /**
