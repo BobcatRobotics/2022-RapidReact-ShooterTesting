@@ -259,7 +259,8 @@ public final class Constants {
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(2.5, new double[]{2375, 2275});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(2.75, new double[]{2375, 2275});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.0, new double[]{2375, 2275});
-      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.25, new double[]{2475, 2345});
+      // LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.25, new double[]{2475, 2345});
+      LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.25, new double[]{2450, 2325});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.5, new double[]{2510, 2390});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(3.75, new double[]{2530, 2470});
       LIMELIGHT_SHOOTING_LOOKUP_MAP.put(4.0, new double[]{2605, 2555});

@@ -219,7 +219,7 @@ public class RobotContainer {
 
   // public String[] deadAutoIDs = {"dA_2B", "dA_3B_right", "target", "dA_5B", "dA_4B", "dA_5B_2"};
   public String[] deadAutoIDs = {"dA_2B", "dA_3B_right"};
-
+  
   public SequentialCommandGroup deadAuto_twoBall(double startingWaitTime) {
     //Drive forward setCommandVelocity = 1 meter/s
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
@@ -227,9 +227,11 @@ public class RobotContainer {
     Command waitBeforeShooting = new waitCommand(1);
     Command drive = new driveCommand(drivetrain, 3.5, 3.5, 1.1);
     Command dns = new dropAndSuck(intake);
-    Command shoot = new shootBalls(shooter, intake, 5, false);
+    // Command shoot = new shootBalls(shooter, intake, 5, false);
+    
+    Command shoot1 = new FV_LimelightShoot(limelight, shooter, intake, 5, false, 1);
     Command dummy = new driveCommand(drivetrain, 4, 4, 1);
-    commandGroup.addCommands(wait,dns,drive,waitBeforeShooting,shoot,dummy);
+    commandGroup.addCommands(wait,dns,drive,waitBeforeShooting,shoot1,dummy);
     return commandGroup;
   }
 

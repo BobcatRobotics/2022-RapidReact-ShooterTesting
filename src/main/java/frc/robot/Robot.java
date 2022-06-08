@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
   private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.intake, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
   private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.gamepad, RobotContainer.limelight);
-  // private LEDControl ledControl = new LEDControl(RobotContainer.ledLights, RobotContainer.shooter, RobotContainer.climber);
+  // private LEDControl ledControl = new LEDControl(RobotContainer.ledLights);
 
   private RobotContainer m_robotContainer;
   private Command m_autonomousCommand;
@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    // CameraServer.startAutomaticCapture();
+    CameraServer.startAutomaticCapture();
 
     //  lower fps
     m_robotContainer = new RobotContainer();
@@ -93,7 +93,8 @@ public class Robot extends TimedRobot {
     // this.leftStick = RobotContainer.leftStick;
 
     drivetrain = m_robotContainer.drivetrain;
-    limelight.turnOffLED();
+    // limelight.turnOffLED();
+    // limelight.turnOnLED();
 
     // Port forwarding
     PortForwarder.add(5800, "limelight.local", 5800);
@@ -146,7 +147,8 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-
+    limelight.turnOnLED();
+    updateShuffleBoard();
   }
 
   @Override
@@ -264,7 +266,7 @@ public class Robot extends TimedRobot {
         // shooter.setShooterSolenoidExtended(true);
         
       }
-    } 
+    }
 
     updateShuffleBoard();
   }
@@ -280,7 +282,7 @@ public class Robot extends TimedRobot {
     shooter.setHighHoodSpeed(hoodhigh);
     shooter.setLowHoodSpeed(hoodlow);
     SmartDashboard.putNumber("Current Left RPM", shooter.getLeftRPM());
-    // SmartDashboard.putBoolean("AutoMode", autoMode);
+    SmartDashboard.putBoolean("AutoMode", autoMode);
     
 
     NetworkTable py_vision_network_table = NetworkTableInstance.getDefault().getTable("pyVision");
