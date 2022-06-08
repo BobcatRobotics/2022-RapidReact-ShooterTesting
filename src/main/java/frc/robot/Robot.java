@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.CenterRobotOnHub;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DriveTele;
@@ -42,7 +43,8 @@ import frc.robot.utils.*;
 public class Robot extends TimedRobot {
   // commands and crap
   private intakeControls intakeControls = new intakeControls(RobotContainer.intake,  RobotContainer.gamepad, RobotContainer.shooter, RobotContainer.climber);
-  private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
+  // private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
+  private ArcadeDrive drivetele = new ArcadeDrive(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
   private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.intake, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
   private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.gamepad, RobotContainer.limelight);
