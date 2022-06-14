@@ -25,9 +25,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.CenterRobotOnHub;
+//import frc.robot.commands.CenterRobotOnHub;
 import frc.robot.commands.ClimberCommand;
-import frc.robot.commands.DriveTele;
+//import frc.robot.commands.DriveTele;
 import frc.robot.commands.LEDControl;
 import frc.robot.commands.ShootingProcess;
 import frc.robot.commands.intakeControls;
@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
   private ArcadeDrive drivetele = new ArcadeDrive(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
   private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.intake, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
-  private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.gamepad, RobotContainer.limelight);
+  //private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.gamepad, RobotContainer.limelight);
   // private LEDControl ledControl = new LEDControl(RobotContainer.ledLights);
 
   private RobotContainer m_robotContainer;
@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
   private ShuffleboardTab tab = Shuffleboard.getTab("Things Tab");
   private double waitTime = 0;
   private boolean autoMode = false;
-
+  private SendableChooser<Command> autoChooser;
   private boolean use_RS_Shift_Switch = true;
 
   // set to true to use Parallel Command Groups
@@ -95,6 +95,7 @@ public class Robot extends TimedRobot {
     // this.leftStick = RobotContainer.leftStick;
 
     drivetrain = m_robotContainer.drivetrain;
+    autoChooser = new SendableChooser<Command>();
     // limelight.turnOffLED();
     // limelight.turnOnLED();
 
@@ -125,6 +126,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
     SmartDashboard.putNumber("Delay time: Dead auto 2-ball", 0);
     SmartDashboard.putNumber("Limelight dist (m)", 0);
+
+    //autoChooser.setDefaultOption("2-ball", object);
 
     // SmartDashboard.putNumber("Gyro heading", 0);
     // SmartDashboard.putString("JsonString", "STARTING");
@@ -170,19 +173,21 @@ public class Robot extends TimedRobot {
     updateShuffleBoard();
     
 
-    if (selected_dead_auto_ID == 1) {
-      m_autonomousCommand = m_robotContainer.deadAuto_threeBall_right();
+    /*if (selected_dead_auto_ID == 1) {
+      //m_autonomousCommand = m_robotContainer.deadAuto_threeBall_right();
     } else if (selected_dead_auto_ID ==0 ) {
-      m_autonomousCommand = m_robotContainer.deadAuto_twoBall(Math.max(0.0, Math.round(SmartDashboard.getEntry("Delay time: Dead auto 2-ball").getDouble(0.0)*2)/2.0));
-    } else if (selected_dead_auto_ID == 3) {
-      m_autonomousCommand = m_robotContainer.deadAuto_fiveBall();
+      //m_autonomousCommand = m_robotContainer.deadAuto_twoBall(Math.max(0.0, Math.round(SmartDashboard.getEntry("Delay time: Dead auto 2-ball").getDouble(0.0)*2)/2.0));
+    } else if (selected_dead_auto_ID == 2) {
+      m_autonomousCommand = m_robotContainer.getRamseteAutoCommand();
     } else if (selected_dead_auto_ID == 4) {
-      m_autonomousCommand = m_robotContainer.deadAuto_FourBall();
+      //m_autonomousCommand = m_robotContainer.deadAuto_FourBall();
     } else if (selected_dead_auto_ID == 5) {
-      m_autonomousCommand = m_robotContainer.deadAuto_fiveBall_2();
+      //m_autonomousCommand = m_robotContainer.deadAuto_fiveBall_2();
     } else {
-      m_autonomousCommand = m_robotContainer.centerBallOnTargetAuto();
-    }
+      //m_autonomousCommand = m_robotContainer.centerBallOnTargetAuto();
+    }*/
+
+    m_autonomousCommand = m_robotContainer.getRamseteAutoCommand();
     
 
     // schedule the autonomous command
@@ -230,7 +235,7 @@ public class Robot extends TimedRobot {
       // climber controller
       climberCommand.schedule();
       // centerRobotOnHub command
-      centerRobotOnHubCommand.schedule(false);
+      //centerRobotOnHubCommand.schedule(false);
       // leds
       // ledControl.schedule();
 
@@ -245,9 +250,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if (!drivetrain.isBrake()) {
-      drivetrain.brake();
-    }
+    drivetrain.brake();
     CommandScheduler.getInstance().run();
   
     // Turn on climber mode
@@ -307,9 +310,8 @@ public class Robot extends TimedRobot {
     String colour = SmartDashboard.getString("Team Color","red");
     m_robotContainer.setTeamColor(colour);
     SmartDashboard.putBoolean("Is climber mode on?", climber.isClimberMode());
-    // SmartDashboard.putNumber("Gyro heading", Rotation2d.fromDegrees(drivetrain.getHeading()).getDegrees());
     // SmartDashboard.putString("DriveTrain get pose", drivetrain.getPose().toString());
-    // SmartDashboard.putNumber("Gyro heading", drivetrain.getHeading());
+    SmartDashboard.putString("posex, posey, theta", String.format("%s, %s, %s", drivetrain.getPose().getX(), drivetrain.getPose().getY(), drivetrain.getPose().getRotation()));
     
     // NetworkTable py_vision_network_table = NetworkTableInstance.getDefault().getTable("pyVision");
     // String jsonString = py_vision_network_table.getEntry("jsonData").getString("");
@@ -317,7 +319,7 @@ public class Robot extends TimedRobot {
 
     // NEED TO TEST -----
     selected_dead_auto_ID = (int)SmartDashboard.getNumber("Selected Dead Auto #", 0);
-    if (!(0 <= selected_dead_auto_ID && selected_dead_auto_ID <= 1)) selected_dead_auto_ID = 0;
+    if (!(0 <= selected_dead_auto_ID && selected_dead_auto_ID <= 2)) selected_dead_auto_ID = 0;
     SmartDashboard.putString("Selected Dead Auto ID", m_robotContainer.deadAutoIDs[selected_dead_auto_ID]);
   }
   

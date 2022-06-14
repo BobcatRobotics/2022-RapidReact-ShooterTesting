@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -201,21 +202,30 @@ public final class Constants {
     // theoretically for *your* robot's drive.
     // The Robot Characterization Toolsuite provides a convenient tool for obtaining
     // these values for your robot.
-    public static final double ksVolts = 1.43;
-    public static final double kvVoltSecondsPerMeter = 5.15;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.384;
+    // public static final double ksVolts = 1.43;
+    // public static final double kvVoltSecondsPerMeter = 5.15;
+    // public static final double kaVoltSecondsSquaredPerMeter = 0.384;
+    public static final double ksVolts = 0.59844;
+    public static final double kvVoltSecondsPerMeter = 0.9975;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.062682;
     public static final double kTrackwidthMeters = 0.77;
 
     // Example value only - as above, this must be tuned for your drive!
     public static final double kPDriveVel = -12.5;
 
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxSpeedMetersPerSecond = 1.5;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 1.5;
 
     // On-the-go route finding waypoint variables
     public static final int pointx = 0;
     public static final int pointy = 0;
     public static final int rotation = 0;
+
+    public static final double wheelDiameterMeters = 0.1016;
+    public static final double wheelCircumferenceMeters = wheelDiameterMeters * Math.PI;
+    public static final double gearRatio = 6.89;
+
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
   }
   
   /**

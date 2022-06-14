@@ -25,10 +25,9 @@ public class ArcadeDrive extends CommandBase {
         if (Math.abs(steer) < 0.07) steer = 0;
         double max = Double.max(Math.abs(throttle), Math.abs(steer));
         double total = throttle + steer, diff = throttle - steer;
-        drivetrain.drive(
-            throttle >= 0 ? (steer >= 0 ? diff : max) : (steer >= 0 ? -max : diff),
+        drivetrain.setPercent(
             throttle >= 0 ? (steer >= 0 ? max : total) : (steer >= 0 ? total : -max),
-            false
+            throttle >= 0 ? (steer >= 0 ? diff : max) : (steer >= 0 ? -max : diff)
         );
     }
 
