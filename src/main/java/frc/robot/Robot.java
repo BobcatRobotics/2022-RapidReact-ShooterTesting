@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.CenterRobotOnHub;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DriveTele;
@@ -44,7 +45,8 @@ import frc.robot.utils.*;
 public class Robot extends TimedRobot {
   // commands and crap
   private intakeControls intakeControls = new intakeControls(RobotContainer.intake,  RobotContainer.gamepad, RobotContainer.shooter, RobotContainer.climber);
-  private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
+  // private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
+  private ArcadeDrive drivetele = new ArcadeDrive(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
   private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.intake, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
   private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.gamepad, RobotContainer.limelight, 0);
@@ -171,7 +173,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     drivetrain.resetOdometry();
-    drivetrain.zeroHeading();
+    // drivetrain.zeroHeading(); NEVER DO THIS IT FUCKS UP THE GYRO SHIT
     autoMode = true;
     limelight.turnOnLED();
     updateShuffleBoard();
@@ -191,7 +193,7 @@ public class Robot extends TimedRobot {
     //   m_autonomousCommand = m_robotContainer.centerBallOnTargetAuto();
     // }
     
-      m_autonomousCommand = getAutonomousCommand();
+    m_autonomousCommand = getAutonomousCommand();
 
     // schedule the autonomous command
     if (m_autonomousCommand != null) {

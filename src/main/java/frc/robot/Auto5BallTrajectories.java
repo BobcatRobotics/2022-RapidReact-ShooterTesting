@@ -43,8 +43,8 @@ public class Auto5BallTrajectories {
     public static Trajectory moveToBall1() {
         return TrajectoryGenerator.generateTrajectory(
             new Pose2d(0, 0, new Rotation2d(0)),
-            List.of(new Translation2d(Units.feetToMeters(3), 0)),
-            new Pose2d(Units.feetToMeters(6), 0, new Rotation2d(0)),
+            List.of(new Translation2d(-Units.feetToMeters(3), 0)),
+            new Pose2d(-Units.feetToMeters(6), 0, new Rotation2d(0)),
             new TrajectoryConfig(
             AutoConstants.kMaxSpeedMetersPerSecond,
             AutoConstants.kMaxAccelerationMetersPerSecondSquared)
