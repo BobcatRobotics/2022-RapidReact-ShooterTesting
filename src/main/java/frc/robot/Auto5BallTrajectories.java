@@ -94,4 +94,112 @@ public class Auto5BallTrajectories {
             getConfig(true));
     }
 
+    public static Trajectory getCurvyTrajectory() {
+        return TrajectoryGenerator.generateTrajectory(
+          // Start at the origin facing the +X direction
+          // new Pose2d(0, 0, new Rotation2d(-Math.PI/2)),
+          new Pose2d(0, 0, new Rotation2d(0)),
+          // Pass through line
+          List.of(
+            new Translation2d(Units.feetToMeters(-1.5*3), 0),
+            new Translation2d(Units.feetToMeters(-3*3), Units.feetToMeters(-2*1.25)),
+            new Translation2d(Units.feetToMeters(-4.5*3), Units.feetToMeters(2*1.25)),
+            new Translation2d(Units.feetToMeters(-6*3), Units.feetToMeters(0)),
+            new Translation2d(Units.feetToMeters(-6.5*3), Units.feetToMeters(0))
+          ),
+          new Pose2d(Units.feetToMeters(-7.5*3), 0, new Rotation2d(0)),
+          // Pass config
+          new TrajectoryConfig(
+                AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(AutoConstants.kDriveKinematics)
+            // Apply the voltage constraint
+            .addConstraint(new DifferentialDriveVoltageConstraint(
+                new SimpleMotorFeedforward(
+                  AutoConstants.ksVolts,
+                    AutoConstants.kvVoltSecondsPerMeter,
+                    AutoConstants.kaVoltSecondsSquaredPerMeter),
+                    AutoConstants.kDriveKinematics,
+                10))
+            .setReversed(true));
+          // use negative waypoints at end cuz coordinates relative 
+      }
+
+    public static Trajectory moveForward() {
+        return TrajectoryGenerator.generateTrajectory(
+          // Start at the origin facing the +X direction
+          new Pose2d(0, 0, new Rotation2d(0)),
+          // Pass through line
+          List.of(new Translation2d(Units.feetToMeters(7*1.35), 0)),
+          // End 1 meters straight ahead of where we started, facing forward
+          new Pose2d(Units.feetToMeters(14*1.35), 0, new Rotation2d(0)),
+          // Pass config
+          new TrajectoryConfig(
+                AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(AutoConstants.kDriveKinematics)
+            // Apply the voltage constraint
+            .addConstraint(new DifferentialDriveVoltageConstraint(
+                new SimpleMotorFeedforward(
+                  AutoConstants.ksVolts,
+                    AutoConstants.kvVoltSecondsPerMeter,
+                    AutoConstants.kaVoltSecondsSquaredPerMeter),
+                    AutoConstants.kDriveKinematics,
+                10))
+            .setReversed(false));
+    }
+
+    public static Trajectory moveToBall() {
+        return TrajectoryGenerator.generateTrajectory(
+          // Start at the origin facing the +X direction
+          new Pose2d(Units.feetToMeters(14*1.35)+0, 0, new Rotation2d(0)),
+          // Pass through line
+          List.of(),
+          // End 1 meters straight ahead of where we started, facing forward
+          new Pose2d(Units.feetToMeters(14*1.35)-Units.feetToMeters(6), -Units.feetToMeters(6), new Rotation2d(Units.degreesToRadians(80))),
+          // Pass config
+          new TrajectoryConfig(
+                AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(AutoConstants.kDriveKinematics)
+            // Apply the voltage constraint
+            .addConstraint(new DifferentialDriveVoltageConstraint(
+                new SimpleMotorFeedforward(
+                  AutoConstants.ksVolts,
+                    AutoConstants.kvVoltSecondsPerMeter,
+                    AutoConstants.kaVoltSecondsSquaredPerMeter),
+                    AutoConstants.kDriveKinematics,
+                10))
+            .setReversed(true));
+    }
+
+    public static Trajectory moveFromBall() {
+        return TrajectoryGenerator.generateTrajectory(
+          // Start at the origin facing the +X direction
+          // Pass through line
+          new Pose2d(Units.feetToMeters(14*1.35)-Units.feetToMeters(6), -Units.feetToMeters(6), new Rotation2d(Units.degreesToRadians(80))),
+          List.of(),
+          new Pose2d(Units.feetToMeters(14*1.35)+0, 0, new Rotation2d(0)),
+          // End 1 meters straight ahead of where we started, facing forward
+          // Pass config
+          new TrajectoryConfig(
+                AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(AutoConstants.kDriveKinematics)
+            // Apply the voltage constraint
+            .addConstraint(new DifferentialDriveVoltageConstraint(
+                new SimpleMotorFeedforward(
+                  AutoConstants.ksVolts,
+                    AutoConstants.kvVoltSecondsPerMeter,
+                    AutoConstants.kaVoltSecondsSquaredPerMeter),
+                    AutoConstants.kDriveKinematics,
+                10))
+            .setReversed(false));
+    }
+
+
 }

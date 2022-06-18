@@ -63,6 +63,7 @@ import frc.robot.commands.alignToNearestBall;
 import frc.robot.commands.driveCommand;
 import frc.robot.commands.dropAndSuck;
 import frc.robot.commands.shootBalls;
+import frc.robot.commands.stopIntake;
 import frc.robot.commands.turnDegreeCommand;
 import frc.robot.commands.waitCommand;
 import frc.robot.commands.five_ball_auto_commands.FV_AlignToNearestBall;
@@ -207,7 +208,14 @@ public class RobotContainer {
     //     new FV_LimelightShoot(limelight, shooter, intake, 3, true, 0.5) // Shoot ball 2
     //   )
     // );
-    return new SequentialCommandGroup(getRamseteAutoCommand(Auto5BallTrajectories.moveToBall1()));
+    return new SequentialCommandGroup(
+      getRamseteAutoCommand(Auto5BallTrajectories.moveForward()),
+      new dropAndSuck(intake),
+      getRamseteAutoCommand(Auto5BallTrajectories.moveToBall()),
+      new stopIntake(intake),
+      getRamseteAutoCommand(Auto5BallTrajectories.moveFromBall()),
+      new shootBalls(shooter, intake, 3, true)
+    );
   }
 
 
@@ -222,72 +230,6 @@ public class RobotContainer {
       // Pass config
       config);
   }
-
-  public Command getRamseteAutoCommand() {
-
-    // m_drivetrain.resetEncoders();
-
-    // Create a voltage constraint to ensure we don't accelerate too fast
-    var autoVoltageConstraint =
-        new DifferentialDriveVoltageConstraint(
-            new SimpleMotorFeedforward(
-              AutoConstants.ksVolts,
-                AutoConstants.kvVoltSecondsPerMeter,
-                AutoConstants.kaVoltSecondsSquaredPerMeter),
-                AutoConstants.kDriveKinematics,
-            10); // max voltage is 3 just to make sure testing yields slow motion along path
-
-    // Create config for trajectory
-    TrajectoryConfig config =
-        new TrajectoryConfig(
-          AutoConstants.kMaxSpeedMetersPerSecond,
-                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(AutoConstants.kDriveKinematics)
-            // Apply the voltage constraint
-            .addConstraint(autoVoltageConstraint);
-
-    // An example trajectory to follow.  All units in meters.
-    Trajectory straightLineTrajectory = getStraightTrajectory(config);
-
-    // WORKED WORKED WORKED
-    // RamseteCommand ramseteCommand =
-    // new RamseteCommand(
-    //     straightLineTrajectory,
-    //     m_drivetrain::getPose,
-    //     new RamseteController(RouteFinderConstants.kRamseteB, RouteFinderConstants.kRamseteZeta),
-    //     RouteFinderConstants.kDriveKinematics,
-    //     m_drivetrain::setVelocityMetersPerSecond,
-    //     m_drivetrain);
-    // ^WORKED WORKED WORKED
-
-    RamseteCommand ramseteCommand =
-      new RamseteCommand(
-        straightLineTrajectory,
-        drivetrain::getPose,
-        new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
-        new SimpleMotorFeedforward(
-          AutoConstants.ksVolts,
-          AutoConstants.kvVoltSecondsPerMeter,
-          AutoConstants.kaVoltSecondsSquaredPerMeter),
-          AutoConstants.kDriveKinematics,
-          drivetrain::getWheelSpeeds,
-        new PIDController(AutoConstants.kPDriveVel, 0, 0),
-        new PIDController(AutoConstants.kPDriveVel, 0, 0),
-        drivetrain::setVolts,
-        drivetrain
-      );
-
-      // RamseteCommand rmc2 =
-      //   new RamseteCommand(trajectory, pose, controller, feedforward, kinematics, wheelSpeeds, leftController, rightController, outputVolts, requirements);
-
-    // Reset odometry to the starting pose of the trajectory.
-    drivetrain.resetOdometry(straightLineTrajectory.getInitialPose());
-    
-    // Run path following command, then stop at the end.
-    return ramseteCommand.andThen(() -> drivetrain.stop());
-  }
-
 
   public void setTeamColor(String color) {
     teamColor = color;
