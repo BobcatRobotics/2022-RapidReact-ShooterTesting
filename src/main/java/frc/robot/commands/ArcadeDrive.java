@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
@@ -9,6 +10,8 @@ public class ArcadeDrive extends CommandBase {
     private Drivetrain drivetrain;
     private Joystick throttleStick;
     private Joystick steerStick;
+    private SlewRateLimiter throttleFilter = new SlewRateLimiter(1.5);
+    private SlewRateLimiter steerFilter = new SlewRateLimiter(1.5);
     
     public ArcadeDrive(Drivetrain drivetrain, Joystick rightStickSteer, Joystick leftStickThrottle) {
         this.drivetrain = drivetrain;
@@ -20,7 +23,9 @@ public class ArcadeDrive extends CommandBase {
     @Override
     public void execute() {
         double throttle = throttleStick.getRawAxis(Joystick.AxisType.kY.value);
+        throttle = throttleFilter.calculate(throttle);
         double steer = steerStick.getRawAxis(Joystick.AxisType.kX.value);
+        steer = steerFilter.calculate(steer);
         if (Math.abs(throttle) < 0.07) throttle = 0;
         if (Math.abs(steer) < 0.07) steer = 0;
         double max = Double.max(Math.abs(throttle), Math.abs(steer));

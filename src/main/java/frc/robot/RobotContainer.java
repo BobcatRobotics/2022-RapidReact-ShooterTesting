@@ -126,7 +126,6 @@ public class RobotContainer {
   // public static final ColorWheel colorwheel = null;
 
   //Trajectory
-  public static Trajectory trajectory;
 
   private static String teamColor = "red";
 
@@ -182,6 +181,19 @@ public class RobotContainer {
     return cmd.andThen(() -> drivetrain.stop());
   }
 
+  public Trajectory testPathweaver() {
+    Trajectory trajectory = new Trajectory();
+    String trajectoryJSON = "paths/output/output/Unnamed.wpilib.json";
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      return trajectory;
+   } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+   }
+   return null;
+  }
+
   public SequentialCommandGroup getSmooth5Ball() {
     // return new SequentialCommandGroup(
     //   new dropAndSuck(intake), // Drop intake and suck
@@ -218,6 +230,9 @@ public class RobotContainer {
     );
   }
 
+  public Command testPathweaverCommand() {
+    return getRamseteAutoCommand(testPathweaver());
+  }
 
   public Trajectory getStraightTrajectory(TrajectoryConfig config) {
     return TrajectoryGenerator.generateTrajectory(

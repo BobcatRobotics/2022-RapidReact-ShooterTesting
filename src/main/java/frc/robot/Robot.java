@@ -134,6 +134,7 @@ public class Robot extends TimedRobot {
     autoChooser.setDefaultOption("DA 2Ball", m_robotContainer.deadAuto_twoBall());
     autoChooser.addOption("DA 3Ball", m_robotContainer.deadAuto_threeBall_right());
     autoChooser.addOption("NFZ 5Ball", m_robotContainer.getSmooth5Ball());
+    autoChooser.addOption("path weaver", m_robotContainer.testPathweaverCommand());
     SmartDashboard.putData(autoChooser);
 
     // SmartDashboard.putNumber("Gyro heading", 0);
