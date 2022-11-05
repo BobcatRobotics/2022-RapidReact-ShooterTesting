@@ -226,7 +226,8 @@ public class RobotContainer {
       getRamseteAutoCommand(Auto5BallTrajectories.moveToBall()),
       new stopIntake(intake),
       getRamseteAutoCommand(Auto5BallTrajectories.moveFromBall()),
-      new shootBalls(shooter, intake, 3, true)
+      new shootBalls(shooter, intake, 3, true),
+      getRamseteAutoCommand(Auto5BallTrajectories.moveBackToStart())
     );
   }
 
