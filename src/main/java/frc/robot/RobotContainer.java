@@ -183,7 +183,7 @@ public class RobotContainer {
 
   public Trajectory testPathweaver() {
     Trajectory trajectory = new Trajectory();
-    String trajectoryJSON = "paths/output/output/Unnamed.wpilib.json";
+    String trajectoryJSON = "paths/loli.wpilib.json";
     try {
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
       trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
@@ -222,12 +222,7 @@ public class RobotContainer {
     // );
     return new SequentialCommandGroup(
       getRamseteAutoCommand(Auto5BallTrajectories.moveForward()),
-      new dropAndSuck(intake),
-      getRamseteAutoCommand(Auto5BallTrajectories.moveToBall()),
-      new stopIntake(intake),
-      getRamseteAutoCommand(Auto5BallTrajectories.moveFromBall()),
-      new shootBalls(shooter, intake, 3, true),
-      getRamseteAutoCommand(Auto5BallTrajectories.moveBackToStart())
+      new dropAndSuck(intake)
     );
   }
 
