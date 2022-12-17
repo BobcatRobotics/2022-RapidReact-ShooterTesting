@@ -134,7 +134,8 @@ public class Robot extends TimedRobot {
     autoChooser.setDefaultOption("DA 2Ball", m_robotContainer.deadAuto_twoBall());
     autoChooser.addOption("DA 3Ball", m_robotContainer.deadAuto_threeBall_right());
     autoChooser.addOption("NFZ 5Ball", m_robotContainer.getSmooth5Ball());
-    autoChooser.addOption("path weaver", m_robotContainer.testPathweaverCommand());
+    autoChooser.addOption("path weaver curve 2", m_robotContainer.testPathweaverCommand(false));
+    autoChooser.addOption("path weaver curve 3", m_robotContainer.testPathweaverCommand(true));
     SmartDashboard.putData(autoChooser);
 
     // SmartDashboard.putNumber("Gyro heading", 0);
@@ -173,7 +174,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    drivetrain.resetOdometry();
+    //drivetrain.resetOdometry();
     // drivetrain.zeroHeading(); NEVER DO THIS IT FUCKS UP THE GYRO SHIT
     autoMode = true;
     limelight.turnOnLED();

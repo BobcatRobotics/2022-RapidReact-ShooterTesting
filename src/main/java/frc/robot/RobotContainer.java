@@ -181,9 +181,22 @@ public class RobotContainer {
     return cmd.andThen(() -> drivetrain.stop());
   }
 
-  public Trajectory testPathweaver() {
+  public Trajectory testPathweaver1() {
     Trajectory trajectory = new Trajectory();
-    String trajectoryJSON = "paths/loli.wpilib.json";
+    String trajectoryJSON = "paths/curve2.wpilib.json";
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      return trajectory;
+   } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+   }
+   return null;
+  }
+
+  public Trajectory testPathweaver2() {
+    Trajectory trajectory = new Trajectory();
+    String trajectoryJSON = "paths/curve4.wpilib.json";
     try {
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
       trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
@@ -226,8 +239,12 @@ public class RobotContainer {
     );
   }
 
-  public Command testPathweaverCommand() {
-    return getRamseteAutoCommand(testPathweaver());
+  public Command testPathweaverCommand(boolean newAuto) {
+    if (newAuto) {
+      return getRamseteAutoCommand(testPathweaver2());
+    } else {
+      return getRamseteAutoCommand(testPathweaver1());
+    }
   }
 
   public Trajectory getStraightTrajectory(TrajectoryConfig config) {
