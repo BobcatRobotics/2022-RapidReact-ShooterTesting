@@ -43,8 +43,8 @@ import frc.robot.utils.*;
 public class Robot extends TimedRobot {
   // commands and crap
   private intakeControls intakeControls = new intakeControls(RobotContainer.intake,  RobotContainer.gamepad, RobotContainer.shooter, RobotContainer.climber);
-  // private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
-  private ArcadeDrive drivetele = new ArcadeDrive(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
+  private DriveTele drivetele = new DriveTele(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
+  private ArcadeDrive arcadedrivetele = new ArcadeDrive(RobotContainer.drivetrain, RobotContainer.rightStick, RobotContainer.leftStick);
   private ShootingProcess shootingProcess = new ShootingProcess(RobotContainer.shooter, RobotContainer.intake, RobotContainer.gamepad, RobotContainer.climber, RobotContainer.limelight);
   private ClimberCommand climberCommand = new ClimberCommand(RobotContainer.climber, RobotContainer.rightStick, RobotContainer.gamepad);
   private CenterRobotOnHub centerRobotOnHubCommand = new CenterRobotOnHub(RobotContainer.drivetrain, RobotContainer.gamepad, RobotContainer.limelight);
@@ -72,6 +72,8 @@ public class Robot extends TimedRobot {
   private ParallelCommandGroup commandGroup = new ParallelCommandGroup();
 
   private int selected_dead_auto_ID = 0;
+
+  private final SendableChooser<Command> driveChooser = new SendableChooser<>();
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -126,6 +128,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Delay time: Dead auto 2-ball", 0);
     SmartDashboard.putNumber("Limelight dist (m)", 0);
 
+    driveChooser.setDefaultOption("arcade", arcadedrivetele);
+    driveChooser.addOption("tank", drivetele);
     // SmartDashboard.putNumber("Gyro heading", 0);
     // SmartDashboard.putString("JsonString", "STARTING");
   }
@@ -144,6 +148,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    SmartDashboard.putData(driveChooser);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -222,7 +227,8 @@ public class Robot extends TimedRobot {
     //   commandGroup.schedules();
     // } else {
       // drive controller
-      drivetele.schedule();
+      // drivetele.schedule();
+      driveChooser.getSelected().schedule();
       // shooter controller
       shootingProcess.schedule();
       // intake controller
