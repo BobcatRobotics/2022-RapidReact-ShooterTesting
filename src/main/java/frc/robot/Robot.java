@@ -60,6 +60,8 @@ public class Robot extends TimedRobot {
   private Limelight limelight;
   private Compressor compressor;
   private boolean shoot = false;
+  private Wrist m_wrist;
+  private boolean m_inwards;
   // private CommandBase desiredAutoCommand;
   private ShuffleboardTab tab = Shuffleboard.getTab("Things Tab");
   private double waitTime = 0;
@@ -261,6 +263,7 @@ public class Robot extends TimedRobot {
     if (gamepad.getRawButtonReleased(Constants.A_Button)) {
       // Intake up
       intake.deploy(false);
+      runWrist(m_wrist, true);
       // Switch to climber mode
       
       climber.toggleSwitchToClimberMode();
@@ -277,6 +280,12 @@ public class Robot extends TimedRobot {
     }
 
     updateShuffleBoard();
+    if(m_inwards) {
+      m_wrist.setwristMotor(-0.3);
+    }
+    else{
+      m_wrist.setwristMotor(0.3);
+    }
   }
 
   public void updateShuffleBoard() {

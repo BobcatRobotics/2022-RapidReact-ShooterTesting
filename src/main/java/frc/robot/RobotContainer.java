@@ -100,6 +100,7 @@ public class RobotContainer {
   // Drivetrain
   public static final Drivetrain drivetrain = new Drivetrain();
 
+  public static final Wrist wrist = new Wrist();
   
   public static Limelight limelight = new Limelight();
   // Shooter
