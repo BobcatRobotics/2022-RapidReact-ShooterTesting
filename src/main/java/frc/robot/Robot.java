@@ -253,7 +253,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if (!drivetrain.isBrake()) {
+    if (drivetrain.isBrake()) {
       drivetrain.brake();
     }
     CommandScheduler.getInstance().run();
