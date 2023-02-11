@@ -154,7 +154,7 @@ public class Robot extends TimedRobot {
     autoMode = true;
     limelight.turnOnLED();
     updateShuffleBoard();
-    m_autonomousCommand = m_robotContainer.parallelCommandGroupTest();
+    m_autonomousCommand = m_robotContainer.SeqParallelCommandGroupTest();
 
     // if (selected_dead_auto_ID == 1) {
     //   m_autonomousCommand = m_robotContainer.deadAuto_threeBall_right();
