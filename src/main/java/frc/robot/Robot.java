@@ -154,21 +154,21 @@ public class Robot extends TimedRobot {
     autoMode = true;
     limelight.turnOnLED();
     updateShuffleBoard();
-    
+    m_autonomousCommand = m_robotContainer.parallelCommandGroupTest();
 
-    if (selected_dead_auto_ID == 1) {
-      m_autonomousCommand = m_robotContainer.deadAuto_threeBall_right();
-    } else if (selected_dead_auto_ID ==0 ) {
-      m_autonomousCommand = m_robotContainer.deadAuto_twoBall(Math.max(0.0, Math.round(SmartDashboard.getEntry("Delay time: Dead auto 2-ball").getDouble(0.0)*2)/2.0));
-    } else if (selected_dead_auto_ID == 3) {
-      m_autonomousCommand = m_robotContainer.deadAuto_fiveBall();
-    } else if (selected_dead_auto_ID == 4) {
-      m_autonomousCommand = m_robotContainer.deadAuto_FourBall();
-    } else if (selected_dead_auto_ID == 5) {
-      m_autonomousCommand = m_robotContainer.deadAuto_fiveBall_2();
-    } else {
-      m_autonomousCommand = m_robotContainer.centerBallOnTargetAuto();
-    }
+    // if (selected_dead_auto_ID == 1) {
+    //   m_autonomousCommand = m_robotContainer.deadAuto_threeBall_right();
+    // } else if (selected_dead_auto_ID ==0 ) {
+    //   m_autonomousCommand = m_robotContainer.deadAuto_twoBall(Math.max(0.0, Math.round(SmartDashboard.getEntry("Delay time: Dead auto 2-ball").getDouble(0.0)*2)/2.0));
+    // } else if (selected_dead_auto_ID == 3) {
+    //   m_autonomousCommand = m_robotContainer.deadAuto_fiveBall();
+    // } else if (selected_dead_auto_ID == 4) {
+    //   m_autonomousCommand = m_robotContainer.deadAuto_FourBall();
+    // } else if (selected_dead_auto_ID == 5) {
+    //   m_autonomousCommand = m_robotContainer.deadAuto_fiveBall_2();
+    // } else {
+    //   m_autonomousCommand = m_robotContainer.centerBallOnTargetAuto();
+    // }
     
 
     // schedule the autonomous command

@@ -32,8 +32,10 @@ import com.google.gson.GsonBuilder;
 import frc.robot.utils.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.CenterRobotOnHub;
+import frc.robot.commands.DriveDistance;
 import frc.robot.commands.alignToNearestBall;
 import frc.robot.commands.driveCommand;
 import frc.robot.commands.dropAndSuck;
@@ -360,6 +362,16 @@ public class RobotContainer {
     // Add all commands
     commandGroup.addCommands(intakeDownAndSuckFirstBall, driveToFirstBall, limelightAlignFirstBall, shootFirstBall, driveSteerForwardBeforeThirdBall, alignToThirdBall, alignToThirdBall2, intakeDownAndSuckThirdBall, driveToThirdBall, turnPartiallyToHubToShootThirdBall, alignToHubToShootThirdBall, shootThirdBall, driveSteerToLastBalls, alignToLastBalls, alignToLastBalls2, intakeDownAndSuckLastBalls, driveToLastBalls, driveSteerToHubToShootLastBalls, alignToHubToShootLastBalls, shootLastBalls);
     return commandGroup;
+  }
+  public ParallelCommandGroup parallelCommandGroupTest(){
+    ParallelCommandGroup commandGroup = new ParallelCommandGroup();
+    Command DriveDistance = new DriveDistance(drivetrain, 2, 7);
+    Command intakeDownAndSuckFirstBall = new FV_IntakeDownAndSuck(intake);
+    commandGroup.addCommands(DriveDistance,intakeDownAndSuckFirstBall);
+    return commandGroup;
+
+
+
   }
 
   // public SequentialCommandGroup deadAutoTwo() {
