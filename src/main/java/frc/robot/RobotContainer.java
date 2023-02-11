@@ -365,9 +365,9 @@ public class RobotContainer {
   }
   public ParallelCommandGroup parallelCommandGroupTest(){
     ParallelCommandGroup commandGroup = new ParallelCommandGroup();
-    Command DriveDistance = new DriveDistance(drivetrain, 2, 7);
-    Command intakeDownAndSuckFirstBall = new FV_IntakeDownAndSuck(intake);
-    commandGroup.addCommands(DriveDistance,intakeDownAndSuckFirstBall);
+    Command DriveDistance = new FV_DriveTime(drivetrain, 3, 3, 2);
+    Command IntakeDown = new FV_IntakeDownAndSuck(intake);
+    commandGroup.addCommands(DriveDistance, IntakeDown);
     return commandGroup;
 
 

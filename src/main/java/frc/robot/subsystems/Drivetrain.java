@@ -96,7 +96,7 @@ public class Drivetrain extends SubsystemBase {
             Rotation2d.fromDegrees(getHeading()), 
             ltMotor.getSensorCollection().getIntegratedSensorPosition(), 
             rtMotor.getSensorCollection().getIntegratedSensorPosition(),
-            getPose());
+            new Pose2d());
         resetEncoders();
         zeroHeading();
         isBreak = true;
