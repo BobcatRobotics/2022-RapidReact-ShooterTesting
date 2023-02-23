@@ -11,9 +11,11 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
+import static frc.robot.Constants.RouteFinderConstants.kTrackwidthMeters;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -71,6 +73,7 @@ public class Drivetrain extends SubsystemBase {
     private final AHRS gyro = new AHRS(SPI.Port.kMXP); // The gyro sensor
 
     private final DifferentialDriveOdometry odometry; // Odometry class for tracking robot pose
+    private final DifferentialDrivePoseEstimator poseEstimator;
     /**
      * Method use to drive the robot
      */
@@ -105,6 +108,12 @@ public class Drivetrain extends SubsystemBase {
         rbMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,0);
         
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+        poseEstimator = new DifferentialDrivePoseEstimator(new DifferentialDriveKinematics(kTrackwidthMeters), 
+        getHeading(), 
+        ltMotor.getSelectedSensorPosition(), 
+        rtMotor.getSelectedSensorPosition(), 
+        getPose()
+        );
         resetEncoders();
         zeroHeading();
         isBreak = true;
