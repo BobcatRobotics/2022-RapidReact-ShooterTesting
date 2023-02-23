@@ -7,10 +7,13 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
+import static frc.robot.Constants.RouteFinderConstants.kTrackwidthMeters;
 
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,6 +29,8 @@ public class Drivetrain extends SubsystemBase {
    private WPI_TalonFX rmMotor;
    private WPI_TalonFX rbMotor;
    private boolean isBreak = true;
+
+   private Limelight lime;
 
 
     // The motors on the left side of the drive.
@@ -59,6 +64,7 @@ public class Drivetrain extends SubsystemBase {
     private final AHRS gyro = new AHRS(SPI.Port.kMXP); // The gyro sensor
 
     private final DifferentialDriveOdometry odometry; // Odometry class for tracking robot pose
+    private final DifferentialDrivePoseEstimator poseEstimator;
     /**
      * Method use to drive the robot
      */
@@ -91,12 +97,21 @@ public class Drivetrain extends SubsystemBase {
         rtMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,0);
         rmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,0);
         rbMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,0);
+
+        lime = new Limelight();
         
         odometry = new DifferentialDriveOdometry(
             Rotation2d.fromDegrees(getHeading()), 
             ltMotor.getSensorCollection().getIntegratedSensorPosition(), 
             rtMotor.getSensorCollection().getIntegratedSensorPosition(),
             new Pose2d());
+        poseEstimator = new DifferentialDrivePoseEstimator(
+            new DifferentialDriveKinematics(kTrackwidthMeters), 
+            new Rotation2d(getHeading()), 
+            ltMotor.getSelectedSensorPosition(), 
+            rtMotor.getSelectedSensorPosition(), 
+            getPose()
+        );
         resetEncoders();
         zeroHeading();
         isBreak = true;
